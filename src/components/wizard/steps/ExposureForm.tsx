@@ -26,113 +26,118 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
 
 
     const generateReport = () => {
-        const doc = new jsPDF();
-        const date = new Date().toLocaleDateString('es-ES');
+        try {
+            const doc = new jsPDF();
+            const date = new Date().toLocaleDateString('es-ES');
 
-        // --- Header ---
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.setTextColor(0, 51, 102); // Dark Blue
-        doc.text("INFORME TÉCNICO JUSTIFICATIVO", 105, 20, { align: "center" });
+            // --- Header ---
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.setTextColor(0, 51, 102); // Dark Blue
+            doc.text("INFORME TÉCNICO JUSTIFICATIVO", 105, 20, { align: "center" });
 
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "normal");
-        doc.text("(Riesgo Químico - Agentes Cancerígenos y Mutágenos)", 105, 26, { align: "center" });
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("(Riesgo Químico - Agentes Cancerígenos y Mutágenos)", 105, 26, { align: "center" });
 
-        // --- Header Info Box ---
-        doc.setFillColor(249, 250, 251); // Light Gray Background
-        doc.setDrawColor(230, 230, 230); // Light Border
-        doc.rect(20, 35, 170, 25, 'FD');
+            // --- Header Info Box ---
+            doc.setFillColor(249, 250, 251); // Light Gray Background
+            doc.setDrawColor(230, 230, 230); // Light Border
+            doc.rect(20, 35, 170, 25, 'FD');
 
-        doc.setFontSize(9);
-        doc.setTextColor(50, 50, 50);
-        doc.text(`Fecha de Emisión: ${date}`, 25, 42);
-        doc.setFont("helvetica", "bold");
-        doc.text(`Estado: EXPOSICIÓN NO RELEVANTE (Bajo Umbral Efectivo)`, 25, 48);
-        doc.setFont("helvetica", "normal");
-        doc.text(`Referencia Legal: Real Decreto 665/1997, de 12 de mayo`, 25, 54);
+            doc.setFontSize(9);
+            doc.setTextColor(50, 50, 50);
+            doc.text(`Fecha de Emisión: ${date}`, 25, 42);
+            doc.setFont("helvetica", "bold");
+            doc.text(`Estado: EXPOSICIÓN NO RELEVANTE (Bajo Umbral Efectivo)`, 25, 48);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Referencia Legal: Real Decreto 665/1997, de 12 de mayo`, 25, 54);
 
-        // --- 1. Identificación ---
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(11);
-        doc.setTextColor(0, 51, 102);
-        doc.text("1. IDENTIFICACIÓN DE LA SITUACIÓN", 20, 70);
-        doc.setDrawColor(200, 200, 200);
-        doc.line(20, 72, 190, 72);
+            // --- 1. Identificación ---
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(11);
+            doc.setTextColor(0, 51, 102);
+            doc.text("1. IDENTIFICACIÓN DE LA SITUACIÓN", 20, 70);
+            doc.setDrawColor(200, 200, 200);
+            doc.line(20, 72, 190, 72);
 
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        doc.setTextColor(0, 0, 0);
-        let y = 80;
-        doc.text(`• Agente Químico: ${substanceName || "(No identificado)"}`, 25, y); y += 6;
-        doc.text(`• Forma Física Detectada: ${formData.physicalForm}`, 25, y); y += 6;
-        doc.text(`• ¿Contacto Directo / Liberación?: ${formData.hasContact ? 'SÍ' : 'NO'}`, 25, y); y += 10;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            let y = 80;
+            doc.text(`• Agente Químico: ${substanceName || "(No identificado)"}`, 25, y); y += 6;
+            doc.text(`• Forma Física Detectada: ${formData.physicalForm}`, 25, y); y += 6;
+            doc.text(`• ¿Contacto Directo / Liberación?: ${formData.hasContact ? 'SÍ' : 'NO'}`, 25, y); y += 10;
 
-        // --- 2. Justificación Técnica ---
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(11);
-        doc.setTextColor(0, 51, 102);
-        doc.text("2. JUSTIFICACIÓN TÉCNICA (Criterio Higiénico)", 20, y + 4);
-        doc.line(20, y + 6, 190, y + 6);
-        y += 14;
+            // --- 2. Justificación Técnica ---
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(11);
+            doc.setTextColor(0, 51, 102);
+            doc.text("2. JUSTIFICACIÓN TÉCNICA (Criterio Higiénico)", 20, y + 4);
+            doc.line(20, y + 6, 190, y + 6);
+            y += 14;
 
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(9);
-        doc.setTextColor(0, 0, 0);
-        const introText = "De acuerdo con la Guía Técnica del INSST para la evaluación y prevención de los riesgos relacionados con la exposición a agentes cancerígenos o mutágenos:";
-        doc.text(doc.splitTextToSize(introText, 170), 20, y);
-        y += 10;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.setTextColor(0, 0, 0);
+            const introText = "De acuerdo con la Guía Técnica del INSST para la evaluación y prevención de los riesgos relacionados con la exposición a agentes cancerígenos o mutágenos:";
+            doc.text(doc.splitTextToSize(introText, 170), 20, y);
+            y += 10;
 
-        // Quote Box
-        doc.setFillColor(245, 245, 245);
-        doc.rect(25, y, 160, 20, 'F');
-        doc.setFont("helvetica", "italic");
-        doc.setTextColor(80, 80, 80);
-        const quote = "\"Cuando el agente se presenta en forma de artículo sólido masivo... se considera que la Vía Inhalatoria es NO RELEVANTE.\"";
-        doc.text(doc.splitTextToSize(quote, 150), 30, y + 6);
-        y += 28;
+            // Quote Box
+            doc.setFillColor(245, 245, 245);
+            doc.rect(25, y, 160, 20, 'F');
+            doc.setFont("helvetica", "italic");
+            doc.setTextColor(80, 80, 80);
+            const quote = "\"Cuando el agente se presenta en forma de artículo sólido masivo... se considera que la Vía Inhalatoria es NO RELEVANTE.\"";
+            doc.text(doc.splitTextToSize(quote, 150), 30, y + 6);
+            y += 28;
 
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(0, 0, 0);
-        const dermalText = "Asimismo, al no existir contacto directo continuo o tratarse de un sistema donde la matriz del material impide la biodisponibilidad, se descarta la absorción dérmica.";
-        doc.text(doc.splitTextToSize(dermalText, 170), 20, y);
-        y += 15;
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(0, 0, 0);
+            const dermalText = "Asimismo, al no existir contacto directo continuo o tratarse de un sistema donde la matriz del material impide la biodisponibilidad, se descarta la absorción dérmica.";
+            doc.text(doc.splitTextToSize(dermalText, 170), 20, y);
+            y += 15;
 
-        // --- 3. Conclusión ---
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(11);
-        doc.setTextColor(0, 51, 102);
-        doc.text("3. CONCLUSIÓN JURÍDICA", 20, y + 4);
-        doc.line(20, y + 6, 190, y + 6);
-        y += 14;
+            // --- 3. Conclusión ---
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(11);
+            doc.setTextColor(0, 51, 102);
+            doc.text("3. CONCLUSIÓN JURÍDICA", 20, y + 4);
+            doc.line(20, y + 6, 190, y + 6);
+            y += 14;
 
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(9);
-        doc.setTextColor(0, 0, 0);
-        const legalText = "En base al Artículo 2 del RD 665/1997, no es necesaria la aplicación de medidas técnicas de control adicionales (Artículo 5) ni mediciones periódicas (Artículo 6).";
-        doc.text(doc.splitTextToSize(legalText, 170), 20, y);
-        y += 12;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.setTextColor(0, 0, 0);
+            const legalText = "En base al Artículo 2 del RD 665/1997, no es necesaria la aplicación de medidas técnicas de control adicionales (Artículo 5) ni mediciones periódicas (Artículo 6).";
+            doc.text(doc.splitTextToSize(legalText, 170), 20, y);
+            y += 12;
 
-        // Dictamen Box
-        y += 5;
-        doc.setFillColor(212, 237, 218); // Success Green
-        doc.setDrawColor(195, 230, 203);
-        doc.rect(40, y, 130, 20, 'FD');
+            // Dictamen Box
+            y += 5;
+            doc.setFillColor(212, 237, 218); // Success Green
+            doc.setDrawColor(195, 230, 203);
+            doc.rect(40, y, 130, 20, 'FD');
 
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(21, 87, 36); // Dark Green
-        doc.setFontSize(10);
-        doc.text("DICTAMEN: BAJO UMBRAL DE EXPOSICIÓN", 105, y + 8, { align: 'center' });
-        doc.text("NO SE REQUIEREN ACCIONES DE HIGIENE INDUSTRIAL", 105, y + 14, { align: 'center' });
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(21, 87, 36); // Dark Green
+            doc.setFontSize(10);
+            doc.text("DICTAMEN: BAJO UMBRAL DE EXPOSICIÓN", 105, y + 8, { align: 'center' });
+            doc.text("NO SE REQUIEREN ACCIONES DE HIGIENE INDUSTRIAL", 105, y + 14, { align: 'center' });
 
-        // Footer
-        doc.setFont("helvetica", "italic");
-        doc.setFontSize(8);
-        doc.setTextColor(150, 150, 150);
-        doc.text("Documento generado automáticamente por sistema ASPY AI LAB.", 105, 280, { align: 'center' });
+            // Footer
+            doc.setFont("helvetica", "italic");
+            doc.setFontSize(8);
+            doc.setTextColor(150, 150, 150);
+            doc.text("Documento generado automáticamente por sistema ASPY AI LAB.", 105, 280, { align: 'center' });
 
-        // Save
-        doc.save("Informe_Justificativo_Exposicion_No_Relevante.pdf");
+            // Save
+            doc.save("Informe_Justificativo_Exposicion_No_Relevante.pdf");
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+            alert("No se pudo generar el PDF. Revise la consola.");
+        }
     };
 
     return (
