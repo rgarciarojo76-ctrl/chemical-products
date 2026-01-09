@@ -16,7 +16,7 @@ export const FinalReport: React.FC<FinalReportProps> = ({ state, onReset }) => {
     };
 
     const hazardResult = state.hazard.result;
-    const exposureResult = state.exposure.result;
+
 
     // Helper to find measure text
     const getMeasureText = (id: string) => RD_MEASURES.find(m => m.id === id)?.text || id;
@@ -71,34 +71,61 @@ export const FinalReport: React.FC<FinalReportProps> = ({ state, onReset }) => {
                 {/* Section 2: Exposure Analysis */}
                 <div style={{ marginBottom: '2rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
                     <h3 style={{ color: 'var(--color-primary)', borderBottom: '2px solid var(--color-secondary)', display: 'inline-block', marginBottom: '1rem' }}>
-                        2. Análisis de Exposición
+                        2. Análisis de Exposición y Riesgo Higiénico
                     </h3>
-                    <div style={{ padding: '1rem', backgroundColor: '#f9fafb', borderRadius: '8px' }}>
+
+                    {/* 2.1 Sieve */}
+                    <div style={{ padding: '1rem', backgroundColor: '#f9fafb', borderRadius: '8px', marginBottom: '1rem' }}>
+                        <h4 style={{ marginTop: 0, fontSize: '1rem', color: '#555' }}>2.1. Tamiz Cualitativo (Sieve)</h4>
                         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(150px, auto) 1fr', gap: '0.5rem', marginBottom: '0.5rem' }}>
                             <strong>Forma Física:</strong>
-                            <span>{state.exposure.input.physicalForm}</span>
+                            <span>{state.exposureSieve.input.physicalForm}</span>
 
                             <strong>Contacto Directo:</strong>
-                            <span>{state.exposure.input.hasContact ? 'SÍ' : 'NO'}</span>
+                            <span>{state.exposureSieve.input.hasContact ? 'SÍ' : 'NO'}</span>
                         </div>
 
-                        <div style={{ marginTop: '1rem' }}>
-                            <strong>Conclusión de Exposición:</strong>
+                        <div style={{ marginTop: '0.5rem' }}>
                             <div style={{
-                                marginTop: '0.5rem',
                                 padding: '0.5rem',
-                                backgroundColor: exposureResult?.isRelevant ? '#d1ecf1' : '#d4edda',
-                                color: exposureResult?.isRelevant ? '#0c5460' : '#155724',
+                                backgroundColor: state.exposureSieve.result?.isRelevant ? '#d1ecf1' : '#d4edda',
+                                color: state.exposureSieve.result?.isRelevant ? '#0c5460' : '#155724',
                                 borderRadius: '4px',
                                 fontWeight: 600
                             }}>
-                                {exposureResult?.isRelevant ? 'Exposición Relevante (Requiere Medidas)' : 'Exposición No Significativa'}
+                                {state.exposureSieve.result?.isRelevant ? 'Exposición Potencialmente Relevante' : 'Exposición No Significativa'}
                             </div>
-                            <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
-                                • {exposureResult?.justification.technical}
-                            </p>
                         </div>
                     </div>
+
+                    {/* 2.2 Hygienic Eval (If exists) */}
+                    {state.hygienicEval.result && (
+                        <div style={{ padding: '1rem', backgroundColor: '#fff', border: '1px solid #ddd', borderRadius: '8px' }}>
+                            <h4 style={{ marginTop: 0, fontSize: '1rem', color: '#555' }}>2.2. Valoración Higiénica Cuantitativa</h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(150px, auto) 1fr', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                                <strong>VLA-ED Referencia:</strong>
+                                <span>{state.hygienicEval.input.vla ? `${state.hygienicEval.input.vla} mg/m³` : 'N/A'}</span>
+
+                                <strong>Resultado Muestreo:</strong>
+                                <span>{state.hygienicEval.input.labResult} mg/m³</span>
+                            </div>
+
+                            <div style={{ marginTop: '0.5rem' }}>
+                                <div style={{
+                                    padding: '0.5rem',
+                                    backgroundColor: state.hygienicEval.result.isSafe ? '#d4edda' : '#f8d7da',
+                                    color: state.hygienicEval.result.isSafe ? '#155724' : '#721c24',
+                                    borderRadius: '4px',
+                                    fontWeight: 600
+                                }}>
+                                    {state.hygienicEval.result.isSafe ? 'Situación CONFORME (Riesgo Controlado)' : 'Situación NO CONFORME (Riesgo Higiénico)'}
+                                </div>
+                                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
+                                    {state.hygienicEval.result.justification.technical}
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Section 3: Action Plan */}

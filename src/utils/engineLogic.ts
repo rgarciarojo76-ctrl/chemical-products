@@ -1,4 +1,4 @@
-import type { HazardInput, HazardAssessment, HPhrase, ExposureInput, ExposureAssessment, MeasureDefinition } from '../types';
+import type { HazardInput, HazardAssessment, HPhrase, ExposureSieveInput, ExposureSieveAssessment, HygienicEvalInput, HygienicAssessment, MeasureDefinition } from '../types';
 
 export const RD_MEASURES: MeasureDefinition[] = [
     {
@@ -153,12 +153,11 @@ export function evaluateHazard(input: HazardInput): HazardAssessment {
     };
 }
 
-export function evaluateExposure(input: ExposureInput): ExposureAssessment {
+export function evaluateExposureSieve(input: ExposureSieveInput): ExposureSieveAssessment {
     // 1. Physical Form Sieve
     if (input.physicalForm === 'solid_massive' && !input.hasContact) {
         return {
             isRelevant: false,
-            status: 'safe',
             justification: {
                 technical: "El agente se presenta como sólido masivo/aleación sin tareas de corte o soldadura (sin emisión de humo/polvo).",
                 legal: {
@@ -169,12 +168,25 @@ export function evaluateExposure(input: ExposureInput): ExposureAssessment {
         };
     }
 
-    // 2. Analytical Validation (LOD)
+    // Default: Exposure is Relevant (Proceed to Mod C)
+    return {
+        isRelevant: true,
+        justification: {
+            technical: "Existe presencia del agente y vía de transmisión posible (sólido pulvurulento, líquido o gas).",
+            legal: {
+                article: "Art. 3 RD 665/1997",
+                text: "Se requiere evaluación higiénica detallada para determinar el riesgo."
+            }
+        }
+    };
+}
+
+export function evaluateHygienicExposure(input: HygienicEvalInput): HygienicAssessment {
+    // 1. Check absence (Result < LOD)
     if (input.labResult !== undefined && input.lod !== undefined) {
         if (input.labResult < input.lod) {
             return {
-                isRelevant: false,
-                status: 'safe',
+                isSafe: true,
                 justification: {
                     technical: `Resultado analítico (${input.labResult}) inferior al Límite de Detección (${input.lod}).`,
                     legal: {
@@ -186,16 +198,42 @@ export function evaluateExposure(input: ExposureInput): ExposureAssessment {
         }
     }
 
-    // 3. Default: Exposure is Relevant
+    // 2. Check VLA Compliance
+    if (input.labResult !== undefined && input.vla !== undefined) {
+        const ratio = input.labResult / input.vla;
+        if (ratio <= 1) {
+            return {
+                isSafe: true,
+                complianceRatio: ratio,
+                justification: {
+                    technical: `El nivel detectado (${input.labResult}) es inferior al VLA-ED (${input.vla}). Indice: ${ratio.toFixed(2)}.`,
+                    legal: {
+                        article: "Art. 6 RD 665/1997",
+                        text: "Situación controlada higiénicamente. Mantener condiciones."
+                    }
+                }
+            };
+        } else {
+            return {
+                isSafe: false,
+                complianceRatio: ratio,
+                justification: {
+                    technical: `¡ATENCIÓN! El nivel detectado (${input.labResult}) SUPERA el VLA-ED (${input.vla}). Indice: ${ratio.toFixed(2)}.`,
+                    legal: {
+                        article: "Art. 5 RD 665/1997",
+                        text: "Situación inaceptable. Se requieren medidas inmediatas de reducción."
+                    }
+                }
+            };
+        }
+    }
+
+    // If no data provided yet
     return {
-        isRelevant: true,
-        status: 'warning', // Needs measures
+        isSafe: false,
         justification: {
-            technical: "Existe presencia del agente y vía de transmisión posible.",
-            legal: {
-                article: "Art. 3 RD 665/1997",
-                text: "La evaluación de riesgos debe determinar la naturaleza, grado y duración de la exposición."
-            }
+            technical: "Pendiente de datos analíticos.",
+            legal: { article: "", text: "" }
         }
     };
 }

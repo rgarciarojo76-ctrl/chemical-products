@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 import { StepCard } from '../../ui/StepCard';
-import type { ExposureInput, ExposureAssessment } from '../../../types';
+import type { ExposureSieveInput, ExposureSieveAssessment } from '../../../types';
 
 interface ExposureFormProps {
-    onAnalyze: (input: ExposureInput) => ExposureAssessment;
+    onAnalyze: (input: ExposureSieveInput) => ExposureSieveAssessment;
     onNext: () => void;
-    initialData?: ExposureInput;
+    onFinish: () => void;
+    initialData?: ExposureSieveInput;
     substanceName?: string;
 }
 
-export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, initialData, substanceName }) => {
-    const [formData, setFormData] = useState<ExposureInput>(initialData || {
+export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, onFinish, initialData, substanceName }) => {
+    const [formData, setFormData] = useState<ExposureSieveInput>(initialData || {
         physicalForm: 'liquid_low_volatility',
-        hasContact: true,
-        labResult: undefined,
-        lod: undefined
+        hasContact: true
     });
-    const [result, setResult] = useState<ExposureAssessment | null>(null);
+    const [result, setResult] = useState<ExposureSieveAssessment | null>(null);
 
     const handleAnalyze = () => {
         const assessment = onAnalyze(formData);
@@ -97,7 +96,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, i
     return (
         <StepCard
             title="Módulo B: Tamiz de Exposición Relevante"
-            description="Evaluamos si existe una exposición efectiva basada en la forma física y datos analíticos."
+            description="Evaluamos la forma de presentación y uso para descartar exposiciones no significativas."
             icon="🛡️"
         >
             <div className="form-group mb-2">
@@ -129,100 +128,6 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, i
                 </p>
             </div>
 
-            {formData.samplingDetails && (
-                <div style={{
-                    marginBottom: '1rem',
-                    padding: '1rem',
-                    backgroundColor: '#e6f4ea',
-                    border: '1px solid #cce5d4',
-                    borderRadius: '8px',
-                    fontSize: '0.9rem'
-                }}>
-                    <h4 style={{ color: '#155724', marginTop: 0, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span>📋</span> Datos de Referencia (Base de Datos)
-                    </h4>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-                        <div><strong>Soporte:</strong> {formData.samplingDetails.support}</div>
-                        <div><strong>Técnica:</strong> {formData.samplingDetails.technique}</div>
-                        <div><strong>Caudal:</strong> {formData.samplingDetails.flowRate}</div>
-                        <div><strong>Tiempo Mín:</strong> {formData.samplingDetails.minTime}</div>
-                    </div>
-                </div>
-            )}
-
-            {/* Strategy Helper Section */}
-            <div className="form-group mb-4" style={{ backgroundColor: '#fff8e1', padding: '1rem', borderRadius: '8px', border: '1px solid #ffead0' }}>
-                <h4 style={{ color: '#856404', marginTop: 0, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span>🧠</span> Asistente de Estrategia (Criterio INSST)
-                </h4>
-
-                <div style={{ marginBottom: '1rem' }}>
-                    <label style={{ display: 'block', fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.5rem' }}>¿Cómo es la exposición durante la jornada?</label>
-                    <select
-                        style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
-                        onChange={(e) => {
-                            // Simple logic to suggest strategy
-                            const val = e.target.value;
-                            let recommendation = "";
-                            if (val === 'continuous') recommendation = "Muestreo de Larga Duración (VLA-ED) - Mínimo 80% de la jornada o representativo.";
-                            if (val === 'peaks') recommendation = "Muestreo de Corta Duración (VLA-EC/STEL) en los momentos de pico + VLA-ED basal.";
-                            if (val === 'variable') recommendation = "Muestreo Consecutivo de Larga Duración (Varios periodos representativos).";
-
-                            // We can store this in a local state or just show it dynamically. 
-                            // For simplicity, let's look at the result below or update specific instructions if needed.
-                            // Ideally, we'd update formData to save this decision, but for UI guidance only:
-                            const output = document.getElementById('strategy-output');
-                            if (output) output.innerText = recommendation;
-                        }}
-                    >
-                        <option value="">Seleccione tipo de proceso...</option>
-                        <option value="continuous">Continuo y Homogéneo (Sin cambios bruscos)</option>
-                        <option value="peaks">Variable con Picos de Exposición (Tareas puntuales)</option>
-                        <option value="variable">Cíclico / Muy Variable (Ciclos repetitivos)</option>
-                    </select>
-                </div>
-
-                <div id="strategy-output" style={{ fontWeight: 'bold', color: '#d39e00', minHeight: '1.5em' }}>
-                    {/* Recommendation appears here */}
-                </div>
-            </div>
-
-            <div className="form-group mb-4" style={{ backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
-                <h4 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: 'var(--color-primary)' }}>Validación Analítica (Opcional)</h4>
-                <div className="inputs-grid">
-                    <div>
-                        <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600 }}>1. VLA-ED (Referencia)</label>
-                        <input
-                            type="text"
-                            value={formData.vla ? `${formData.vla} mg/m³` : '---'}
-                            disabled
-                            style={{ width: '100%', padding: '0.25rem', backgroundColor: '#eee', border: '1px solid #ccc', color: '#555' }}
-                        />
-                    </div>
-                    <div>
-                        <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600 }}>2. LOD Sugerido</label>
-                        <input
-                            type="number"
-                            step="0.001"
-                            placeholder="---"
-                            value={formData.lod || ''}
-                            style={{ width: '100%', padding: '0.25rem', backgroundColor: formData.lod ? '#f0fff4' : 'white' }}
-                            onChange={e => setFormData({ ...formData, lod: e.target.value ? parseFloat(e.target.value) : undefined })}
-                        />
-                    </div>
-                    <div>
-                        <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-primary)' }}>3. Resultado (mg/m³)</label>
-                        <input
-                            type="number"
-                            step="0.001"
-                            placeholder="Introducir dato..."
-                            style={{ width: '100%', padding: '0.25rem', border: '2px solid var(--color-primary)', fontWeight: 'bold' }}
-                            onChange={e => setFormData({ ...formData, labResult: e.target.value ? parseFloat(e.target.value) : undefined })}
-                        />
-                    </div>
-                </div>
-            </div>
-
             <div className="actions" style={{ marginTop: 'var(--spacing-lg)', borderTop: '1px solid #eee', paddingTop: 'var(--spacing-md)' }}>
                 {!result ? (
                     <button
@@ -237,7 +142,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, i
                             fontSize: '1rem'
                         }}
                     >
-                        Evaluar Exposición
+                        Verificar Relevancia
                     </button>
                 ) : (
                     <div className={`result-box`} style={{
@@ -247,17 +152,18 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, i
                         borderRadius: '6px'
                     }}>
                         <h4 style={{ color: result.isRelevant ? '#856404' : '#155724' }}>
-                            {result.isRelevant ? 'Exposición Relevante: Requiere Medidas (Art. 4-5)' : 'Exposición No Relevante (Bajo Umbral Efectivo)'}
+                            {result.isRelevant ? 'Exposición Potencialmente Relevante' : 'Exposición No Relevante'}
                         </h4>
                         <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>{result.justification.technical}</p>
-                        <div style={{
+
+                        {!result.isRelevant && <div style={{
                             fontSize: '0.8rem',
                             fontStyle: 'italic',
                             borderLeft: '2px solid rgba(0,0,0,0.2)',
                             paddingLeft: '0.5rem'
                         }}>
                             <strong>Base Legal:</strong> {result.justification.legal.article} - {result.justification.legal.text}
-                        </div>
+                        </div>}
 
                         <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             {/* DOWNLOAD JUSTIFICATION REPORT BUTTON (Only for Non-Relevant) */}
@@ -282,17 +188,17 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, i
                             )}
 
                             <button
-                                onClick={onNext}
+                                onClick={result.isRelevant ? onNext : onFinish}
                                 style={{
                                     backgroundColor: 'var(--color-primary)',
                                     color: 'white',
                                     border: 'none',
                                     padding: '0.5rem 1rem',
                                     borderRadius: '4px',
-                                    marginLeft: 'auto' // Push to right
+                                    marginLeft: 'auto'
                                 }}
                             >
-                                {result.isRelevant ? 'Ir a Plan de Medidas' : 'Finalizar Evaluación'}
+                                {result.isRelevant ? 'Continuar a Evaluación Higiénica →' : 'Finalizar Evaluación'}
                             </button>
                         </div>
                         <div style={{ clear: 'both' }}></div>

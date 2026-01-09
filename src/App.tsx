@@ -4,6 +4,7 @@ import { useDecisionEngine } from './hooks/useDecisionEngine';
 import { WizardContainer } from './components/wizard/WizardContainer';
 import { HazardForm } from './components/wizard/steps/HazardForm';
 import { ExposureForm } from './components/wizard/steps/ExposureForm';
+import { HygienicEvalForm } from './components/wizard/steps/HygienicEvalForm';
 import { MeasuresForm } from './components/wizard/steps/MeasuresForm';
 import { FinalReport } from './components/wizard/steps/FinalReport';
 
@@ -46,7 +47,7 @@ function App() {
     <Layout>
       <WizardContainer
         currentStep={engine.state.step}
-        totalSteps={4} // Hazard, Exposure, Measures, Report
+        totalSteps={5} // Hazard, Exposure Sieve, Hygienic Eval, Measures, Report
         title="Evaluación en curso"
       >
         {engine.state.step === 1 && (
@@ -58,16 +59,25 @@ function App() {
 
         {engine.state.step === 2 && (
           <ExposureForm
-            onAnalyze={engine.runExposureAssessment}
+            onAnalyze={engine.runExposureSieveAssessment}
             onNext={engine.nextStep}
-            initialData={engine.state.exposure.input}
+            onFinish={() => engine.goToStep(5)} // Go directly to Report
+            initialData={engine.state.exposureSieve.input}
             substanceName={engine.state.hazard.input.substanceName}
           />
         )}
 
-
-
         {engine.state.step === 3 && (
+          <HygienicEvalForm
+            onAnalyze={engine.runHygienicAssessment}
+            onNext={engine.nextStep}
+            initialData={engine.state.hygienicEval.input}
+            vlaReference={engine.state.hygienicEval.input.vla}
+            substanceName={engine.state.hazard.input.substanceName}
+          />
+        )}
+
+        {engine.state.step === 4 && (
           <MeasuresForm
             initialData={engine.state.measures}
             onUpdate={engine.updateMeasures}
@@ -75,7 +85,7 @@ function App() {
           />
         )}
 
-        {engine.state.step === 4 && (
+        {engine.state.step === 5 && (
           <FinalReport
             state={engine.state}
             onReset={() => { setStarted(false); engine.reset(); }}

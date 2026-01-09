@@ -42,11 +42,20 @@ export interface HazardAssessment {
     justifications: Justification[];
 }
 
-// Module B: Exposure Sieve
-export interface ExposureInput {
+// Module B: Exposure Sieve (Qualitative)
+export interface ExposureSieveInput {
     physicalForm: 'solid_massive' | 'solid_dust' | 'liquid_high_volatility' | 'liquid_low_volatility' | 'gas';
     hasContact: boolean;
-    labResult?: number; // mg/m3 or ppm
+}
+
+export interface ExposureSieveAssessment {
+    isRelevant: boolean;
+    justification: Justification;
+}
+
+// Module C: Hygienic Evaluation (Quantitative)
+export interface HygienicEvalInput {
+    labResult?: number; // mg/m3
     lod?: number; // Limit of Detection
     vla?: number; // Reference Limit (VLA-ED)
     samplingDetails?: { // Auto-filled strategy
@@ -55,11 +64,13 @@ export interface ExposureInput {
         flowRate: string;
         minTime: string;
     };
+    strategyType?: 'continuous' | 'peaks' | 'variable';
 }
 
-export interface ExposureAssessment {
-    isRelevant: boolean;
-    status: TrafficLightStatus;
+export interface HygienicAssessment {
+    isSafe: boolean; // True if Result < VLA or Result < LOD
+    complianceRatio?: number; // Result / VLA
+    strategyRecommendation?: string;
     justification: Justification;
 }
 
@@ -95,9 +106,13 @@ export interface AssessmentState {
         input: HazardInput;
         result: HazardAssessment | null;
     };
-    exposure: {
-        input: ExposureInput;
-        result: ExposureAssessment | null;
+    exposureSieve: {
+        input: ExposureSieveInput;
+        result: ExposureSieveAssessment | null;
+    };
+    hygienicEval: {
+        input: HygienicEvalInput;
+        result: HygienicAssessment | null;
     };
     measures: MeasureStatus[];
     hygieneRights: {
