@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StepCard } from '../../ui/StepCard';
 import type { ExposureSieveInput, ExposureSieveAssessment } from '../../../types';
+import { jsPDF } from 'jspdf';
 
 interface ExposureFormProps {
     onAnalyze: (input: ExposureSieveInput) => ExposureSieveAssessment;
@@ -22,9 +23,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
         setResult(assessment);
     };
 
-    import { jsPDF } from 'jspdf';
 
-    // ...
 
     const generateReport = () => {
         const doc = new jsPDF();
