@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StepCard } from '../../ui/StepCard';
 import type { ExposureSieveInput, ExposureSieveAssessment } from '../../../types';
-import { jsPDF } from 'jspdf';
+import jsPDF from 'jspdf';
 
 interface ExposureFormProps {
     onAnalyze: (input: ExposureSieveInput) => ExposureSieveAssessment;
