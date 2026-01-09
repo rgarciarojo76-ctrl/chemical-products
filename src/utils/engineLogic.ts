@@ -172,7 +172,7 @@ export function evaluateExposureSieve(input: ExposureSieveInput): ExposureSieveA
     return {
         isRelevant: true,
         justification: {
-            technical: "Existe presencia del agente y vía de transmisión posible (sólido pulvurulento, líquido o gas).",
+            technical: "Existe presencia del agente y exposición posible (sólido pulvurulento, líquido o gas).",
             legal: {
                 article: "Art. 3 RD 665/1997",
                 text: "Se requiere evaluación higiénica detallada para determinar el riesgo."
