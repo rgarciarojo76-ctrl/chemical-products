@@ -68,7 +68,7 @@ export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext }) => 
             console.log("PDF Text Extracted:", text.substring(0, 500) + "...");
             analyzeText(text);
             setAnalysisStatus('success');
-            setTimeout(() => setAnalysisStatus('idle'), 3000);
+            setAnalysisStatus('success');
         } catch (error) {
             console.error("Error analyzing PDF:", error);
             setAnalysisStatus('error');
