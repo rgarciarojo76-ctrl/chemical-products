@@ -122,6 +122,59 @@ button {
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #999;
+/* Responsive Utilities */
+.routes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  align-items: end;
+}
+
+.responsive-flex {
+  display: flex;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --spacing-lg: 1rem;
+    --spacing-xl: 1.5rem;
+  }
+
+  .container {
+    padding: 0 var(--spacing-sm);
+  }
+
+  .routes-grid {
+    grid-template-columns: repeat(2, 1fr);
+    /* 2x2 on tablets/large phones */
+  }
+
+  .inputs-grid {
+    grid-template-columns: 1fr;
+    /* Stack vertically */
+  }
+
+  .responsive-flex {
+    flex-direction: column;
+  }
+
+  /* Hide less critical header elements */
+  .hide-on-mobile,
+  .show-on-desktop {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .routes-grid {
+    grid-template-columns: 1fr;
+    /* Stack on very small screens */
+  }
 }

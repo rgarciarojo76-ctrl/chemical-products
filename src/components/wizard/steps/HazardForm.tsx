@@ -363,9 +363,8 @@ export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext }) => 
             {/* ROUTES OF EXPOSURE VISUALIZATION */}
             <div className="form-group mb-4">
                 <label style={{ display: 'block', fontWeight: 600, marginBottom: '0.5rem' }}>Vías de Entrada (Identificadas en FDS)</label>
-                <div style={{ display: 'flex', gap: '1rem' }}>
+                <div className="routes-grid">
                     <div style={{
-                        flex: 1,
                         padding: '0.75rem',
                         borderRadius: '6px',
                         textAlign: 'center',
@@ -377,7 +376,6 @@ export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext }) => 
                         <div style={{ fontSize: '0.85rem', fontWeight: 600, color: detectedRoutes.inhalation ? '#0369a1' : '#6b7280' }}>Inhalatoria</div>
                     </div>
                     <div style={{
-                        flex: 1,
                         padding: '0.75rem',
                         borderRadius: '6px',
                         textAlign: 'center',
@@ -389,7 +387,6 @@ export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext }) => 
                         <div style={{ fontSize: '0.85rem', fontWeight: 600, color: detectedRoutes.dermal ? '#92400e' : '#6b7280' }}>Dérmica</div>
                     </div>
                     <div style={{
-                        flex: 1,
                         padding: '0.75rem',
                         borderRadius: '6px',
                         textAlign: 'center',
@@ -401,7 +398,6 @@ export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext }) => 
                         <div style={{ fontSize: '0.85rem', fontWeight: 600, color: detectedRoutes.oral ? '#be123c' : '#6b7280' }}>Oral / Digestiva</div>
                     </div>
                     <div style={{
-                        flex: 1,
                         padding: '0.75rem',
                         borderRadius: '6px',
                         textAlign: 'center',

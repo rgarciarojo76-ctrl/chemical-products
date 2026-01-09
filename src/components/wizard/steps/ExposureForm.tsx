@@ -189,9 +189,8 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, i
 
             <div className="form-group mb-4" style={{ backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
                 <h4 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: 'var(--color-primary)' }}>Validación Analítica (Opcional)</h4>
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
-                    <div style={{ flex: 0.8, display: 'none' }}></div> {/* Spacer hack if needed, but flex handles it */}
-                    <div style={{ flex: 1 }}>
+                <div className="inputs-grid">
+                    <div>
                         <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600 }}>1. VLA-ED (Referencia)</label>
                         <input
                             type="text"
@@ -200,7 +199,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, i
                             style={{ width: '100%', padding: '0.25rem', backgroundColor: '#eee', border: '1px solid #ccc', color: '#555' }}
                         />
                     </div>
-                    <div style={{ flex: 1 }}>
+                    <div>
                         <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600 }}>2. LOD Sugerido</label>
                         <input
                             type="number"
@@ -211,7 +210,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, i
                             onChange={e => setFormData({ ...formData, lod: e.target.value ? parseFloat(e.target.value) : undefined })}
                         />
                     </div>
-                    <div style={{ flex: 1 }}>
+                    <div>
                         <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-primary)' }}>3. Resultado (mg/m³)</label>
                         <input
                             type="number"
