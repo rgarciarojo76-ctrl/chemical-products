@@ -57,6 +57,67 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                 )}
             </div>
 
+            {/* Sampling Data Sheet */}
+            <div className="form-group mb-4" style={{ backgroundColor: '#f0f7ff', padding: '1rem', borderRadius: '8px', border: '1px solid #d0e7ff' }}>
+                <h4 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#0056b3', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>📋</span> Ficha de Muestreo (Método Recomendado)
+                </h4>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#444' }}>Soporte de Captación</label>
+                        <input
+                            type="text"
+                            value={formData.samplingDetails?.support || ''}
+                            onChange={(e) => setFormData({
+                                ...formData,
+                                samplingDetails: { ...formData.samplingDetails!, support: e.target.value }
+                            })}
+                            placeholder="Ej. Filtro de membrana..."
+                            style={{ width: '100%', padding: '0.4rem', border: '1px solid #ccc', borderRadius: '4px', fontSize: '0.9rem' }}
+                        />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#444' }}>Técnica Analítica</label>
+                        <input
+                            type="text"
+                            value={formData.samplingDetails?.technique || ''}
+                            onChange={(e) => setFormData({
+                                ...formData,
+                                samplingDetails: { ...formData.samplingDetails!, technique: e.target.value }
+                            })}
+                            placeholder="Ej. Cromatografía..."
+                            style={{ width: '100%', padding: '0.4rem', border: '1px solid #ccc', borderRadius: '4px', fontSize: '0.9rem' }}
+                        />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#444' }}>Caudal de Muestreo (l/min)</label>
+                        <input
+                            type="text"
+                            value={formData.samplingDetails?.flowRate || ''}
+                            onChange={(e) => setFormData({
+                                ...formData,
+                                samplingDetails: { ...formData.samplingDetails!, flowRate: e.target.value }
+                            })}
+                            placeholder="Ej. 2 l/min"
+                            style={{ width: '100%', padding: '0.4rem', border: '1px solid #ccc', borderRadius: '4px', fontSize: '0.9rem' }}
+                        />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#444' }}>Tiempo Mínimo (Vol. Mín)</label>
+                        <input
+                            type="text"
+                            value={formData.samplingDetails?.minTime || ''}
+                            onChange={(e) => setFormData({
+                                ...formData,
+                                samplingDetails: { ...formData.samplingDetails!, minTime: e.target.value }
+                            })}
+                            placeholder="Ej. 60 min"
+                            style={{ width: '100%', padding: '0.4rem', border: '1px solid #ccc', borderRadius: '4px', fontSize: '0.9rem' }}
+                        />
+                    </div>
+                </div>
+            </div>
+
             <div className="form-group mb-4" style={{ backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
                 <h4 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: 'var(--color-primary)' }}>Validación de Resultados Analíticos</h4>
                 <div className="inputs-grid">
