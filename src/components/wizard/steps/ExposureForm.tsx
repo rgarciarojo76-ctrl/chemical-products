@@ -137,7 +137,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
 
     return (
         <StepCard
-            title="Módulo B: Tamiz de Exposición Relevante"
+            title="Módulo B: Determinación de Presencia | Exposición"
             description="Evaluamos la forma de presentación y uso para descartar exposiciones no significativas."
             icon="🛡️"
         >
