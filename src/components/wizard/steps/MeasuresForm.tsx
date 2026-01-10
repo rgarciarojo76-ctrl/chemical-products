@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StepCard } from '../../ui/StepCard';
-import type { MeasureStatus, MeasureDefinition } from '../../../types';
+import type { MeasureStatus } from '../../../types';
 import { RD_MEASURES } from '../../../utils/engineLogic';
 
 interface MeasuresFormProps {
@@ -50,7 +50,7 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {RD_MEASURES.map((def, index) => {
                     const status = measures.find(m => m.measureId === def.id) || { implemented: false, justificationIfNo: '' };
-                    const isCritical = def.level === 'substitution' || def.level === 'closed_system';
+
 
                     return (
                         <div key={def.id} style={{

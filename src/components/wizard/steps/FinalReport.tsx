@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { StepCard } from '../../ui/StepCard';
-import type { AssessmentState, MeasureStatus } from '../../../types';
+import type { AssessmentState } from '../../../types';
 import { RD_MEASURES } from '../../../utils/engineLogic';
 
 interface FinalReportProps {
