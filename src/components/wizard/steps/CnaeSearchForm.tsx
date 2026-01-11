@@ -180,10 +180,6 @@ export const CnaeSearchForm: React.FC<CnaeSearchFormProps> = ({ onNext, onSelect
                                                 )}
                                             </div>
                                         </div>
-
-                                        <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.2rem', lineHeight: '1.2' }}>
-                                            {agent.context}
-                                        </div>
                                     </div>
                                     <button
                                         onClick={() => handleSelectAgent(agent.name)}
