@@ -145,24 +145,25 @@ export const CnaeSearchForm: React.FC<CnaeSearchFormProps> = ({ onNext, onSelect
                                                 <strong style={{ fontSize: '1rem', color: '#333' }}>{agent.name}</strong>
 
                                                 {/* Compact Badges */}
+                                                {/* Educational Badges (Junior Techs) */}
                                                 {agent.context.includes('Carc. 1A') && (
-                                                    <span style={{ backgroundColor: '#dc3545', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 600 }}>
-                                                        ☢️ Carc. 1A (Probado)
+                                                    <span style={{ backgroundColor: '#dc3545', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                        ☢️ Cancerígeno 1A (Probado en Humanos)
                                                     </span>
                                                 )}
                                                 {agent.context.includes('Carc. 1B') && (
-                                                    <span style={{ backgroundColor: '#fd7e14', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 600 }}>
-                                                        ☣️ Carc. 1B (Supuesto)
+                                                    <span style={{ backgroundColor: '#fd7e14', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                        ☣️ Cancerígeno 1B (Supuesto en Humanos)
                                                     </span>
                                                 )}
                                                 {agent.context.includes('Muta. 1') && (
-                                                    <span style={{ backgroundColor: '#6f42c1', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 600 }}>
-                                                        🧬 Muta.
+                                                    <span style={{ backgroundColor: '#6f42c1', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                        🧬 Mutágeno (Daño Genético Hereditario)
                                                     </span>
                                                 )}
                                                 {agent.context.includes('Repr. 1') && (
-                                                    <span style={{ backgroundColor: '#e83e8c', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 600 }}>
-                                                        👶 Repro.
+                                                    <span style={{ backgroundColor: '#e83e8c', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                        👶 Tóxico para la Reproducción
                                                     </span>
                                                 )}
                                             </div>
