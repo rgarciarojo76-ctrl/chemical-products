@@ -35,17 +35,29 @@ export const CnaeSearchForm: React.FC<CnaeSearchFormProps> = ({ onNext, onSelect
     return (
         <StepCard
             title={
-                <span>
-                    Buscador de Productos Químicos Cancerigenos por actividad{' '}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <span>Buscador de Productos Químicos Cancerígenos por Actividad</span>
                     <a
                         href="https://www.insst.es/agentes-quimicos-infocarquim"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: 'var(--color-primary)', textDecoration: 'underline' }}
+                        style={{
+                            fontSize: '0.85rem',
+                            fontWeight: 'normal',
+                            color: '#666',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            textDecoration: 'none',
+                            alignSelf: 'flex-start'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                        onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
                     >
-                        (Base INSST InfoCarquim)
+                        <span>ℹ️ Fuente: Base Datos INSST InfoCarquim</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                     </a>
-                </span>
+                </div>
             }
             description="Identifica posibles agentes cancerígenos asociados a la actividad del cliente antes de la visita. Una vez allí, confirma su presencia y solicita las Fichas de Datos de Seguridad (FDS) para proceder con la evaluación"
         >
@@ -232,6 +244,6 @@ export const CnaeSearchForm: React.FC<CnaeSearchFormProps> = ({ onNext, onSelect
                     </button>
                 </div>
             </div>
-        </StepCard>
+        </StepCard >
     );
 };
