@@ -126,19 +126,36 @@ export const CnaeSearchForm: React.FC<CnaeSearchFormProps> = ({ onNext, onSelect
                                     <ChemicalImage agentName={agent.name} />
 
                                     <div style={{ flex: 1 }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                                            <strong style={{ fontSize: '1.1rem', color: '#333' }}>{agent.name}</strong>
-                                            {/* Extract Carc 1A/1B tags for badges */}
-                                            {agent.context.includes('Carc. 1A') && (
-                                                <span style={{ backgroundColor: '#dc3545', color: 'white', padding: '2px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 'bold' }}>Carc. 1A</span>
-                                            )}
-                                            {agent.context.includes('Carc. 1B') && (
-                                                <span style={{ backgroundColor: '#fd7e14', color: 'white', padding: '2px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 'bold' }}>Carc. 1B</span>
-                                            )}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginBottom: '0.5rem' }}>
+                                            <strong style={{ fontSize: '1.2rem', color: '#333' }}>{agent.name}</strong>
+
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.25rem' }}>
+                                                {/* Expanded Badges for Junior Technicians */}
+                                                {agent.context.includes('Carc. 1A') && (
+                                                    <span style={{ backgroundColor: '#dc3545', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
+                                                        ☢️ Cancerígeno 1A (Probado en Humanos)
+                                                    </span>
+                                                )}
+                                                {agent.context.includes('Carc. 1B') && (
+                                                    <span style={{ backgroundColor: '#fd7e14', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
+                                                        ☣️ Cancerígeno 1B (Supuesto en Humanos)
+                                                    </span>
+                                                )}
+                                                {agent.context.includes('Muta. 1') && (
+                                                    <span style={{ backgroundColor: '#6f42c1', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
+                                                        🧬 Mutágeno (Daño Genético Hereditario)
+                                                    </span>
+                                                )}
+                                                {agent.context.includes('Repr. 1') && (
+                                                    <span style={{ backgroundColor: '#e83e8c', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
+                                                        👶 Tóxico para la Reproducción
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
 
-                                        <div style={{ fontSize: '0.85rem', color: '#666', lineHeight: '1.4' }}>
-                                            {agent.context}
+                                        <div style={{ fontSize: '0.9rem', color: '#555', fontStyle: 'italic' }}>
+                                            Referencia INSST: {agent.context}
                                         </div>
                                     </div>
                                     <button
