@@ -2,7 +2,7 @@ import React from 'react';
 
 interface StepCardProps {
     title: string;
-    description?: string;
+    description?: React.ReactNode;
     icon?: React.ReactNode;
     children: React.ReactNode;
     status?: 'default' | 'success' | 'warning' | 'error';
