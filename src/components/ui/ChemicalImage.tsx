@@ -53,8 +53,8 @@ export const ChemicalImage: React.FC<ChemicalImageProps> = ({ agentName, classNa
     if (hasError || !imageUrl) {
         return (
             <div className={`chemical-placeholder ${className}`} style={{
-                width: '100px',
-                height: '100px',
+                width: '100%',
+                height: '100%',
                 backgroundColor: '#f8f9fa',
                 display: 'flex',
                 alignItems: 'center',
@@ -62,7 +62,7 @@ export const ChemicalImage: React.FC<ChemicalImageProps> = ({ agentName, classNa
                 borderRadius: '8px',
                 border: '1px solid #eee',
                 color: '#ccc',
-                fontSize: '2rem'
+                fontSize: '1.5rem'
             }}>
                 🧪
             </div>
