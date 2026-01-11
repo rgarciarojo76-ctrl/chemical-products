@@ -466,7 +466,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -496,7 +496,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -510,7 +510,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -540,7 +540,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -554,7 +554,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -568,7 +568,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -590,7 +590,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -612,7 +612,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -634,7 +634,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -674,7 +674,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -684,7 +684,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -736,7 +736,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -774,7 +774,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -836,7 +836,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -858,7 +858,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -872,7 +872,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -886,7 +886,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -904,7 +904,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -918,7 +918,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -932,7 +932,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -946,7 +946,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -1002,7 +1002,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1024,7 +1024,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1062,7 +1062,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1104,7 +1104,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1142,7 +1142,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1184,7 +1184,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1222,7 +1222,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1260,7 +1260,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1290,7 +1290,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1352,7 +1352,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -1390,7 +1390,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1424,7 +1424,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1458,7 +1458,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1492,7 +1492,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -1664,7 +1664,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -1968,7 +1968,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -2110,7 +2110,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -2152,7 +2152,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -2630,7 +2630,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -2684,7 +2684,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -2738,7 +2738,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -2800,7 +2800,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -2838,7 +2838,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -2872,7 +2872,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -2906,7 +2906,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -2940,7 +2940,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -2974,7 +2974,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -3000,7 +3000,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -3030,7 +3030,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -3060,7 +3060,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -3090,7 +3090,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -3120,7 +3120,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -3150,7 +3150,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -3180,7 +3180,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -3202,7 +3202,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -3212,7 +3212,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -3222,7 +3222,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -3232,7 +3232,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -3242,7 +3242,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -3252,7 +3252,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -3266,7 +3266,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -3276,7 +3276,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -3290,7 +3290,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -3300,7 +3300,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -3314,7 +3314,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -3336,7 +3336,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -3366,7 +3366,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -3540,7 +3540,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -3570,7 +3570,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -3600,7 +3600,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -3630,7 +3630,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -3660,7 +3660,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -3694,7 +3694,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -3852,7 +3852,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -3906,7 +3906,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -3944,7 +3944,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4068,7 +4068,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4102,7 +4102,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4196,7 +4196,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4230,7 +4230,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4306,7 +4306,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4368,7 +4368,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4386,7 +4386,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4458,7 +4458,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4674,7 +4674,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4906,7 +4906,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4954,7 +4954,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -4984,7 +4984,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -5076,7 +5076,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -5128,7 +5128,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -5160,7 +5160,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -5202,7 +5202,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -5354,7 +5354,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -5392,7 +5392,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -5432,7 +5432,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -5480,7 +5480,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -5624,7 +5624,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "TRICLOROETILENO",
@@ -5840,7 +5840,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -5862,7 +5862,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -5880,7 +5880,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -5898,7 +5898,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -5916,7 +5916,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -5934,7 +5934,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -5952,7 +5952,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -5970,7 +5970,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -5988,7 +5988,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -5998,7 +5998,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6008,7 +6008,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6022,7 +6022,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6040,7 +6040,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6050,7 +6050,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6060,7 +6060,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6078,7 +6078,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6092,7 +6092,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6102,7 +6102,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6116,7 +6116,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6130,7 +6130,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6216,7 +6216,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6226,7 +6226,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6236,7 +6236,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6246,7 +6246,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6256,7 +6256,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6266,7 +6266,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6276,7 +6276,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6286,7 +6286,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6296,7 +6296,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6306,7 +6306,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6478,7 +6478,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6492,7 +6492,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6518,7 +6518,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             },
             {
                 "name": "VAPOR ORGANICO",
@@ -6602,7 +6602,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6710,7 +6710,7 @@ export const CNAE_DATA: CnaeEntry[] = [
             },
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6756,7 +6756,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
@@ -6776,7 +6776,7 @@ export const CNAE_DATA: CnaeEntry[] = [
         "agents": [
             {
                 "name": "SILICE",
-                "context": "[Cancerígeno ] SILICE"
+                "context": "[Cancerígeno ] SILICE - Carc. 1B"
             }
         ]
     },
