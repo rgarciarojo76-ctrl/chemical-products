@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { StepCard } from '../../ui/StepCard';
-import { CNAE_DATA, CnaeEntry } from '../../../data/cnaeData';
+import { CNAE_DATA } from '../../../data/cnaeData';
+import type { CnaeEntry } from '../../../data/cnaeData';
 
 interface CnaeSearchFormProps {
     onNext: () => void;
@@ -34,8 +35,6 @@ export const CnaeSearchForm: React.FC<CnaeSearchFormProps> = ({ onNext, onSelect
         <StepCard
             title="Buscador de Agentes por Actividad (INSST)"
             description="Identifica posibles agentes cancerígenos asociados a tu actividad (CNAE) antes de comenzar."
-            currentStep={0}
-            totalSteps={5}
         >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 

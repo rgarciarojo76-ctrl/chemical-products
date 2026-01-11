@@ -11,10 +11,11 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 interface HazardFormProps {
     onAnalyze: (input: HazardInput) => HazardAssessment;
     onNext: () => void;
+    initialData?: HazardInput;
 }
 
-export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext }) => {
-    const [formData, setFormData] = useState<HazardInput>({
+export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext, initialData }) => {
+    const [formData, setFormData] = useState<HazardInput>(initialData || {
         substanceName: '',
         hPhrases: [],
         isMixture: false,
