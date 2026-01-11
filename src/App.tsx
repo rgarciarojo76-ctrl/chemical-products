@@ -8,9 +8,22 @@ import { HygienicEvalForm } from './components/wizard/steps/HygienicEvalForm';
 import { MeasuresForm } from './components/wizard/steps/MeasuresForm';
 import { FinalReport } from './components/wizard/steps/FinalReport';
 
+import { CnaeSearchForm } from './components/wizard/steps/CnaeSearchForm';
+
 function App() {
   const [started, setStarted] = useState(false);
   const engine = useDecisionEngine();
+
+  const handleAgentSelect = (agentName: string) => {
+    // Pre-fill Hazard Input with the selected name
+    // We reuse the existing runHazardAssessment to update the state
+    // We preserve existing input to not overwrite defaults
+    engine.runHazardAssessment({
+      ...engine.state.hazard.input,
+      substanceName: agentName
+    });
+    engine.nextStep();
+  };
 
   if (!started) {
     return (
@@ -46,14 +59,22 @@ function App() {
   return (
     <Layout>
       <WizardContainer
-        currentStep={engine.state.step}
-        totalSteps={5} // Hazard, Exposure Sieve, Hygienic Eval, Measures, Report
+        currentStep={engine.state.step + 1} // +1 for display (Step 1 of 6)
+        totalSteps={6} // Cnae, Hazard, Exposure Sieve, Hygienic Eval, Measures, Report
         title="Evaluación en curso"
       >
+        {engine.state.step === 0 && (
+          <CnaeSearchForm
+            onNext={engine.nextStep}
+            onSelectAgent={handleAgentSelect}
+          />
+        )}
+
         {engine.state.step === 1 && (
           <HazardForm
             onAnalyze={engine.runHazardAssessment}
             onNext={engine.nextStep}
+            initialData={engine.state.hazard.input}
           />
         )}
 
@@ -61,7 +82,7 @@ function App() {
           <ExposureForm
             onAnalyze={engine.runExposureSieveAssessment}
             onNext={engine.nextStep}
-            onFinish={() => engine.goToStep(5)} // Go directly to Report
+            onFinish={() => engine.goToStep(5)} // Go directly to Report (now step 5)
             initialData={engine.state.exposureSieve.input}
             substanceName={engine.state.hazard.input.substanceName}
           />

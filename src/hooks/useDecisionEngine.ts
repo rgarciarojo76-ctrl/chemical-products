@@ -3,7 +3,7 @@ import type { AssessmentState, HazardInput, ExposureSieveInput, HygienicEvalInpu
 import { evaluateHazard, evaluateExposureSieve, evaluateHygienicExposure } from '../utils/engineLogic';
 
 const INITIAL_STATE: AssessmentState = {
-    step: 1,
+    step: 0,
     hazard: {
         input: {
             substanceName: '',
