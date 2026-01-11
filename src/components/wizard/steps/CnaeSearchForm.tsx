@@ -34,20 +34,20 @@ export const CnaeSearchForm: React.FC<CnaeSearchFormProps> = ({ onNext, onSelect
 
     return (
         <StepCard
-            title="Buscador de Productos Químicos Cancerigenos por actividad (Base INSST InfoCarquim)"
-            description={
+            title={
                 <span>
-                    Identifica posibles agentes cancerígenos asociados a tu actividad (CNAE).{' '}
+                    Buscador de Productos Químicos Cancerigenos por actividad{' '}
                     <a
                         href="https://www.insst.es/agentes-quimicos-infocarquim"
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ color: 'var(--color-primary)', textDecoration: 'underline' }}
                     >
-                        https://www.insst.es/agentes-quimicos-infocarquim
+                        (Base INSST InfoCarquim)
                     </a>
                 </span>
             }
+            description="Identifica posibles agentes cancerígenos asociados a tu actividad (CNAE)."
         >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 

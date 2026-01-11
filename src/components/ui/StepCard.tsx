@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface StepCardProps {
-    title: string;
+    title: React.ReactNode;
     description?: React.ReactNode;
     icon?: React.ReactNode;
     children: React.ReactNode;
