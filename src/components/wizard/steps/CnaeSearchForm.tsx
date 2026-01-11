@@ -108,65 +108,67 @@ export const CnaeSearchForm: React.FC<CnaeSearchFormProps> = ({ onNext, onSelect
 
                         <div style={{ display: 'grid', gap: '0.5rem' }}>
 
-                            // ... (inside the map loop)
+                            {/* ... (inside the map loop) */}
 
                             {selectedCnae.agents.map((agent, idx) => (
                                 <div key={idx} style={{
                                     backgroundColor: '#fff',
-                                    padding: '1.5rem',
-                                    borderRadius: '8px',
+                                    padding: '0.75rem 1rem', // Reduced padding
+                                    borderRadius: '6px',
                                     border: '1px solid #e0e0e0',
                                     display: 'flex',
-                                    gap: '1.5rem',
+                                    gap: '1rem',
                                     alignItems: 'center',
-                                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                                    boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                                 }}>
 
-                                    {/* New Image Column */}
-                                    <ChemicalImage agentName={agent.name} />
+                                    {/* New Image Column - Compact */}
+                                    <div style={{ width: '60px', height: '60px', flexShrink: 0 }}>
+                                        <ChemicalImage agentName={agent.name} />
+                                    </div>
 
                                     <div style={{ flex: 1 }}>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginBottom: '0.5rem' }}>
-                                            <strong style={{ fontSize: '1.2rem', color: '#333' }}>{agent.name}</strong>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                                <strong style={{ fontSize: '1rem', color: '#333' }}>{agent.name}</strong>
 
-                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.25rem' }}>
-                                                {/* Expanded Badges for Junior Technicians */}
+                                                {/* Compact Badges */}
                                                 {agent.context.includes('Carc. 1A') && (
-                                                    <span style={{ backgroundColor: '#dc3545', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
-                                                        ☢️ Cancerígeno 1A (Probado en Humanos)
+                                                    <span style={{ backgroundColor: '#dc3545', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 600 }}>
+                                                        ☢️ Carc. 1A (Probado)
                                                     </span>
                                                 )}
                                                 {agent.context.includes('Carc. 1B') && (
-                                                    <span style={{ backgroundColor: '#fd7e14', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
-                                                        ☣️ Cancerígeno 1B (Supuesto en Humanos)
+                                                    <span style={{ backgroundColor: '#fd7e14', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 600 }}>
+                                                        ☣️ Carc. 1B (Supuesto)
                                                     </span>
                                                 )}
                                                 {agent.context.includes('Muta. 1') && (
-                                                    <span style={{ backgroundColor: '#6f42c1', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
-                                                        🧬 Mutágeno (Daño Genético Hereditario)
+                                                    <span style={{ backgroundColor: '#6f42c1', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 600 }}>
+                                                        🧬 Muta.
                                                     </span>
                                                 )}
                                                 {agent.context.includes('Repr. 1') && (
-                                                    <span style={{ backgroundColor: '#e83e8c', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
-                                                        👶 Tóxico para la Reproducción
+                                                    <span style={{ backgroundColor: '#e83e8c', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 600 }}>
+                                                        👶 Repro.
                                                     </span>
                                                 )}
                                             </div>
                                         </div>
 
-                                        <div style={{ fontSize: '0.9rem', color: '#555', fontStyle: 'italic' }}>
-                                            Referencia INSST: {agent.context}
+                                        <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.2rem', lineHeight: '1.2' }}>
+                                            {agent.context}
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => handleSelectAgent(agent.name)}
                                         style={{
-                                            padding: '8px 16px',
-                                            fontSize: '0.9rem',
+                                            padding: '6px 12px',
+                                            fontSize: '0.85rem',
                                             backgroundColor: 'var(--color-primary)', // Use brand color
                                             color: 'white',
                                             border: 'none',
-                                            borderRadius: '6px',
+                                            borderRadius: '4px',
                                             cursor: 'pointer',
                                             fontWeight: 600,
                                             whiteSpace: 'nowrap'

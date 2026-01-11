@@ -70,7 +70,7 @@ export const ChemicalImage: React.FC<ChemicalImageProps> = ({ agentName, classNa
     }
 
     return (
-        <div style={{ position: 'relative', width: '100px', height: '100px', overflow: 'hidden', borderRadius: '8px', backgroundColor: 'white', padding: '4px' }}>
+        <div className={className} style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', borderRadius: '6px', backgroundColor: 'white', padding: '2px' }}>
             <img
                 src={imageUrl}
                 alt={`Estructura de ${agentName}`}
