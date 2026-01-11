@@ -47,7 +47,7 @@ export const CnaeSearchForm: React.FC<CnaeSearchFormProps> = ({ onNext, onSelect
                     </a>
                 </span>
             }
-            description="Identifica posibles agentes cancerígenos asociados a tu actividad (CNAE)."
+            description="Identifica posibles agentes cancerígenos asociados a la actividad del cliente antes de la visita. Una vez allí, confirma su presencia y solicita las Fichas de Datos de Seguridad (FDS) para proceder con la evaluación"
         >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
