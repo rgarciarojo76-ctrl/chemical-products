@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { StepCard } from '../../ui/StepCard';
+import { ChemicalImage } from '../../ui/ChemicalImage';
 import { CNAE_DATA } from '../../../data/cnaeData';
 import type { CnaeEntry } from '../../../data/cnaeData';
 
@@ -106,35 +107,55 @@ export const CnaeSearchForm: React.FC<CnaeSearchFormProps> = ({ onNext, onSelect
                         </h4>
 
                         <div style={{ display: 'grid', gap: '0.5rem' }}>
+
+                            // ... (inside the map loop)
+
                             {selectedCnae.agents.map((agent, idx) => (
                                 <div key={idx} style={{
                                     backgroundColor: '#fff',
-                                    padding: '10px',
-                                    borderRadius: '6px',
+                                    padding: '1.5rem',
+                                    borderRadius: '8px',
                                     border: '1px solid #e0e0e0',
                                     display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
+                                    gap: '1.5rem',
+                                    alignItems: 'center',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
                                 }}>
-                                    <div>
-                                        <strong>{agent.name}</strong>
-                                        <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '2px' }}>
+
+                                    {/* New Image Column */}
+                                    <ChemicalImage agentName={agent.name} />
+
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                                            <strong style={{ fontSize: '1.1rem', color: '#333' }}>{agent.name}</strong>
+                                            {/* Extract Carc 1A/1B tags for badges */}
+                                            {agent.context.includes('Carc. 1A') && (
+                                                <span style={{ backgroundColor: '#dc3545', color: 'white', padding: '2px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 'bold' }}>Carc. 1A</span>
+                                            )}
+                                            {agent.context.includes('Carc. 1B') && (
+                                                <span style={{ backgroundColor: '#fd7e14', color: 'white', padding: '2px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 'bold' }}>Carc. 1B</span>
+                                            )}
+                                        </div>
+
+                                        <div style={{ fontSize: '0.85rem', color: '#666', lineHeight: '1.4' }}>
                                             {agent.context}
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => handleSelectAgent(agent.name)}
                                         style={{
-                                            padding: '6px 12px',
-                                            fontSize: '0.8rem',
-                                            backgroundColor: '#28a745',
+                                            padding: '8px 16px',
+                                            fontSize: '0.9rem',
+                                            backgroundColor: 'var(--color-primary)', // Use brand color
                                             color: 'white',
                                             border: 'none',
-                                            borderRadius: '4px',
-                                            cursor: 'pointer'
+                                            borderRadius: '6px',
+                                            cursor: 'pointer',
+                                            fontWeight: 600,
+                                            whiteSpace: 'nowrap'
                                         }}
                                     >
-                                        Evaluar este Agente →
+                                        Evaluar →
                                     </button>
                                 </div>
                             ))}
