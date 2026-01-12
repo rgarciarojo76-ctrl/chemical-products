@@ -33,6 +33,7 @@ export interface HazardInput {
             flowRate: string;
             minTime: string;
             methodUrl?: string;
+            videoUrl?: string;
         };
     };
 }
@@ -65,6 +66,7 @@ export interface HygienicEvalInput {
         flowRate: string;
         minTime: string;
         methodUrl?: string;
+        videoUrl?: string;
     };
     strategyType?: 'continuous' | 'peaks' | 'variable';
 }

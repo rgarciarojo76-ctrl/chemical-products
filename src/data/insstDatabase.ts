@@ -15,6 +15,7 @@ export interface ChemicalData {
         flowRate: string; // e.g., 0.2 L/min
         minTime: string; // e.g., 120 min
         methodUrl?: string; // Link to INSST PDF
+        videoUrl?: string; // Link to APA Video
     };
     notes: string;
 }
@@ -36,7 +37,8 @@ export const INSST_DATABASE: Record<string, ChemicalData> = {
             technique: 'HPLC-UV',
             flowRate: '0.2 L/min',
             minTime: '15 min (Corta) - 120 min (Diaria)',
-            methodUrl: 'https://www.insst.es/documents/94886/358630/MTA+MA+062+A16+Determinaci%C3%B3n+de+formaldeh%C3%ADdo+en+aire+-+M%C3%A9todo+de+adsorci%C3%B3n+en+gel+de+s%C3%ADlice+e+impregnado+con+2,4-dinitrofenilhidracina,+desorci%C3%B3n+con+acetonitrilo.pdf'
+            methodUrl: 'https://www.insst.es/documents/94886/358630/MTA+MA+062+A16+Determinaci%C3%B3n+de+formaldeh%C3%ADdo+en+aire+-+M%C3%A9todo+de+adsorci%C3%B3n+en+gel+de+s%C3%ADlice+e+impregnado+con+2,4-dinitrofenilhidracina,+desorci%C3%B3n+con+acetonitrilo.pdf',
+            videoUrl: 'https://youtu.be/ulD_fwpP2YU'
         },
         notes: 'Sen, C1B. VLA-EC aplicable.'
     },
@@ -53,7 +55,8 @@ export const INSST_DATABASE: Record<string, ChemicalData> = {
             support: 'Tubo Carbón Activo (100/50 mg)',
             technique: 'Cromatografía de Gases (GC-FID)',
             flowRate: '0.2 L/min',
-            minTime: '120 min'
+            minTime: '120 min',
+            videoUrl: 'https://youtu.be/ulD_fwpP2YU'
         },
         notes: 'Vía dérmica, C1A, M1B.'
     },
@@ -69,7 +72,8 @@ export const INSST_DATABASE: Record<string, ChemicalData> = {
             support: 'Bomba + Ciclón + Filtro PVC 5µm',
             technique: 'Difracción Rayos X (DRX) o IR',
             flowRate: '2.5 L/min (según ciclón)',
-            minTime: 'Jornada Completa (>80%)'
+            minTime: 'Jornada Completa (>80%)',
+            videoUrl: 'https://youtu.be/RH2Nl4Yfhvg'
         },
         notes: 'Cancerígeno (C1A). Norma UNE EN 481.'
     },
@@ -102,7 +106,8 @@ export const INSST_DATABASE: Record<string, ChemicalData> = {
             support: 'Tubo Carbón Activo',
             technique: 'Cromatografía Gases (GC)',
             flowRate: '0.1 - 0.2 L/min',
-            minTime: '120 min'
+            minTime: '120 min',
+            videoUrl: 'https://youtu.be/ulD_fwpP2YU'
         },
         notes: 'C1B, M1B'
     }

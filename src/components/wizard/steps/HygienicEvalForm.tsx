@@ -132,6 +132,27 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                                 📥 Ver Método Oficial INSST
                             </a>
                         )}
+                        {formData.samplingDetails?.videoUrl && (
+                            <a
+                                href={formData.samplingDetails.videoUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    backgroundColor: '#d9441e', // APA Orange-ish
+                                    color: 'white',
+                                    textDecoration: 'none',
+                                    fontSize: '0.8rem',
+                                    padding: '0.25rem 0.75rem',
+                                    borderRadius: '4px',
+                                    fontWeight: 500,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.25rem'
+                                }}
+                            >
+                                📹 Ver Video Muestreo
+                            </a>
+                        )}
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div>
