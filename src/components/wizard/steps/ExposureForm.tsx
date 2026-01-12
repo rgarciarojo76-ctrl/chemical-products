@@ -171,7 +171,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
 
     return (
         <StepCard
-            title="Módulo B: Determinación de Presencia | Exposición"
+            title="Módulo B: Determinación de la presencia y/o exposición a agentes cancerígenos"
             description="Evaluamos la forma de presentación y uso para descartar exposiciones no significativas."
             icon="🛡️"
         >
