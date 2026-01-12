@@ -29,6 +29,58 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
         >
 
 
+            {/* 1. Caracterización Básica */}
+            <div className="form-group mb-4">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', borderBottom: '2px solid #0056b3', paddingBottom: '0.25rem' }}>
+                    <h4 style={{ fontSize: '1rem', margin: 0, color: '#0056b3' }}>
+                        1. Caracterización Básica
+                    </h4>
+                    <a
+                        href="https://www.navarra.gob.es/NR/rdonlyres/C4878B29-DA35-49FB-9845-517AFA7A5D3C/457874/Caracterizacionbasica.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: '0.8rem', color: '#009bdb', textDecoration: 'none', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
+                    >
+                        📚 Guía Oficial Caracterización
+                    </a>
+                </div>
+
+                {/* Educational Guide for Junior Techs */}
+                <div style={{ backgroundColor: '#eef6fc', padding: '1rem', borderRadius: '6px', marginBottom: '1rem', borderLeft: '4px solid #009bdb' }}>
+                    <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#0056b3' }}>ℹ️ Guía Rápida para Técnico Junior:</strong>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.85rem' }}>
+                        <div>
+                            <strong>1. Identificación A.Q.:</strong>
+                            <ul style={{ paddingLeft: '1.2rem', margin: '0.2rem 0' }}>
+                                <li>Revisar FDS, Etiquetado y VLAs.</li>
+                                <li>Identificar A.Q. más peligrosos.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong>2. Factores Exposición:</strong>
+                            <ul style={{ paddingLeft: '1.2rem', margin: '0.2rem 0' }}>
+                                <li>Revisar Tareas, Procesos y Duración.</li>
+                                <li>Definir Trabajadores Implicados (GES).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: '#f8f9fa', padding: '1rem', borderRadius: '8px' }}>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#555' }}>Agente Químico</label>
+                        <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{substanceName || 'No identificado'}</div>
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#555' }}>VLA-ED (Valor Límite Ambiental)</label>
+                        <div style={{ fontWeight: 'bold', fontSize: '1rem', color: formData.vla ? '#333' : '#999' }}>
+                            {formData.vla ? `${formData.vla} mg/m³` : '---'}
+                        </div>
+                        {!formData.vla && <small style={{ color: 'orange' }}>No disponible en B.D.</small>}
+                    </div>
+                </div>
+            </div>
+
             {/* 2. Strategy & Sampling (Planning) */}
             <div className="form-group mb-4">
                 <h4 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#0056b3', borderBottom: '2px solid #0056b3', paddingBottom: '0.25rem' }}>
@@ -106,58 +158,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                                 style={{ width: '100%', padding: '0.3rem', border: '1px solid #ccc', borderRadius: '4px' }}
                             />
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* 1. Basic Characterization & Limits (Moved) */}
-            <div className="form-group mb-4">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', borderBottom: '2px solid #0056b3', paddingBottom: '0.25rem' }}>
-                    <h4 style={{ fontSize: '1rem', margin: 0, color: '#0056b3' }}>
-                        1. Caracterización Básica
-                    </h4>
-                    <a
-                        href="https://www.navarra.gob.es/NR/rdonlyres/C4878B29-DA35-49FB-9845-517AFA7A5D3C/457874/Caracterizacionbasica.pdf"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ fontSize: '0.8rem', color: '#009bdb', textDecoration: 'none', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
-                    >
-                        📚 Guía Oficial Caracterización
-                    </a>
-                </div>
-
-                {/* Educational Guide for Junior Techs */}
-                <div style={{ backgroundColor: '#eef6fc', padding: '1rem', borderRadius: '6px', marginBottom: '1rem', borderLeft: '4px solid #009bdb' }}>
-                    <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#0056b3' }}>ℹ️ Guía Rápida para Técnico Junior:</strong>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.85rem' }}>
-                        <div>
-                            <strong>1. Identificación A.Q.:</strong>
-                            <ul style={{ paddingLeft: '1.2rem', margin: '0.2rem 0' }}>
-                                <li>Revisar FDS, Etiquetado y VLAs.</li>
-                                <li>Identificar A.Q. más peligrosos.</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <strong>2. Factores Exposición:</strong>
-                            <ul style={{ paddingLeft: '1.2rem', margin: '0.2rem 0' }}>
-                                <li>Revisar Tareas, Procesos y Duración.</li>
-                                <li>Definir Trabajadores Implicados (GES).</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: '#f8f9fa', padding: '1rem', borderRadius: '8px' }}>
-                    <div>
-                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#555' }}>Agente Químico</label>
-                        <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{substanceName || 'No identificado'}</div>
-                    </div>
-                    <div>
-                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#555' }}>VLA-ED (Valor Límite Ambiental)</label>
-                        <div style={{ fontWeight: 'bold', fontSize: '1rem', color: formData.vla ? '#333' : '#999' }}>
-                            {formData.vla ? `${formData.vla} mg/m³` : '---'}
-                        </div>
-                        {!formData.vla && <small style={{ color: 'orange' }}>No disponible en B.D.</small>}
                     </div>
                 </div>
             </div>
