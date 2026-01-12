@@ -32,12 +32,12 @@ export const INSST_DATABASE: Record<string, ChemicalData> = {
         },
         suggestedLod: 0.037, // 10% of 0.37
         sampling: {
-            method: 'MTA/MA-062/A16',
+            method: 'MTA/MA-062/A23',
             support: 'Tubo Silica Gel + 2,4-DNPH',
             technique: 'HPLC-UV',
             flowRate: '0.2 L/min',
             minTime: '15 min (Corta) - 120 min (Diaria)',
-            methodUrl: 'https://www.insst.es/documents/94886/358630/MTA+MA+062+A16+Determinaci%C3%B3n+de+formaldeh%C3%ADdo+en+aire+-+M%C3%A9todo+de+adsorci%C3%B3n+en+gel+de+s%C3%ADlice+e+impregnado+con+2,4-dinitrofenilhidracina,+desorci%C3%B3n+con+acetonitrilo.pdf',
+            methodUrl: 'https://www.insst.es/documents/94886/789584/MTA-MA-062-A23.pdf/bf042c0f-6240-a158-7e4a-446777083042?t=1701344434220',
             videoUrl: 'https://youtu.be/ulD_fwpP2YU'
         },
         notes: 'Sen, C1B. VLA-EC aplicable.'
