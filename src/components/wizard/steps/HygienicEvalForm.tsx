@@ -47,23 +47,15 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
 
                 {/* Educational Guide for Junior Techs */}
                 <div style={{ backgroundColor: '#eef6fc', padding: '1rem', borderRadius: '6px', marginBottom: '1rem', borderLeft: '4px solid #009bdb' }}>
-                    <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#0056b3' }}>ℹ️ Criterios técnicos básicos</strong>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.85rem' }}>
-                        <div>
-                            <strong>1. Identificación A.Q.:</strong>
-                            <ul style={{ paddingLeft: '1.2rem', margin: '0.2rem 0' }}>
-                                <li>Revisar FDS, Etiquetado y VLAs.</li>
-                                <li>Identificar A.Q. más peligrosos.</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <strong>2. Factores Exposición:</strong>
-                            <ul style={{ paddingLeft: '1.2rem', margin: '0.2rem 0' }}>
-                                <li>Revisar Tareas, Procesos y Duración.</li>
-                                <li>Definir Trabajadores Implicados (GES).</li>
-                            </ul>
-                        </div>
-                    </div>
+                    <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#0056b3' }}>ℹ️ Criterios técnicos básicos (Factores de Exposición):</strong>
+                    <ul style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem 2rem', paddingLeft: '1.2rem', margin: 0, fontSize: '0.85rem' }}>
+                        <li><strong>Organización:</strong> Tareas, jornada, funciones y carga.</li>
+                        <li><strong>Proceso:</strong> Técnicas, fuentes de emisión y producción.</li>
+                        <li><strong>Entorno:</strong> Distribución, orden y limpieza.</li>
+                        <li><strong>Medidas:</strong> Ventilación, procedimientos y zonas.</li>
+                        <li><strong>Temporalidad:</strong> Duración, frecuencia y variaciones.</li>
+                        <li><strong>Personal:</strong> Comportamiento y hábitos de trabajo.</li>
+                    </ul>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: '#f8f9fa', padding: '1rem', borderRadius: '8px' }}>
