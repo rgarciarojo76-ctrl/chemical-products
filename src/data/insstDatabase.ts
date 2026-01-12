@@ -37,7 +37,7 @@ export const INSST_DATABASE: Record<string, ChemicalData> = {
             technique: 'HPLC-UV',
             flowRate: '0.2 L/min',
             minTime: '15 min (Corta) - 120 min (Diaria)',
-            methodUrl: 'https://www.insst.es/documents/94886/789584/MTA-MA-062-A23.pdf/bf042c0f-6240-a158-7e4a-446777083042?t=1701344434220',
+            methodUrl: 'https://www.insst.es/documents/94886/359043/MA_062_A23.pdf',
             videoUrl: 'https://youtu.be/ulD_fwpP2YU'
         },
         notes: 'Sen, C1B. VLA-EC aplicable.'
