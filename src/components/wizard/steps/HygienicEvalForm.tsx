@@ -105,78 +105,153 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                     )}
                 </div>
 
-                {/* Sampling Matrix */}
-                <div style={{ padding: '1rem', backgroundColor: '#f0f7ff', borderRadius: '8px', border: '1px solid #d0e7ff' }}>
-                    <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#0056b3' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <span>📋</span> Método de Captación y Análisis
+                {/* Sampling Matrix - Redesigned */}
+                <div style={{
+                    backgroundColor: '#ffffff',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+                    border: '1px solid #e0e6ed',
+                    overflow: 'hidden',
+                    marginTop: '1rem',
+                    marginBottom: '1rem'
+                }}>
+                    {/* Card Header */}
+                    <div style={{
+                        backgroundColor: '#f8fafc',
+                        padding: '1rem 1.5rem',
+                        borderBottom: '1px solid #e2e8f0',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        gap: '1rem'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <div style={{
+                                backgroundColor: '#e0f2fe',
+                                padding: '0.5rem',
+                                borderRadius: '8px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <span style={{ fontSize: '1.25rem' }}>📋</span>
+                            </div>
+                            <div>
+                                <h5 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, color: '#1e293b' }}>
+                                    Método de Captación y Análisis
+                                </h5>
+                                <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Protocolo oficial de higiene industrial</span>
+                            </div>
                         </div>
-                        {formData.samplingDetails?.methodUrl && (
-                            <a
-                                href={formData.samplingDetails.methodUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    backgroundColor: '#0056b3',
-                                    color: 'white',
-                                    textDecoration: 'none',
-                                    fontSize: '0.8rem',
-                                    padding: '0.25rem 0.75rem',
-                                    borderRadius: '4px',
-                                    fontWeight: 500,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.25rem'
-                                }}
-                            >
-                                📥 Ver Método Oficial INSST
-                            </a>
-                        )}
-                        {formData.samplingDetails?.videoUrl && (
-                            <a
-                                href={formData.samplingDetails.videoUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    backgroundColor: '#d9441e', // APA Orange-ish
-                                    color: 'white',
-                                    textDecoration: 'none',
-                                    fontSize: '0.8rem',
-                                    padding: '0.25rem 0.75rem',
-                                    borderRadius: '4px',
-                                    fontWeight: 500,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.25rem'
-                                }}
-                            >
-                                📹 Ver Video Muestreo
-                            </a>
-                        )}
+
+                        <div style={{ display: 'flex', gap: '0.75rem' }}>
+                            {formData.samplingDetails?.methodUrl && (
+                                <a
+                                    href={formData.samplingDetails.methodUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        backgroundColor: '#0f172a',
+                                        color: 'white',
+                                        textDecoration: 'none',
+                                        fontSize: '0.85rem',
+                                        padding: '0.5rem 1rem',
+                                        borderRadius: '6px',
+                                        fontWeight: 600,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                >
+                                    <span>📄</span> Ver Método INSST
+                                </a>
+                            )}
+                            {formData.samplingDetails?.videoUrl && (
+                                <a
+                                    href={formData.samplingDetails.videoUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        backgroundColor: '#ea580c', // Vibrant Orange
+                                        color: 'white',
+                                        textDecoration: 'none',
+                                        fontSize: '0.85rem',
+                                        padding: '0.5rem 1rem',
+                                        borderRadius: '6px',
+                                        fontWeight: 600,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        boxShadow: '0 2px 4px rgba(234, 88, 12, 0.25)',
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                >
+                                    <span>🎥</span> Video Guía
+                                </a>
+                            )}
+                        </div>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Soporte</label>
-                            <div style={{ width: '100%', padding: '0.4rem', border: '1px solid #e0e0e0', borderRadius: '4px', backgroundColor: '#fff', fontSize: '0.9rem', color: '#333' }}>
-                                {formData.samplingDetails?.support || 'Tubo Silica Gel + 2,4-DNPH'}
+
+                    {/* Card Content - Metrics Grid */}
+                    <div style={{
+                        padding: '1.5rem',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                        gap: '1.5rem',
+                        backgroundColor: '#fff'
+                    }}>
+                        {/* Metric 1 */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748b', fontWeight: 700 }}>
+                                Soporte de Muestreo
+                            </label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', backgroundColor: '#f1f5f9', borderRadius: '8px' }}>
+                                <span style={{ fontSize: '1.5rem' }}>🧪</span>
+                                <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#334155', lineHeight: '1.3' }}>
+                                    {formData.samplingDetails?.support || 'Consultar Método'}
+                                </span>
                             </div>
                         </div>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Técnica</label>
-                            <div style={{ width: '100%', padding: '0.4rem', border: '1px solid #e0e0e0', borderRadius: '4px', backgroundColor: '#fff', fontSize: '0.9rem', color: '#333' }}>
-                                {formData.samplingDetails?.technique || 'HPLC-UV'}
+
+                        {/* Metric 2 */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748b', fontWeight: 700 }}>
+                                Técnica Analítica
+                            </label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', backgroundColor: '#f1f5f9', borderRadius: '8px' }}>
+                                <span style={{ fontSize: '1.5rem' }}>🔬</span>
+                                <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#334155', lineHeight: '1.3' }}>
+                                    {formData.samplingDetails?.technique || 'Consultar Método'}
+                                </span>
                             </div>
                         </div>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Caudal (l/min)</label>
-                            <div style={{ width: '100%', padding: '0.4rem', border: '1px solid #e0e0e0', borderRadius: '4px', backgroundColor: '#fff', fontSize: '0.9rem', color: '#333' }}>
-                                {formData.samplingDetails?.flowRate || '0.2 L/min'}
+
+                        {/* Metric 3 */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748b', fontWeight: 700 }}>
+                                Caudal de Bomba
+                            </label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', backgroundColor: '#f1f5f9', borderRadius: '8px' }}>
+                                <span style={{ fontSize: '1.5rem' }}>💨</span>
+                                <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#334155', lineHeight: '1.3' }}>
+                                    {formData.samplingDetails?.flowRate || '---'}
+                                </span>
                             </div>
                         </div>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Tiempo Mín.</label>
-                            <div style={{ width: '100%', padding: '0.4rem', border: '1px solid #e0e0e0', borderRadius: '4px', backgroundColor: '#fff', fontSize: '0.9rem', color: '#333' }}>
-                                {formData.samplingDetails?.minTime || '15 min (Corta) - 120 min (Diaria)'}
+
+                        {/* Metric 4 */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748b', fontWeight: 700 }}>
+                                Tiempo Mín. Muestreo
+                            </label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', backgroundColor: '#f1f5f9', borderRadius: '8px' }}>
+                                <span style={{ fontSize: '1.5rem' }}>⏱️</span>
+                                <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#334155', lineHeight: '1.3' }}>
+                                    {formData.samplingDetails?.minTime || '---'}
+                                </span>
                             </div>
                         </div>
                     </div>
