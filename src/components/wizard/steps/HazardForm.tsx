@@ -492,8 +492,8 @@ export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext, initi
                         borderRadius: '6px'
                     }}>
                         <h4 style={{ color: result.isHazardous ? '#856404' : '#155724' }}>
-                            {result.isHazardous ? 'Agente CMR Confirmado' :
-                                result.requiresZeroExposure ? 'Principio de Precaución' : 'No clasificado como CMR'}
+                            {result.isHazardous ? 'Agente Cancerígeno, Mutágeno o Reprotóxico Confirmado' :
+                                result.requiresZeroExposure ? 'Principio de Precaución' : 'No clasificado como Cancerígeno, Mutágeno o Reprotóxico'}
                         </h4>
 
                         {result.justifications.map((just, idx) => (
