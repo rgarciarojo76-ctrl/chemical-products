@@ -58,19 +58,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                     </ul>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: '#f8f9fa', padding: '1rem', borderRadius: '8px' }}>
-                    <div>
-                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#555' }}>Agente Químico</label>
-                        <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{substanceName || 'No identificado'}</div>
-                    </div>
-                    <div>
-                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#555' }}>VLA-ED (Valor Límite Ambiental)</label>
-                        <div style={{ fontWeight: 'bold', fontSize: '1rem', color: formData.vla ? '#333' : '#999' }}>
-                            {formData.vla ? `${formData.vla} mg/m³` : '---'}
-                        </div>
-                        {!formData.vla && <small style={{ color: 'orange' }}>No disponible en B.D.</small>}
-                    </div>
-                </div>
+
             </div>
 
             {/* 2. Strategy & Sampling (Planning) */}
@@ -154,10 +142,36 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                 </div>
             </div>
 
-            {/* 3. Results (Execution) */}
+            {/* 3. VLA Section (New) */}
+            <div className="form-group mb-4">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', borderBottom: '2px solid #0056b3', paddingBottom: '0.25rem' }}>
+                    <h4 style={{ fontSize: '1rem', margin: 0, color: '#0056b3' }}>
+                        3. Valor Límite Ambiental
+                    </h4>
+                    <span style={{ fontSize: '0.8rem', color: '#666', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        📖 Ref: Límites de Exposición Profesional (INSST)
+                    </span>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: '#f8f9fa', padding: '1rem', borderRadius: '8px' }}>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#555' }}>Agente Químico</label>
+                        <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{substanceName || 'No identificado'}</div>
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#555' }}>VLA-ED (Valor Límite Ambiental)</label>
+                        <div style={{ fontWeight: 'bold', fontSize: '1rem', color: formData.vla ? '#333' : '#999' }}>
+                            {formData.vla ? `${formData.vla} mg/m³` : '---'}
+                        </div>
+                        {!formData.vla && <small style={{ color: 'orange' }}>No disponible en B.D.</small>}
+                    </div>
+                </div>
+            </div>
+
+            {/* 4. Results (Renumbered) */}
             <div className="form-group mb-4">
                 <h4 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#0056b3', borderBottom: '2px solid #0056b3', paddingBottom: '0.25rem' }}>
-                    3. Resultados de la Medición
+                    4. Resultados de la Medición
                 </h4>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
                     <div>
@@ -207,7 +221,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                             fontWeight: 'bold'
                         }}
                     >
-                        4. Verificar Conformidad (Test Preliminar)
+                        5. Verificar Conformidad (Test Preliminar)
                     </button>
                 ) : (
                     <div className={`result-box`} style={{
