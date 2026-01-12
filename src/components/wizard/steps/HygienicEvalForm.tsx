@@ -199,7 +199,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                     <div style={{
                         padding: '1.5rem',
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                        gridTemplateColumns: '1fr 1fr', // Enforce 2x2 grid as requested
                         gap: '1.5rem',
                         backgroundColor: '#fff'
                     }}>
