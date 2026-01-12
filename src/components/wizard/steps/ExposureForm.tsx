@@ -55,7 +55,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
             // --- Title Section ---
             doc.setFont("helvetica", "bold");
             doc.setFontSize(14);
-            doc.setTextColor(0, 51, 102); // ASPY Blue equivalent
+            doc.setTextColor(0, 119, 168); // ASPY Corporate Dark Blue (#0077a8)
             doc.text("INFORME TÉCNICO JUSTIFICATIVO", pageWidth / 2, 25, { align: "center" });
 
             doc.setFontSize(10);
@@ -82,7 +82,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
             let y = 75;
             doc.setFont("helvetica", "bold");
             doc.setFontSize(11);
-            doc.setTextColor(0, 51, 102); // Blue
+            doc.setTextColor(0, 155, 219); // ASPY Corporate Primary (#009bdb)
             doc.text("1. IDENTIFICACIÓN DE LA SITUACIÓN", 20, y);
             doc.setDrawColor(200, 200, 200);
             doc.line(20, y + 2, 190, y + 2);
@@ -98,7 +98,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
             // --- 2. Justificación Técnica ---
             doc.setFont("helvetica", "bold");
             doc.setFontSize(11);
-            doc.setTextColor(0, 51, 102);
+            doc.setTextColor(0, 155, 219); // ASPY Corporate Primary (#009bdb)
             doc.text("2. JUSTIFICACIÓN TÉCNICA (Criterio Higiénico)", 20, y);
             doc.line(20, y + 2, 190, y + 2);
             y += 10;
@@ -131,7 +131,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
             y += 5;
             doc.setFont("helvetica", "bold");
             doc.setFontSize(11);
-            doc.setTextColor(0, 51, 102);
+            doc.setTextColor(0, 155, 219); // ASPY Corporate Primary (#009bdb)
             doc.text("3. CONCLUSIÓN JURÍDICA", 20, y);
             doc.line(20, y + 2, 190, y + 2);
             y += 10;
