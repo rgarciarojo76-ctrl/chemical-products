@@ -462,7 +462,7 @@ export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext, initi
                             onChange={e => setFormData({ ...formData, concentration: parseFloat(e.target.value) })}
                         />
                         <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.25rem' }}>
-                            Si es menor al 0.1% (C/M) o 0.3% (R), se evaluará principio de precaución.
+                            Nota Técnica: El límite legal de clasificación es 0.1% para Cancerígenos/Mutágenos y 0.3% para Reprotóxicos. Por debajo de estos valores, se emitirá una recomendación de precaución.
                         </p>
                     </div>
                 )}
