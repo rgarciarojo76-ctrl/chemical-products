@@ -36,12 +36,12 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                         1. Caracterización Básica
                     </h4>
                     <a
-                        href="https://www.navarra.gob.es/NR/rdonlyres/C4878B29-DA35-49FB-9845-517AFA7A5D3C/457874/Caracterizacionbasica.pdf"
+                        href="https://files.infocentre.io/files/docs_clients/3646_2008110792_2318118_UNE-EN%20689_2019.pdf"
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ fontSize: '0.8rem', color: '#009bdb', textDecoration: 'none', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
                     >
-                        📚 Guía Oficial Caracterización
+                        📚 Norma UNE 689
                     </a>
                 </div>
 
