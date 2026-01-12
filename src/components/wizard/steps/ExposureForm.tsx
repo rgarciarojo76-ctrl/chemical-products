@@ -55,7 +55,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
             // --- Title Section ---
             doc.setFont("helvetica", "bold");
             doc.setFontSize(14);
-            doc.setTextColor(0, 119, 168); // ASPY Corporate Dark Blue (#0077a8)
+            doc.setTextColor(0, 155, 219); // ASPY Corporate Primary (#009bdb)
             doc.text("INFORME TÉCNICO JUSTIFICATIVO", pageWidth / 2, 25, { align: "center" });
 
             doc.setFontSize(10);
@@ -88,11 +88,21 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
             doc.line(20, y + 2, 190, y + 2);
             y += 10;
 
+            // Map physical forms to Spanish
+            const formMap: Record<string, string> = {
+                'solid_massive': 'Sólido Masivo / Aleación (Pieza compacta)',
+                'solid_dust': 'Sólido Pulvurulento / Polvo',
+                'liquid_low_volatility': 'Líquido (Baja volatilidad)',
+                'liquid_high_volatility': 'Líquido (Alta volatilidad / Aerosol)',
+                'gas': 'Gas / Vapor'
+            };
+            const formText = formData.physicalForm ? formMap[formData.physicalForm] || formData.physicalForm : 'No detectada';
+
             doc.setFont("helvetica", "normal");
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
             doc.text(`• Agente Químico: ${substanceName || "(No identificado)"}`, 25, y); y += 6;
-            doc.text(`• Forma Física Detectada: ${formData.physicalForm}`, 25, y); y += 6;
+            doc.text(`• Forma Física Detectada: ${formText}`, 25, y); y += 6;
             doc.text(`• ¿Contacto Directo / Liberación?: ${formData.hasContact ? 'SÍ' : 'NO'}`, 25, y); y += 12;
 
             // --- 2. Justificación Técnica ---
@@ -110,13 +120,19 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
             doc.text(doc.splitTextToSize(introText, 170), 20, y);
             y += 12;
 
-            // Quote Box
+            // Quote Box with Translation Logic
             doc.setFillColor(242, 242, 242); // Gray background for quote
             doc.rect(25, y, 160, 18, 'F');
             doc.setFont("helvetica", "italic");
             doc.setFontSize(9);
             doc.setTextColor(80, 80, 80);
-            const quote = "\"Cuando el agente se presenta en forma de artículo sólido masivo... se considera que la Vía Inhalatoria es NO RELEVANTE.\"";
+
+            // Dynamic quote based on form
+            let quote = "\"Cuando el agente se presenta en forma de artículo sólido masivo... se considera que la Vía Inhalatoria es NO RELEVANTE.\"";
+            if (formData.physicalForm !== 'solid_massive') {
+                quote = "\"No existe exposición por vía inhalatoria ni dérmica relevante al no haber contacto directo ni liberación de agente (Sistema Cerrado / Sin uso intencional).\"";
+            }
+
             doc.text(doc.splitTextToSize(quote, 150), 30, y + 6);
             y += 24;
 
@@ -125,7 +141,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
             doc.setTextColor(0, 0, 0);
             const dermalText = "Asimismo, al no existir contacto directo continuo o tratarse de un sistema donde la matriz del material impide la biodisponibilidad, se descarta la absorción dérmica.";
             doc.text(doc.splitTextToSize(dermalText, 170), 20, y);
-            y += 12;
+            y += 15;
 
             // --- 3. Conclusión ---
             y += 5;
