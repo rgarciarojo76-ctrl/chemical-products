@@ -59,6 +59,7 @@ function App() {
   return (
     <Layout>
       <WizardContainer
+        key={engine.state.step}
         currentStep={engine.state.step + 1} // +1 for display (Step 1 of 6)
         totalSteps={6} // Cnae, Hazard, Exposure Sieve, Hygienic Eval, Measures, Report
         title="Evaluación en curso"

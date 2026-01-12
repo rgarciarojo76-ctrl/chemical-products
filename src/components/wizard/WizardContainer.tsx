@@ -27,7 +27,7 @@ export const WizardContainer: React.FC<WizardContainerProps> = ({
                     color: 'var(--color-text-light)',
                     fontWeight: 500
                 }}>
-                    <span>Paso {currentStep} de {totalSteps}</span>
+                    <span>Fase {currentStep} de {totalSteps}</span>
                     <span>{title}</span>
                 </div>
                 <div style={{
