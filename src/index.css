@@ -73,9 +73,9 @@ button {
 
 /* Utilities */
 .container {
-  max-width: 1600px;
+  max-width: 98vw;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  padding: 0 var(--spacing-sm);
 }
 
 .card {
