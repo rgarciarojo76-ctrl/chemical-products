@@ -61,10 +61,23 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
 
             </div>
 
-            {/* 2. Strategy & Sampling (Planning) */}
+            {/* 2. Similar Exposure Groups (GES) */}
             <div className="form-group mb-4">
                 <h4 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#0056b3', borderBottom: '2px solid #0056b3', paddingBottom: '0.25rem' }}>
-                    2. Estrategia de Medición (UNE-EN 689)
+                    2. Grupos de exposición similar
+                </h4>
+                <div style={{ backgroundColor: '#eef6fc', padding: '1rem', borderRadius: '6px', marginBottom: '1rem', borderLeft: '4px solid #009bdb' }}>
+                    <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#0056b3' }}>ℹ️ Criterios técnicos básicos (GES)</strong>
+                    <p style={{ fontSize: '0.85rem', margin: 0, color: '#333', lineHeight: '1.4' }}>
+                        Grupo de trabajadores que tienen el mismo perfil de exposición para el agente químico estudiado, debido a la similitud y frecuencia de las tareas realizadas, los procesos y los materiales con los que trabajan y a la similitud de la manera que realizan las tareas.
+                    </p>
+                </div>
+            </div>
+
+            {/* 3. Strategy & Sampling (Planning) */}
+            <div className="form-group mb-4">
+                <h4 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#0056b3', borderBottom: '2px solid #0056b3', paddingBottom: '0.25rem' }}>
+                    3. Estrategia de Medición (UNE-EN 689)
                 </h4>
 
                 {/* Exposure Profile */}
@@ -142,11 +155,11 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                 </div>
             </div>
 
-            {/* 3. VLA Section (New) */}
+            {/* 4. VLA Section */}
             <div className="form-group mb-4">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', borderBottom: '2px solid #0056b3', paddingBottom: '0.25rem' }}>
                     <h4 style={{ fontSize: '1rem', margin: 0, color: '#0056b3' }}>
-                        3. Valor Límite Ambiental
+                        4. Valor Límite Ambiental
                     </h4>
                     <span style={{ fontSize: '0.8rem', color: '#666', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         📖 Ref: Límites de Exposición Profesional (INSST)
@@ -168,10 +181,10 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                 </div>
             </div>
 
-            {/* 4. Results (Renumbered) */}
+            {/* 5. Results (Renumbered) */}
             <div className="form-group mb-4">
                 <h4 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#0056b3', borderBottom: '2px solid #0056b3', paddingBottom: '0.25rem' }}>
-                    4. Resultados de la Medición
+                    5. Resultados de la Medición
                 </h4>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
                     <div>
@@ -221,7 +234,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                             fontWeight: 'bold'
                         }}
                     >
-                        5. Verificar Conformidad (Test Preliminar)
+                        6. Verificar Conformidad (Test Preliminar)
                     </button>
                 ) : (
                     <div className={`result-box`} style={{
