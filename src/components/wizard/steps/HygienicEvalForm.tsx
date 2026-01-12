@@ -107,8 +107,31 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
 
                 {/* Sampling Matrix */}
                 <div style={{ padding: '1rem', backgroundColor: '#f0f7ff', borderRadius: '8px', border: '1px solid #d0e7ff' }}>
-                    <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0056b3' }}>
-                        <span>📋</span> Método de Captación y Análisis
+                    <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#0056b3' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span>📋</span> Método de Captación y Análisis
+                        </div>
+                        {formData.samplingDetails?.methodUrl && (
+                            <a
+                                href={formData.samplingDetails.methodUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    backgroundColor: '#0056b3',
+                                    color: 'white',
+                                    textDecoration: 'none',
+                                    fontSize: '0.8rem',
+                                    padding: '0.25rem 0.75rem',
+                                    borderRadius: '4px',
+                                    fontWeight: 500,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.25rem'
+                                }}
+                            >
+                                📥 Ver Método Oficial INSST
+                            </a>
+                        )}
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div>

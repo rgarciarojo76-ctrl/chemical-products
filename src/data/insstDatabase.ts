@@ -14,6 +14,7 @@ export interface ChemicalData {
         technique: string; // e.g., HPLC-UV
         flowRate: string; // e.g., 0.2 L/min
         minTime: string; // e.g., 120 min
+        methodUrl?: string; // Link to INSST PDF
     };
     notes: string;
 }
@@ -34,7 +35,8 @@ export const INSST_DATABASE: Record<string, ChemicalData> = {
             support: 'Tubo Silica Gel + 2,4-DNPH',
             technique: 'HPLC-UV',
             flowRate: '0.2 L/min',
-            minTime: '15 min (Corta) - 120 min (Diaria)'
+            minTime: '15 min (Corta) - 120 min (Diaria)',
+            methodUrl: 'https://www.insst.es/documents/94886/358630/MTA+MA+062+A16+Determinaci%C3%B3n+de+formaldeh%C3%ADdo+en+aire+-+M%C3%A9todo+de+adsorci%C3%B3n+en+gel+de+s%C3%ADlice+e+impregnado+con+2,4-dinitrofenilhidracina,+desorci%C3%B3n+con+acetonitrilo.pdf'
         },
         notes: 'Sen, C1B. VLA-EC aplicable.'
     },

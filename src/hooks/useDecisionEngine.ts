@@ -61,7 +61,8 @@ export function useDecisionEngine() {
                             support: input.vlaInfo.sampling.support,
                             technique: input.vlaInfo.sampling.technique,
                             flowRate: input.vlaInfo.sampling.flowRate,
-                            minTime: input.vlaInfo.sampling.minTime
+                            minTime: input.vlaInfo.sampling.minTime,
+                            methodUrl: input.vlaInfo.sampling.methodUrl
                         } : undefined
                     }
                 }
