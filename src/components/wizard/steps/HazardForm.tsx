@@ -250,7 +250,7 @@ export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext, initi
             >
                 <div style={{ fontSize: '2rem', marginBottom: '0.5rem', pointerEvents: 'none' }}>📄</div>
                 <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--color-primary)', pointerEvents: 'none' }}>
-                    {isDragging ? '¡SUELTA EL DOCUMENTO AQUÍ!' : 'Análisis Automático de FDS (RegEx)'}
+                    {isDragging ? '¡SUELTA EL DOCUMENTO AQUÍ!' : 'Análisis Automático de la Ficha de Datos de Seguridad'}
                 </h4>
                 <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '1rem', pointerEvents: 'none' }}>
                     {isDragging ? '...' : "Arrastra tu PDF aquí o usa el botón para buscarlo."}
