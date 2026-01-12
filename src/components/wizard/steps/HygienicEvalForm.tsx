@@ -113,43 +113,27 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Soporte</label>
-                            <input
-                                type="text"
-                                value={formData.samplingDetails?.support || ''}
-                                onChange={(e) => setFormData({ ...formData, samplingDetails: { ...formData.samplingDetails!, support: e.target.value } })}
-                                placeholder="Ej. Filtro..."
-                                style={{ width: '100%', padding: '0.3rem', border: '1px solid #ccc', borderRadius: '4px' }}
-                            />
+                            <div style={{ width: '100%', padding: '0.4rem', border: '1px solid #e0e0e0', borderRadius: '4px', backgroundColor: '#fff', fontSize: '0.9rem', color: '#333' }}>
+                                {formData.samplingDetails?.support || 'Tubo Silica Gel + 2,4-DNPH'}
+                            </div>
                         </div>
                         <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Técnica</label>
-                            <input
-                                type="text"
-                                value={formData.samplingDetails?.technique || ''}
-                                onChange={(e) => setFormData({ ...formData, samplingDetails: { ...formData.samplingDetails!, technique: e.target.value } })}
-                                placeholder="Ej. HPLC..."
-                                style={{ width: '100%', padding: '0.3rem', border: '1px solid #ccc', borderRadius: '4px' }}
-                            />
+                            <div style={{ width: '100%', padding: '0.4rem', border: '1px solid #e0e0e0', borderRadius: '4px', backgroundColor: '#fff', fontSize: '0.9rem', color: '#333' }}>
+                                {formData.samplingDetails?.technique || 'HPLC-UV'}
+                            </div>
                         </div>
                         <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Caudal (l/min)</label>
-                            <input
-                                type="text"
-                                value={formData.samplingDetails?.flowRate || ''}
-                                onChange={(e) => setFormData({ ...formData, samplingDetails: { ...formData.samplingDetails!, flowRate: e.target.value } })}
-                                placeholder="Ej. 2.0"
-                                style={{ width: '100%', padding: '0.3rem', border: '1px solid #ccc', borderRadius: '4px' }}
-                            />
+                            <div style={{ width: '100%', padding: '0.4rem', border: '1px solid #e0e0e0', borderRadius: '4px', backgroundColor: '#fff', fontSize: '0.9rem', color: '#333' }}>
+                                {formData.samplingDetails?.flowRate || '0.2 L/min'}
+                            </div>
                         </div>
                         <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Tiempo Mín.</label>
-                            <input
-                                type="text"
-                                value={formData.samplingDetails?.minTime || ''}
-                                onChange={(e) => setFormData({ ...formData, samplingDetails: { ...formData.samplingDetails!, minTime: e.target.value } })}
-                                placeholder="Ej. 120 min"
-                                style={{ width: '100%', padding: '0.3rem', border: '1px solid #ccc', borderRadius: '4px' }}
-                            />
+                            <div style={{ width: '100%', padding: '0.4rem', border: '1px solid #e0e0e0', borderRadius: '4px', backgroundColor: '#fff', fontSize: '0.9rem', color: '#333' }}>
+                                {formData.samplingDetails?.minTime || '15 min (Corta) - 120 min (Diaria)'}
+                            </div>
                         </div>
                     </div>
                 </div>
