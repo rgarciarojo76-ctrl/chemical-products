@@ -258,9 +258,14 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                     <h4 style={{ fontSize: '1rem', margin: 0, color: '#0056b3' }}>
                         4. Valor Límite Ambiental
                     </h4>
-                    <span style={{ fontSize: '0.8rem', color: '#666', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <a
+                        href="https://www.insst.es/documentacion/material-normativo/limites-de-exposicion-profesional-para-agentes-quimicos-2025"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: '0.8rem', color: '#666', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
+                    >
                         📖 Ref: Límites de Exposición Profesional (INSST)
-                    </span>
+                    </a>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: '#f8f9fa', padding: '1rem', borderRadius: '8px' }}>
