@@ -48,14 +48,33 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                 {/* Educational Guide for Junior Techs */}
                 <div style={{ backgroundColor: '#eef6fc', padding: '1rem', borderRadius: '6px', marginBottom: '1rem', borderLeft: '4px solid #009bdb' }}>
                     <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#0056b3' }}>ℹ️ Criterios técnicos básicos (Factores de Exposición):</strong>
-                    <ul style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem 2rem', paddingLeft: '1.2rem', margin: 0, fontSize: '0.85rem' }}>
-                        <li><strong>Organización:</strong> Tareas, jornada, funciones y carga.</li>
-                        <li><strong>Proceso:</strong> Técnicas, fuentes de emisión y producción.</li>
-                        <li><strong>Entorno:</strong> Distribución, orden y limpieza.</li>
-                        <li><strong>Medidas:</strong> Ventilación, procedimientos y zonas.</li>
-                        <li><strong>Temporalidad:</strong> Duración, frecuencia y variaciones.</li>
-                        <li><strong>Personal:</strong> Comportamiento y hábitos de trabajo.</li>
-                    </ul>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        {[
+                            { label: 'Organización', text: 'Tareas, jornada, funciones y carga.', icon: '📋' },
+                            { label: 'Proceso', text: 'Técnicas, fuentes de emisión y producción.', icon: '🏭' },
+                            { label: 'Entorno', text: 'Distribución, orden y limpieza.', icon: '🧹' },
+                            { label: 'Medidas', text: 'Ventilación, procedimientos y zonas.', icon: '🛡️' },
+                            { label: 'Temporalidad', text: 'Duración, frecuencia y variaciones.', icon: '⏱️' },
+                            { label: 'Personal', text: 'Comportamiento y hábitos de trabajo.', icon: '👷' }
+                        ].map((item, idx) => (
+                            <div key={idx} style={{
+                                display: 'flex',
+                                alignItems: 'center', // Align vertically
+                                gap: '1rem',
+                                padding: '0.75rem 1rem',
+                                backgroundColor: '#ffffff', // White bg for contrast against blue container
+                                borderRadius: '6px',
+                                border: '1px solid #dae1e7', // Subtle border
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.03)'
+                            }}>
+                                <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{item.icon}</span>
+                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                    <span style={{ fontWeight: 700, color: '#1e3a8a', fontSize: '0.9rem', minWidth: '100px' }}>{item.label}:</span>
+                                    <span style={{ color: '#475569', fontSize: '0.9rem' }}>{item.text}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
 
