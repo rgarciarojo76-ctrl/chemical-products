@@ -320,7 +320,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
                     <div>
-                        <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600 }}>Concentración Hallada (I)</label>
+                        <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600 }}>Concentración (I)</label>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <input
                                 type="number"
