@@ -178,3 +178,21 @@ button {
     /* Stack on very small screens */
   }
 }
+
+/* Sampling Grid specific responsive layout */
+.sampling-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background-color: #fff;
+}
+
+@media (max-width: 640px) {
+  .sampling-grid {
+    grid-template-columns: 1fr;
+    /* Stack on mobile */
+    padding: 1rem;
+    gap: 1rem;
+  }
+}

@@ -196,13 +196,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                     </div>
 
                     {/* Card Content - Metrics Grid */}
-                    <div style={{
-                        padding: '1.5rem',
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr', // Enforce 2x2 grid as requested
-                        gap: '1.5rem',
-                        backgroundColor: '#fff'
-                    }}>
+                    <div className="sampling-grid">
                         {/* Metric 1 */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748b', fontWeight: 700 }}>
