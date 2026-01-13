@@ -107,6 +107,88 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
                                 </div>
                             </div>
 
+                            {def.id === 'substitution' && (
+                                <div style={{ marginTop: '1rem', borderTop: '1px dashed #ddd', paddingTop: '1rem' }}>
+                                    <details style={{ backgroundColor: '#f8fafc', padding: '0.5rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                                        <summary style={{ cursor: 'pointer', fontSize: '0.9rem', color: '#0056b3', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                            <span>💡</span> Ver 5 Alternativas Técnicas (Sugerencias AI)
+                                        </summary>
+
+                                        <div style={{ marginTop: '1rem', display: 'grid', gap: '1rem' }}>
+                                            {/* Alternative 1 */}
+                                            <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.25rem' }}>
+                                                    <strong style={{ color: '#0f172a' }}>1. Plasma de Peróxido de Hidrógeno</strong>
+                                                    <span style={{ fontSize: '0.75rem', backgroundColor: '#dcfce7', color: '#166534', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Esterilización</span>
+                                                </div>
+                                                <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 0.5rem 0' }}>
+                                                    Elimina el uso de formaldehído gas cancerígeno. Tecnología limpia (subproductos: agua y oxígeno) con eficacia esporicida validada. Baja temperatura (47-56°C).
+                                                </p>
+                                                <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem' }}>
+                                                    Fuente: CDC "Guideline for Disinfection and Sterilization in Healthcare Facilities"
+                                                </div>
+                                            </div>
+
+                                            {/* Alternative 2 */}
+                                            <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.25rem' }}>
+                                                    <strong style={{ color: '#0f172a' }}>2. Fijadores Base Etanol/Metanol (ej. FineFIX)</strong>
+                                                    <span style={{ fontSize: '0.75rem', backgroundColor: '#e0f2fe', color: '#075985', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Histopatología</span>
+                                                </div>
+                                                <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 0.5rem 0' }}>
+                                                    Sustituye el cross-linking de aldehídos. Permite mayor recuperación de ADN/ARN para biología molecular sin la toxicidad/carcinogenicidad del formol.
+                                                </p>
+                                                <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem' }}>
+                                                    Fuente: NIH (National Institutes of Health) "Formalin-free fixatives review"
+                                                </div>
+                                            </div>
+
+                                            {/* Alternative 3 */}
+                                            <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.25rem' }}>
+                                                    <strong style={{ color: '#0f172a' }}>3. Resinas MDI / Poliuretano (NAF)</strong>
+                                                    <span style={{ fontSize: '0.75rem', backgroundColor: '#fef3c7', color: '#92400e', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Industria Madera</span>
+                                                </div>
+                                                <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 0.5rem 0' }}>
+                                                    Aglomerantes "No Added Formaldehyde" (NAF). Eliminan totalmente la emisión en tableros. Mayor resistencia a humedad que la urea-formol.
+                                                </p>
+                                                <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem' }}>
+                                                    Fuente: Fichas Técnicas Industriales (Weinberger Holz / Sonae Arauco)
+                                                </div>
+                                            </div>
+
+                                            {/* Alternative 4 */}
+                                            <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.25rem' }}>
+                                                    <strong style={{ color: '#0f172a' }}>4. Ácido Peracético (PAA)</strong>
+                                                    <span style={{ fontSize: '0.75rem', backgroundColor: '#dcfce7', color: '#166534', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Desinfección</span>
+                                                </div>
+                                                <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 0.5rem 0' }}>
+                                                    Biocida oxidante biodegradable (se descompone en acético, agua, O2). No fija proteínas ni crea biofilms, a diferencia de los aldehídos.
+                                                </p>
+                                                <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem' }}>
+                                                    Fuente: UNE-EN ISO 15883 (Lavadoras desinfectadoras)
+                                                </div>
+                                            </div>
+
+                                            {/* Alternative 5 */}
+                                            <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.25rem' }}>
+                                                    <strong style={{ color: '#0f172a' }}>5. Miel / Jaggery (Soluciones Naturales)</strong>
+                                                    <span style={{ fontSize: '0.75rem', backgroundColor: '#fae8ff', color: '#86198f', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Histología Docente</span>
+                                                </div>
+                                                <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 0.5rem 0' }}>
+                                                    Alternativas no tóxicas para conservación de muestras en entornos de bajo riesgo. Preservación morfológica adecuada para H&E rutinaria.
+                                                </p>
+                                                <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem' }}>
+                                                    Fuente: Journal of Oral and Maxillofacial Pathology (JOMFP, 2020)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </details>
+                                </div>
+                            )}
+
                             {!status.implemented && (
                                 <div style={{ marginTop: '0.5rem' }}>
                                     <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#dc3545', marginBottom: '0.25rem' }}>
