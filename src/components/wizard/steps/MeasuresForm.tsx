@@ -43,7 +43,7 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
 
     return (
         <StepCard
-            title="Módulo C: Jerarquía de Medidas (RD 665/1997)"
+            title="Módulo D: Jerarquía de Medidas (RD 665/1997)"
             description="Verifique la implantación de las medidas obligatorias. Si no se aplican, DEBE justificar técnica o legalmente la causa."
             icon="📋"
         >
