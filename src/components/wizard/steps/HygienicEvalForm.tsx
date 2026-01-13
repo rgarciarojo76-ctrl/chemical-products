@@ -285,9 +285,20 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
 
             {/* 5. Results (Renumbered) */}
             <div className="form-group mb-4">
-                <h4 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#0056b3', borderBottom: '2px solid #0056b3', paddingBottom: '0.25rem' }}>
-                    5. Resultados de la Medición
-                </h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', borderBottom: '2px solid #0056b3', paddingBottom: '0.25rem' }}>
+                    <h4 style={{ fontSize: '1rem', margin: 0, color: '#0056b3' }}>
+                        5. Resultados de la Medición
+                    </h4>
+                    <a
+                        href="https://www.insst.es/documentacion/herramientas-de-prl/calculadores/agentes-quimicos-evaluacion-de-la-exposicion-2020"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: '0.8rem', color: '#666', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
+                    >
+                        🧮 Calculador INSST (UNE-EN 689:2019)
+                    </a>
+                </div>
+
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
                     <div>
                         <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600 }}>Concentración Hallada (I)</label>
@@ -304,7 +315,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
                         </div>
                     </div>
                     <div>
-                        <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600 }}>Límite Detección (LOD)</label>
+                        <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600 }}>Límite de Cuantificación (LOQ)</label>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <input
                                 type="number"
