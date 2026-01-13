@@ -21,6 +21,9 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
     };
 
     const [measures, setMeasures] = useState<MeasureStatus[]>(initializeMeasures);
+    const [activeStep, setActiveStep] = useState(0);
+    const currentMeasure = RD_MEASURES[activeStep];
+    const currentStatus = measures.find(m => m.measureId === currentMeasure.id) || { implemented: false, justificationIfNo: '' };
 
     // Sync with parent when changed
     const handleToggle = (id: string, implemented: boolean) => {
@@ -39,247 +42,304 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
         onUpdate(updated);
     };
 
-    const isValid = measures.every(m => m.implemented || (!m.implemented && m.justificationIfNo.trim().length > 5));
+    const handleNextStep = () => {
+        if (activeStep < RD_MEASURES.length - 1) {
+            setActiveStep(prev => prev + 1);
+        } else {
+            onNext();
+        }
+    };
+
+    const handlePrevStep = () => {
+        if (activeStep > 0) {
+            setActiveStep(prev => prev - 1);
+        }
+    };
+
+    const isCurrentValid = currentStatus.implemented || (!currentStatus.implemented && currentStatus.justificationIfNo.trim().length > 5);
+    const isLastStep = activeStep === RD_MEASURES.length - 1;
 
     return (
         <StepCard
             title="Módulo D: Jerarquía de Medidas (RD 665/1997)"
-            description="Verifique la implantación de las medidas obligatorias. Si no se aplican, DEBE justificar técnica o legalmente la causa."
+            description={`Paso ${activeStep + 1} de ${RD_MEASURES.length}: Verifique la implantación de las medidas obligatorias.`}
             icon="📋"
         >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                {RD_MEASURES.map((def, index) => {
-                    const status = measures.find(m => m.measureId === def.id) || { implemented: false, justificationIfNo: '' };
-
+            {/* Progress Indicator */}
+            <div style={{ display: 'flex', gap: '4px', marginBottom: '1.5rem' }}>
+                {RD_MEASURES.map((_, idx) => {
+                    const status = measures.find(m => m.measureId === RD_MEASURES[idx].id);
+                    const isCompleted = status?.implemented || (status && !status.implemented && status.justificationIfNo.length > 5);
 
                     return (
-                        <div key={def.id} style={{
-                            padding: '1rem',
-                            border: '1px solid #eee',
-                            borderRadius: '8px',
-                            backgroundColor: status.implemented ? '#f0fff4' : '#fff5f5',
-                            borderLeft: status.implemented ? '4px solid #28a745' : '4px solid #dc3545'
-                        }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '0.5rem' }}>
-                                <div>
-                                    <span style={{
-                                        fontSize: '0.75rem',
-                                        textTransform: 'uppercase',
-                                        fontWeight: 'bold',
-                                        color: '#666',
-                                        backgroundColor: '#eee',
-                                        padding: '2px 6px',
-                                        borderRadius: '4px'
-                                    }}>
-                                        {def.article}
-                                    </span>
-                                    <h4 style={{ margin: '0.5rem 0', fontSize: '1rem', color: '#333' }}>
-                                        {index + 1}. {def.text}
-                                    </h4>
-                                </div>
-                                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                    <button
-                                        onClick={() => handleToggle(def.id, true)}
-                                        style={{
-                                            padding: '0.25rem 0.75rem',
-                                            borderRadius: '4px',
-                                            border: '1px solid #28a745',
-                                            backgroundColor: status.implemented ? '#28a745' : 'white',
-                                            color: status.implemented ? 'white' : '#28a745',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        SÍ
-                                    </button>
-                                    <button
-                                        onClick={() => handleToggle(def.id, false)}
-                                        style={{
-                                            padding: '0.25rem 0.75rem',
-                                            borderRadius: '4px',
-                                            border: '1px solid #dc3545',
-                                            backgroundColor: !status.implemented ? '#dc3545' : 'white',
-                                            color: !status.implemented ? 'white' : '#dc3545',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        NO
-                                    </button>
-                                </div>
-                            </div>
-
-                            {def.id === 'substitution' && (
-                                <div style={{ marginTop: '1rem', borderTop: '1px dashed #ddd', paddingTop: '1rem' }}>
-                                    <details style={{ backgroundColor: '#f8fafc', padding: '0.5rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
-                                        <summary style={{ cursor: 'pointer', fontSize: '0.9rem', color: '#0056b3', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                            <span>💡</span> Ver 5 Alternativas Técnicas (Sugerencias AI)
-                                        </summary>
-
-                                        <div style={{ marginTop: '1rem', display: 'grid', gap: '1rem' }}>
-                                            {/* Alternative 1 */}
-                                            <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.25rem' }}>
-                                                    <strong style={{ color: '#0f172a' }}>1. Plasma de Peróxido de Hidrógeno</strong>
-                                                    <span style={{ fontSize: '0.75rem', backgroundColor: '#dcfce7', color: '#166534', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Esterilización</span>
-                                                </div>
-                                                <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 0.5rem 0' }}>
-                                                    Elimina el uso de formaldehído gas cancerígeno. Tecnología limpia (subproductos: agua y oxígeno) con eficacia esporicida validada. Baja temperatura (47-56°C).
-                                                </p>
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem', fontSize: '0.75rem' }}>
-                                                    <a href="https://www.cdc.gov/infectioncontrol/guidelines/disinfection/index.html" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem', textDecoration: 'none', display: 'block', marginBottom: '0.25rem' }}>
-                                                        Fuente: CDC "Guideline for Disinfection and Sterilization in Healthcare Facilities" 🔗
-                                                    </a>
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <a href="https://www.asp.com/es-es/productos/sistemas-de-esterilizacion-sterrad" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
-                                                            🏢 ASP (STERRAD) &rarr;
-                                                        </a>
-                                                        <a href="https://www.medline.com/media/assets/pdf/sds/Hxs_Hydrogen_Peroxide_Sterilant_SDS_US_EN.pdf" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                            📄 Ver FDS (Ejemplo)
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Alternative 2 */}
-                                            <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.25rem' }}>
-                                                    <strong style={{ color: '#0f172a' }}>2. Fijadores Base Etanol/Metanol (FineFIX)</strong>
-                                                    <span style={{ fontSize: '0.75rem', backgroundColor: '#e0f2fe', color: '#075985', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Histopatología</span>
-                                                </div>
-                                                <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 0.5rem 0' }}>
-                                                    Sustituye el cross-linking de aldehídos. Permite mayor recuperación de ADN/ARN para biología molecular sin la toxicidad/carcinogenicidad del formol.
-                                                </p>
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem', fontSize: '0.75rem' }}>
-                                                    <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3927343/" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem', textDecoration: 'none', display: 'block', marginBottom: '0.25rem' }}>
-                                                        Fuente: NIH (National Institutes of Health) "Formalin-free fixatives review" 🔗
-                                                    </a>
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <a href="https://www.milestonemedsrl.com/product/finefix-formalin-free-fixative/" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
-                                                            🏢 Milestone Medical &rarr;
-                                                        </a>
-                                                        <a href="https://www.milestonemedsrl.com/product/finefix-formalin-free-fixative/#downloads" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                            📄 Ver FDS (Web)
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Alternative 3 */}
-                                            <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.25rem' }}>
-                                                    <strong style={{ color: '#0f172a' }}>3. Resinas MDI / Poliuretano (NAF)</strong>
-                                                    <span style={{ fontSize: '0.75rem', backgroundColor: '#fef3c7', color: '#92400e', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Industria Madera</span>
-                                                </div>
-                                                <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 0.5rem 0' }}>
-                                                    Aglomerantes "No Added Formaldehyde" (NAF). Eliminan totalmente la emisión en tableros. Mayor resistencia a humedad que la urea-formol.
-                                                </p>
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem', fontSize: '0.75rem' }}>
-                                                    <a href="https://www.sonaearauco.com/es/productos/ecoboard/detalles" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem', textDecoration: 'none', display: 'block', marginBottom: '0.25rem' }}>
-                                                        Fuente: Fichas Técnicas Industriales (Weinberger Holz / Sonae Arauco) 🔗
-                                                    </a>
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <a href="https://www.sonaearauco.com/es/productos/ecoboard/detalles" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
-                                                            🏢 Sonae Arauco (Ecoboard) &rarr;
-                                                        </a>
-                                                        <a href="https://www.sonaearauco.com/downloads/technical-data-sheets" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                            📄 Ver Ficha Técnica
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Alternative 4 */}
-                                            <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.25rem' }}>
-                                                    <strong style={{ color: '#0f172a' }}>4. Ácido Peracético (PAA)</strong>
-                                                    <span style={{ fontSize: '0.75rem', backgroundColor: '#dcfce7', color: '#166534', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Desinfección</span>
-                                                </div>
-                                                <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 0.5rem 0' }}>
-                                                    Biocida oxidante biodegradable (se descompone en acético, agua, O2). No fija proteínas ni crea biofilms, a diferencia de los aldehídos.
-                                                </p>
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem', fontSize: '0.75rem' }}>
-                                                    <a href="https://www.une.org/encuentra-tu-norma/busca-tu-norma/norma?c=N0063998" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem', textDecoration: 'none', display: 'block', marginBottom: '0.25rem' }}>
-                                                        Fuente: UNE-EN ISO 15883 (Lavadoras desinfectadoras) 🔗
-                                                    </a>
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <a href="https://www.sterislifesciences.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
-                                                            🏢 STERIS / Solvay &rarr;
-                                                        </a>
-                                                        <a href="https://www.sterislifesciences.com/products/surface-disinfectants/spor-klenz-ready-to-use-cold-sterilant" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                            📄 Ver FDS (Spor-Klenz)
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Alternative 5 */}
-                                            <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.25rem' }}>
-                                                    <strong style={{ color: '#0f172a' }}>5. Miel / Jaggery (Soluciones Naturales)</strong>
-                                                    <span style={{ fontSize: '0.75rem', backgroundColor: '#fae8ff', color: '#86198f', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Histología Docente</span>
-                                                </div>
-                                                <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 0.5rem 0' }}>
-                                                    Alternativas no tóxicas para conservación de muestras en entornos de bajo riesgo. Preservación morfológica adecuada para H&E rutinaria.
-                                                </p>
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem', fontSize: '0.75rem' }}>
-                                                    <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6996362/" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem', textDecoration: 'none', display: 'block', marginBottom: '0.25rem' }}>
-                                                        Fuente: Journal of Oral and Maxillofacial Pathology (JOMFP, 2020) 🔗
-                                                    </a>
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <span style={{ color: '#999', cursor: 'help' }} title="Solución natural no comercializada específicamente">
-                                                            🏢 (Producto Genérico)
-                                                        </span>
-                                                        <span style={{ color: '#28a745', fontSize: '0.7rem', border: '1px solid #28a745', padding: '1px 4px', borderRadius: '4px' }}>
-                                                            🌿 Grado Alimentario
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </details>
-                                </div>
-                            )}
-
-                            {!status.implemented && (
-                                <div style={{ marginTop: '0.5rem' }}>
-                                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#dc3545', marginBottom: '0.25rem' }}>
-                                        ⚠️ Obligatorio: Justificación Técnica / Legal
-                                    </label>
-                                    <textarea
-                                        value={status.justificationIfNo}
-                                        onChange={(e) => handleJustification(def.id, e.target.value)}
-                                        placeholder={`Explique por qué no es técnicamente posible la ${def.level === 'substitution' ? 'sustitución' : 'medida'}...`}
-                                        style={{
-                                            width: '100%',
-                                            padding: '0.5rem',
-                                            border: '1px solid #dc3545',
-                                            borderRadius: '4px',
-                                            minHeight: '60px',
-                                            fontSize: '0.9rem'
-                                        }}
-                                    />
-                                </div>
-                            )}
-                        </div>
+                        <div
+                            key={idx}
+                            style={{
+                                flex: 1,
+                                height: '4px',
+                                borderRadius: '2px',
+                                backgroundColor: idx === activeStep ? 'var(--color-primary)' : (isCompleted ? '#28a745' : '#e2e8f0'),
+                                opacity: idx === activeStep ? 1 : 0.6
+                            }}
+                        />
                     );
                 })}
             </div>
 
-            <div className="actions" style={{ marginTop: '2rem', borderTop: '1px solid #eee', paddingTop: '1rem', textAlign: 'right' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div key={currentMeasure.id} style={{
+                    padding: '1.5rem',
+                    border: '1px solid #eee',
+                    borderRadius: '8px',
+                    backgroundColor: currentStatus.implemented ? '#f0fff4' : '#fff5f5',
+                    borderLeft: currentStatus.implemented ? '4px solid #28a745' : '4px solid #dc3545',
+                    transition: 'all 0.3s ease'
+                }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                        <div>
+                            <span style={{
+                                fontSize: '0.85rem',
+                                textTransform: 'uppercase',
+                                fontWeight: 'bold',
+                                color: '#666',
+                                backgroundColor: '#eee',
+                                padding: '4px 8px',
+                                borderRadius: '4px'
+                            }}>
+                                {currentMeasure.article}
+                            </span>
+                            <h4 style={{ margin: '1rem 0 0.5rem 0', fontSize: '1.25rem', color: '#1e293b', lineHeight: 1.4 }}>
+                                {activeStep + 1}. {currentMeasure.text}
+                            </h4>
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <button
+                                onClick={() => handleToggle(currentMeasure.id, true)}
+                                style={{
+                                    padding: '0.5rem 1.25rem',
+                                    borderRadius: '6px',
+                                    border: '1px solid #28a745',
+                                    backgroundColor: currentStatus.implemented ? '#28a745' : 'white',
+                                    color: currentStatus.implemented ? 'white' : '#28a745',
+                                    cursor: 'pointer',
+                                    fontWeight: 600,
+                                    fontSize: '1rem'
+                                }}
+                            >
+                                SÍ
+                            </button>
+                            <button
+                                onClick={() => handleToggle(currentMeasure.id, false)}
+                                style={{
+                                    padding: '0.5rem 1.25rem',
+                                    borderRadius: '6px',
+                                    border: '1px solid #dc3545',
+                                    backgroundColor: !currentStatus.implemented ? '#dc3545' : 'white',
+                                    color: !currentStatus.implemented ? 'white' : '#dc3545',
+                                    cursor: 'pointer',
+                                    fontWeight: 600,
+                                    fontSize: '1rem'
+                                }}
+                            >
+                                NO
+                            </button>
+                        </div>
+                    </div>
+
+                    {currentMeasure.id === 'substitution' && (
+                        <div style={{ marginTop: '1.5rem', borderTop: '2px dashed #e2e8f0', paddingTop: '1.5rem' }}>
+                            <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <span style={{ fontSize: '1.25rem' }}>💡</span>
+                                <h5 style={{ margin: 0, fontSize: '1rem', color: '#0056b3', fontWeight: 700 }}>
+                                    Alternativas Técnicas Recomendadas (AI Suggestions)
+                                </h5>
+                            </div>
+
+                            <div style={{ display: 'grid', gap: '1rem' }}>
+                                {/* Alternative 1 */}
+                                <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.5rem' }}>
+                                        <strong style={{ color: '#0f172a', fontSize: '1rem' }}>1. Plasma de Peróxido de Hidrógeno</strong>
+                                        <span style={{ fontSize: '0.75rem', backgroundColor: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>Esterilización</span>
+                                    </div>
+                                    <p style={{ fontSize: '0.9rem', color: '#475569', margin: '0 0 0.75rem 0', lineHeight: 1.5 }}>
+                                        Elimina el uso de formaldehído gas cancerígeno. Tecnología limpia (subproductos: agua y oxígeno) con eficacia esporicida validada. Baja temperatura (47-56°C).
+                                    </p>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid #f1f5f9', paddingTop: '0.5rem' }}>
+                                        <a href="https://www.cdc.gov/infectioncontrol/guidelines/disinfection/index.html" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', fontSize: '0.8rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            📖 Fuente: CDC "Guideline for Disinfection..." 🔗
+                                        </a>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <a href="https://www.asp.com/es-es/productos/sistemas-de-esterilizacion-sterrad" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
+                                                🏢 ASP (STERRAD) &rarr;
+                                            </a>
+                                            <a href="https://www.medline.com/media/assets/pdf/sds/Hxs_Hydrogen_Peroxide_Sterilant_SDS_US_EN.pdf" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
+                                                📄 Ver FDS (Ejemplo)
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Alternative 2 */}
+                                <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.5rem' }}>
+                                        <strong style={{ color: '#0f172a', fontSize: '1rem' }}>2. Fijadores Base Etanol/Metanol (FineFIX)</strong>
+                                        <span style={{ fontSize: '0.75rem', backgroundColor: '#e0f2fe', color: '#075985', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>Histopatología</span>
+                                    </div>
+                                    <p style={{ fontSize: '0.9rem', color: '#475569', margin: '0 0 0.75rem 0', lineHeight: 1.5 }}>
+                                        Sustituye el cross-linking de aldehídos. Permite mayor recuperación de ADN/ARN para biología molecular sin la toxicidad/carcinogenicidad del formol.
+                                    </p>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid #f1f5f9', paddingTop: '0.5rem' }}>
+                                        <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3927343/" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', fontSize: '0.8rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            📖 Fuente: NIH "Formalin-free fixatives review" 🔗
+                                        </a>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <a href="https://www.milestonemedsrl.com/product/finefix-formalin-free-fixative/" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
+                                                🏢 Milestone Medical &rarr;
+                                            </a>
+                                            <a href="https://www.milestonemedsrl.com/product/finefix-formalin-free-fixative/#downloads" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
+                                                📄 Ver FDS (Web)
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Alternative 3 */}
+                                <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.5rem' }}>
+                                        <strong style={{ color: '#0f172a', fontSize: '1rem' }}>3. Resinas MDI / Poliuretano (NAF)</strong>
+                                        <span style={{ fontSize: '0.75rem', backgroundColor: '#fef3c7', color: '#92400e', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>Industria Madera</span>
+                                    </div>
+                                    <p style={{ fontSize: '0.9rem', color: '#475569', margin: '0 0 0.75rem 0', lineHeight: 1.5 }}>
+                                        Aglomerantes "No Added Formaldehyde" (NAF). Eliminan totalmente la emisión en tableros. Mayor resistencia a humedad que la urea-formol.
+                                    </p>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid #f1f5f9', paddingTop: '0.5rem' }}>
+                                        <a href="https://www.sonaearauco.com/es/productos/ecoboard/detalles" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', fontSize: '0.8rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            📖 Fuente: Fichas Técnicas (Sonae Arauco) 🔗
+                                        </a>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <a href="https://www.sonaearauco.com/es/productos/ecoboard/detalles" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
+                                                🏢 Sonae Arauco (Ecoboard) &rarr;
+                                            </a>
+                                            <a href="https://www.sonaearauco.com/downloads/technical-data-sheets" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
+                                                📄 Ver Ficha Técnica
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Alternative 4 */}
+                                <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.5rem' }}>
+                                        <strong style={{ color: '#0f172a', fontSize: '1rem' }}>4. Ácido Peracético (PAA)</strong>
+                                        <span style={{ fontSize: '0.75rem', backgroundColor: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>Desinfección</span>
+                                    </div>
+                                    <p style={{ fontSize: '0.9rem', color: '#475569', margin: '0 0 0.75rem 0', lineHeight: 1.5 }}>
+                                        Biocida oxidante biodegradable (se descompone en acético, agua, O2). No fija proteínas ni crea biofilms, a diferencia de los aldehídos.
+                                    </p>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid #f1f5f9', paddingTop: '0.5rem' }}>
+                                        <a href="https://www.une.org/encuentra-tu-norma/busca-tu-norma/norma?c=N0063998" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', fontSize: '0.8rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            📖 Fuente: UNE-EN ISO 15883 (Lavadoras) 🔗
+                                        </a>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <a href="https://www.sterislifesciences.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
+                                                🏢 STERIS / Solvay &rarr;
+                                            </a>
+                                            <a href="https://www.sterislifesciences.com/products/surface-disinfectants/spor-klenz-ready-to-use-cold-sterilant" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
+                                                📄 Ver FDS (Spor-Klenz)
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Alternative 5 */}
+                                <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.5rem' }}>
+                                        <strong style={{ color: '#0f172a', fontSize: '1rem' }}>5. Miel / Jaggery (Soluciones Naturales)</strong>
+                                        <span style={{ fontSize: '0.75rem', backgroundColor: '#fae8ff', color: '#86198f', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>Histología Docente</span>
+                                    </div>
+                                    <p style={{ fontSize: '0.9rem', color: '#475569', margin: '0 0 0.75rem 0', lineHeight: 1.5 }}>
+                                        Alternativas no tóxicas para conservación de muestras en entornos de bajo riesgo. Preservación morfológica adecuada para H&E rutinaria.
+                                    </p>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid #f1f5f9', paddingTop: '0.5rem' }}>
+                                        <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6996362/" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', fontSize: '0.8rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            📖 Fuente: Journal of Oral and Maxillofacial Pathology (JOMFP) 🔗
+                                        </a>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <span style={{ color: '#999', cursor: 'help' }} title="Solución natural no comercializada específicamente">
+                                                🏢 (Producto Genérico)
+                                            </span>
+                                            <span style={{ color: '#28a745', fontSize: '0.7rem', border: '1px solid #28a745', padding: '1px 4px', borderRadius: '4px' }}>
+                                                🌿 Grado Alimentario
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {!currentStatus.implemented && (
+                        <div style={{ marginTop: '1.5rem' }}>
+                            <label style={{ fontSize: '0.9rem', fontWeight: 600, color: '#dc3545', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <span>⚠️</span> Justificación Técnica / Legal Obligatoria
+                            </label>
+                            <textarea
+                                value={currentStatus.justificationIfNo}
+                                onChange={(e) => handleJustification(currentMeasure.id, e.target.value)}
+                                placeholder="Describa por qué NO es posible aplicar esta medida en su proceso (ej. limitaciones técnicas, inviabilidad económica validada, etc.)..."
+                                style={{
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    border: '1px solid #dc3545',
+                                    borderRadius: '6px',
+                                    minHeight: '100px',
+                                    fontSize: '0.95rem',
+                                    boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.05)'
+                                }}
+                            />
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div className="actions" style={{ marginTop: '2rem', borderTop: '1px solid #eee', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between' }}>
                 <button
-                    onClick={onNext}
-                    disabled={!isValid}
+                    onClick={handlePrevStep}
+                    disabled={activeStep === 0}
                     style={{
-                        backgroundColor: isValid ? 'var(--color-primary)' : '#ccc',
+                        backgroundColor: 'white',
+                        color: '#64748b',
+                        padding: '0.75rem 1.5rem',
+                        borderRadius: '6px',
+                        border: '1px solid #cbd5e1',
+                        fontSize: '1rem',
+                        cursor: activeStep === 0 ? 'not-allowed' : 'pointer',
+                        opacity: activeStep === 0 ? 0.5 : 1
+                    }}
+                >
+                    &larr; Anterior
+                </button>
+
+                <button
+                    onClick={handleNextStep}
+                    disabled={!isCurrentValid}
+                    style={{
+                        backgroundColor: isCurrentValid ? 'var(--color-primary)' : '#ccc',
                         color: 'white',
                         padding: '0.75rem 1.5rem',
                         borderRadius: '6px',
                         border: 'none',
                         fontSize: '1rem',
-                        cursor: isValid ? 'pointer' : 'not-allowed',
-                        transition: 'background-color 0.2s'
+                        cursor: isCurrentValid ? 'pointer' : 'not-allowed',
+                        transition: 'background-color 0.2s',
+                        fontWeight: 600,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
                     }}
                 >
-                    Validar y Continuar
+                    {isLastStep ? 'Validar Final y Continuar ✨' : 'Siguiente Medida &rarr;'}
                 </button>
             </div>
         </StepCard>
