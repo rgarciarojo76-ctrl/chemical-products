@@ -125,9 +125,9 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
                                                     Elimina el uso de formaldehído gas cancerígeno. Tecnología limpia (subproductos: agua y oxígeno) con eficacia esporicida validada. Baja temperatura (47-56°C).
                                                 </p>
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem', fontSize: '0.75rem' }}>
-                                                    <span style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem' }}>
-                                                        Fuente: CDC "Guideline for Disinfection and Sterilization in Healthcare Facilities"
-                                                    </span>
+                                                    <a href="https://www.cdc.gov/infectioncontrol/guidelines/disinfection/index.html" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem', textDecoration: 'none', display: 'block', marginBottom: '0.25rem' }}>
+                                                        Fuente: CDC "Guideline for Disinfection and Sterilization in Healthcare Facilities" 🔗
+                                                    </a>
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                         <a href="https://www.asp.com/es-es/productos/sistemas-de-esterilizacion-sterrad" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
                                                             🏢 ASP (STERRAD) &rarr;
@@ -149,9 +149,9 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
                                                     Sustituye el cross-linking de aldehídos. Permite mayor recuperación de ADN/ARN para biología molecular sin la toxicidad/carcinogenicidad del formol.
                                                 </p>
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem', fontSize: '0.75rem' }}>
-                                                    <span style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem' }}>
-                                                        Fuente: NIH (National Institutes of Health) "Formalin-free fixatives review"
-                                                    </span>
+                                                    <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3927343/" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem', textDecoration: 'none', display: 'block', marginBottom: '0.25rem' }}>
+                                                        Fuente: NIH (National Institutes of Health) "Formalin-free fixatives review" 🔗
+                                                    </a>
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                         <a href="https://www.milestonemedsrl.com/product/finefix-formalin-free-fixative/" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
                                                             🏢 Milestone Medical &rarr;
@@ -173,9 +173,9 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
                                                     Aglomerantes "No Added Formaldehyde" (NAF). Eliminan totalmente la emisión en tableros. Mayor resistencia a humedad que la urea-formol.
                                                 </p>
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem', fontSize: '0.75rem' }}>
-                                                    <span style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem' }}>
-                                                        Fuente: Fichas Técnicas Industriales (Weinberger Holz / Sonae Arauco)
-                                                    </span>
+                                                    <a href="https://www.sonaearauco.com/es/productos/ecoboard/detalles" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem', textDecoration: 'none', display: 'block', marginBottom: '0.25rem' }}>
+                                                        Fuente: Fichas Técnicas Industriales (Weinberger Holz / Sonae Arauco) 🔗
+                                                    </a>
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                         <a href="https://www.sonaearauco.com/es/productos/ecoboard/detalles" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
                                                             🏢 Sonae Arauco (Ecoboard) &rarr;
@@ -197,9 +197,9 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
                                                     Biocida oxidante biodegradable (se descompone en acético, agua, O2). No fija proteínas ni crea biofilms, a diferencia de los aldehídos.
                                                 </p>
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem', fontSize: '0.75rem' }}>
-                                                    <span style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem' }}>
-                                                        Fuente: UNE-EN ISO 15883 (Lavadoras desinfectadoras)
-                                                    </span>
+                                                    <a href="https://www.une.org/encuentra-tu-norma/busca-tu-norma/norma?c=N0063998" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem', textDecoration: 'none', display: 'block', marginBottom: '0.25rem' }}>
+                                                        Fuente: UNE-EN ISO 15883 (Lavadoras desinfectadoras) 🔗
+                                                    </a>
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                         <a href="https://www.sterislifesciences.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
                                                             🏢 STERIS / Solvay &rarr;
@@ -221,9 +221,9 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
                                                     Alternativas no tóxicas para conservación de muestras en entornos de bajo riesgo. Preservación morfológica adecuada para H&E rutinaria.
                                                 </p>
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem', fontSize: '0.75rem' }}>
-                                                    <span style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem' }}>
-                                                        Fuente: Journal of Oral and Maxillofacial Pathology (JOMFP, 2020)
-                                                    </span>
+                                                    <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6996362/" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', borderLeft: '2px solid #94a3b8', paddingLeft: '0.5rem', textDecoration: 'none', display: 'block', marginBottom: '0.25rem' }}>
+                                                        Fuente: Journal of Oral and Maxillofacial Pathology (JOMFP, 2020) 🔗
+                                                    </a>
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                         <span style={{ color: '#999', cursor: 'help' }} title="Solución natural no comercializada específicamente">
                                                             🏢 (Producto Genérico)
