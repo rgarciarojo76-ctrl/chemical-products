@@ -295,13 +295,22 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
                                 style={{
                                     width: '100%',
                                     padding: '0.75rem',
-                                    border: '1px solid #dc3545',
+                                    border: currentStatus.justificationIfNo.trim().length > 5 ? '1px solid #cbd5e1' : '1px solid #dc3545',
                                     borderRadius: '6px',
                                     minHeight: '100px',
                                     fontSize: '0.95rem',
                                     boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.05)'
                                 }}
                             />
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '4px' }}>
+                                <span style={{
+                                    fontSize: '0.75rem',
+                                    color: currentStatus.justificationIfNo.trim().length > 5 ? '#28a745' : '#dc3545',
+                                    fontWeight: 600
+                                }}>
+                                    {currentStatus.justificationIfNo.trim().length} / 6 caracteres mínimos
+                                </span>
+                            </div>
                         </div>
                     )}
                 </div>
