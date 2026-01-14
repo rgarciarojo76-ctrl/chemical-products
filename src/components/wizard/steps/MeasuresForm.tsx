@@ -10,14 +10,18 @@ interface MeasuresFormProps {
 }
 
 export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdate, onNext }) => {
-    // Initialize state with all measures if empty
+    // Initialize state with all measures, merging with initialData if present
     const initializeMeasures = () => {
-        if (initialData.length > 0) return initialData;
-        return RD_MEASURES.map(m => ({
-            measureId: m.id,
-            implemented: false,
-            justificationIfNo: ''
-        }));
+        return RD_MEASURES.map(m => {
+            const existing = initialData.find(d => d.measureId === m.id);
+            if (existing) return existing;
+
+            return {
+                measureId: m.id,
+                implemented: false,
+                justificationIfNo: ''
+            };
+        });
     };
 
     const [measures, setMeasures] = useState<MeasureStatus[]>(initializeMeasures);
@@ -170,11 +174,11 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
                                             📖 Fuente: CDC "Guideline for Disinfection..." 🔗
                                         </a>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <a href="https://www.asp.com/es-es/productos/sistemas-de-esterilizacion-sterrad" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
-                                                🏢 ASP (STERRAD) &rarr;
+                                            <a href="https://www.asp.com/es-es" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
+                                                🏢 ASP (Web Oficial) &rarr;
                                             </a>
-                                            <a href="https://www.medline.com/media/assets/pdf/sds/Hxs_Hydrogen_Peroxide_Sterilant_SDS_US_EN.pdf" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
-                                                📄 Ver FDS (Ejemplo)
+                                            <a href="https://www.asp.com/es-es/biblioteca-tecnica" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
+                                                📄 Buscar FDS (Biblioteca)
                                             </a>
                                         </div>
                                     </div>
@@ -194,11 +198,11 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
                                             📖 Fuente: NIH "Formalin-free fixatives review" 🔗
                                         </a>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <a href="https://www.milestonemedsrl.com/product/finefix-formalin-free-fixative/" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
+                                            <a href="https://www.milestonemedsrl.com/pathology/reagents-and-consumables/finefix/" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
                                                 🏢 Milestone Medical &rarr;
                                             </a>
-                                            <a href="https://www.milestonemedsrl.com/product/finefix-formalin-free-fixative/#downloads" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
-                                                📄 Ver FDS (Web)
+                                            <a href="https://www.milestonemedsrl.com/resources/" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
+                                                📄 Descargas / FDS
                                             </a>
                                         </div>
                                     </div>
@@ -214,15 +218,15 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
                                         Aglomerantes "No Added Formaldehyde" (NAF). Eliminan totalmente la emisión en tableros. Mayor resistencia a humedad que la urea-formol.
                                     </p>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid #f1f5f9', paddingTop: '0.5rem' }}>
-                                        <a href="https://www.sonaearauco.com/es/productos/ecoboard/detalles" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', fontSize: '0.8rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                        <a href="https://www.sonaearauco.com/es/productos" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', fontSize: '0.8rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
                                             📖 Fuente: Fichas Técnicas (Sonae Arauco) 🔗
                                         </a>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <a href="https://www.sonaearauco.com/es/productos/ecoboard/detalles" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
-                                                🏢 Sonae Arauco (Ecoboard) &rarr;
+                                            <a href="https://www.sonaearauco.com/es/productos" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
+                                                🏢 Sonae Arauco (Web) &rarr;
                                             </a>
-                                            <a href="https://www.sonaearauco.com/downloads/technical-data-sheets" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
-                                                📄 Ver Ficha Técnica
+                                            <a href="https://www.sonaearauco.com/es/areadescargas" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
+                                                📄 Área de Descargas
                                             </a>
                                         </div>
                                     </div>
@@ -238,15 +242,15 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
                                         Biocida oxidante biodegradable (se descompone en acético, agua, O2). No fija proteínas ni crea biofilms, a diferencia de los aldehídos.
                                     </p>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid #f1f5f9', paddingTop: '0.5rem' }}>
-                                        <a href="https://www.une.org/encuentra-tu-norma/busca-tu-norma/norma?c=N0063998" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', fontSize: '0.8rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                            📖 Fuente: UNE-EN ISO 15883 (Lavadoras) 🔗
+                                        <a href="https://www.iso.org/standard/53385.html" target="_blank" rel="noopener noreferrer" style={{ color: '#64748b', fontStyle: 'italic', fontSize: '0.8rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            📖 Fuente: ISO 15883-4 (Endoscopios) 🔗
                                         </a>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <a href="https://www.sterislifesciences.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
-                                                🏢 STERIS / Solvay &rarr;
+                                            <a href="https://www.sterislifesciences.com/products/surface-disinfectants" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}>
+                                                🏢 STERIS (Desinfectantes) &rarr;
                                             </a>
-                                            <a href="https://www.sterislifesciences.com/products/surface-disinfectants/spor-klenz-ready-to-use-cold-sterilant" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
-                                                📄 Ver FDS (Spor-Klenz)
+                                            <a href="https://www.sterislifesciences.com/resources/safety-data-sheets" target="_blank" rel="noopener noreferrer" style={{ color: '#dc2626', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
+                                                📄 Buscar FDS (Oficial)
                                             </a>
                                         </div>
                                     </div>
