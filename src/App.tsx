@@ -71,6 +71,7 @@ function App() {
               <HazardForm
                 onAnalyze={engine.runHazardAssessment}
                 onNext={engine.nextStep}
+                onBack={() => engine.goToStep(0)}
                 initialData={engine.state.hazard.input}
               />
             )}
@@ -79,6 +80,7 @@ function App() {
               <ExposureForm
                 onAnalyze={engine.runExposureSieveAssessment}
                 onNext={engine.nextStep}
+                onBack={() => engine.goToStep(1)}
                 onFinish={() => engine.goToStep(5)}
                 initialData={engine.state.exposureSieve.input}
                 substanceName={engine.state.hazard.input.substanceName}
@@ -89,6 +91,7 @@ function App() {
               <HygienicEvalForm
                 onAnalyze={engine.runHygienicAssessment}
                 onNext={engine.nextStep}
+                onBack={() => engine.goToStep(2)}
                 initialData={engine.state.hygienicEval.input}
                 vlaReference={engine.state.hygienicEval.input.vla}
                 substanceName={engine.state.hazard.input.substanceName}
@@ -100,6 +103,7 @@ function App() {
                 initialData={engine.state.measures}
                 onUpdate={engine.updateMeasures}
                 onNext={engine.nextStep}
+                onBack={() => engine.goToStep(3)}
               />
             )}
 
@@ -107,6 +111,7 @@ function App() {
               <FinalReport
                 state={engine.state}
                 onReset={() => { setStarted(false); engine.reset(); }}
+                onBack={() => engine.goToStep(4)}
               />
             )}
           </WizardContainer>

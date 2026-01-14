@@ -6,12 +6,13 @@ import jsPDF from 'jspdf';
 interface ExposureFormProps {
     onAnalyze: (input: ExposureSieveInput) => ExposureSieveAssessment;
     onNext: () => void;
+    onBack?: () => void;
     onFinish: () => void;
     initialData?: ExposureSieveInput;
     substanceName?: string;
 }
 
-export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, onFinish, initialData, substanceName }) => {
+export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, onBack, onFinish, initialData, substanceName }) => {
     const [formData, setFormData] = useState<ExposureSieveInput>(initialData || {
         physicalForm: 'liquid_low_volatility',
         hasContact: true
@@ -220,12 +221,28 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, o
                 </p>
             </div>
 
-            <div className="actions" style={{ marginTop: 'var(--spacing-lg)', borderTop: '1px solid #eee', paddingTop: 'var(--spacing-md)' }}>
+            <div className="actions" style={{ marginTop: 'var(--spacing-lg)', borderTop: '1px solid #eee', paddingTop: 'var(--spacing-md)', display: 'flex', gap: '1rem' }}>
+                {onBack && (
+                    <button
+                        onClick={onBack}
+                        style={{
+                            padding: '0.75rem 1.5rem',
+                            borderRadius: '6px',
+                            border: '1px solid #ccc',
+                            backgroundColor: 'white',
+                            color: '#666',
+                            cursor: 'pointer',
+                            fontSize: '1rem'
+                        }}
+                    >
+                        &larr; Anterior
+                    </button>
+                )}
                 {!result ? (
                     <button
                         onClick={handleAnalyze}
                         style={{
-                            width: '100%',
+                            flex: 1,
                             backgroundColor: 'var(--color-primary)',
                             color: 'white',
                             padding: '0.75rem',

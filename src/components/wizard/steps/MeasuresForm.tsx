@@ -7,9 +7,10 @@ interface MeasuresFormProps {
     initialData: MeasureStatus[];
     onUpdate: (measures: MeasureStatus[]) => void;
     onNext: () => void;
+    onBack?: () => void;
 }
 
-export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdate, onNext }) => {
+export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdate, onNext, onBack }) => {
     // Initialize state with all measures, merging with initialData if present
     const initializeMeasures = () => {
         return RD_MEASURES.map(m => {
@@ -57,6 +58,8 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({ initialData, onUpdat
     const handlePrevStep = () => {
         if (activeStep > 0) {
             setActiveStep(prev => prev - 1);
+        } else if (onBack) {
+            onBack();
         }
     };
 

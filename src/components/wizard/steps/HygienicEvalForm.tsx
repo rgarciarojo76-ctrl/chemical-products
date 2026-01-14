@@ -5,12 +5,13 @@ import type { HygienicEvalInput, HygienicAssessment } from '../../../types';
 interface HygienicEvalFormProps {
     onAnalyze: (input: HygienicEvalInput) => HygienicAssessment;
     onNext: () => void;
+    onBack?: () => void;
     initialData?: HygienicEvalInput;
     vlaReference?: number; // Passed from prev state
     substanceName?: string;
 }
 
-export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, onNext, initialData, vlaReference, substanceName }) => {
+export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, onNext, onBack, initialData, vlaReference, substanceName }) => {
     const [formData, setFormData] = useState<HygienicEvalInput>(initialData || {
         vla: vlaReference ? vlaReference : undefined
     });
@@ -351,12 +352,28 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({ onAnalyze, o
             </div>
 
             {/* 4. Actions & Verification */}
-            <div className="actions" style={{ marginTop: 'var(--spacing-lg)', borderTop: '1px solid #eee', paddingTop: 'var(--spacing-md)' }}>
+            <div className="actions" style={{ marginTop: 'var(--spacing-lg)', borderTop: '1px solid #eee', paddingTop: 'var(--spacing-md)', display: 'flex', gap: '1rem' }}>
+                {onBack && (
+                    <button
+                        onClick={onBack}
+                        style={{
+                            padding: '0.75rem 1.5rem',
+                            borderRadius: '6px',
+                            border: '1px solid #ccc',
+                            backgroundColor: 'white',
+                            color: '#666',
+                            cursor: 'pointer',
+                            fontSize: '1rem'
+                        }}
+                    >
+                        &larr; Anterior
+                    </button>
+                )}
                 {!result ? (
                     <button
                         onClick={handleAnalyze}
                         style={{
-                            width: '100%',
+                            flex: 1,
                             backgroundColor: 'var(--color-primary)',
                             color: 'white',
                             padding: '0.75rem',

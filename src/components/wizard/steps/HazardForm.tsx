@@ -11,10 +11,11 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 interface HazardFormProps {
     onAnalyze: (input: HazardInput) => HazardAssessment;
     onNext: () => void;
+    onBack?: () => void;
     initialData?: HazardInput;
 }
 
-export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext, initialData }) => {
+export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext, onBack, initialData }) => {
     const [formData, setFormData] = useState<HazardInput>(initialData || {
         substanceName: '',
         hPhrases: [],
@@ -468,12 +469,28 @@ export const HazardForm: React.FC<HazardFormProps> = ({ onAnalyze, onNext, initi
                 )}
             </div>
 
-            <div className="actions" style={{ marginTop: 'var(--spacing-lg)', borderTop: '1px solid #eee', paddingTop: 'var(--spacing-md)' }}>
+            <div className="actions" style={{ marginTop: 'var(--spacing-lg)', borderTop: '1px solid #eee', paddingTop: 'var(--spacing-md)', display: 'flex', gap: '1rem' }}>
+                {onBack && (
+                    <button
+                        onClick={onBack}
+                        style={{
+                            padding: '0.75rem 1.5rem',
+                            borderRadius: '6px',
+                            border: '1px solid #ccc',
+                            backgroundColor: 'white',
+                            color: '#666',
+                            cursor: 'pointer',
+                            fontSize: '1rem'
+                        }}
+                    >
+                        &larr; Anterior
+                    </button>
+                )}
                 {!result ? (
                     <button
                         onClick={handleAnalyze}
                         style={{
-                            width: '100%',
+                            flex: 1,
                             backgroundColor: 'var(--color-primary)',
                             color: 'white',
                             padding: '0.75rem',

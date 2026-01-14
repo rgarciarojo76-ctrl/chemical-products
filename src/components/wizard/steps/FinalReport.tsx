@@ -6,9 +6,10 @@ import { RD_MEASURES } from '../../../utils/engineLogic';
 interface FinalReportProps {
     state: AssessmentState;
     onReset: () => void;
+    onBack?: () => void;
 }
 
-export const FinalReport: React.FC<FinalReportProps> = ({ state, onReset }) => {
+export const FinalReport: React.FC<FinalReportProps> = ({ state, onReset, onBack }) => {
     const reportRef = useRef<HTMLDivElement>(null);
 
     const handlePrint = () => {
@@ -170,6 +171,21 @@ export const FinalReport: React.FC<FinalReportProps> = ({ state, onReset }) => {
             </div>
 
             <div className="actions" style={{ marginTop: '2rem', borderTop: '1px solid #eee', paddingTop: '1rem', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+                {onBack && (
+                    <button
+                        onClick={onBack}
+                        style={{
+                            backgroundColor: 'white',
+                            color: '#666',
+                            border: '1px solid #ccc',
+                            padding: '0.75rem 1.5rem',
+                            borderRadius: '6px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        &larr; Volver a Editar
+                    </button>
+                )}
                 <button
                     onClick={onReset}
                     style={{
