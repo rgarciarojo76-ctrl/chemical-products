@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { StepCard } from '../../ui/StepCard';
+import { StepCard, TrafficLight, LegalTooltip } from '../../ui';
 import type { AssessmentState } from '../../../types';
 import { RD_MEASURES } from '../../../utils/engineLogic';
 
@@ -49,19 +49,16 @@ export const FinalReport: React.FC<FinalReportProps> = ({ state, onReset }) => {
 
                         <div style={{ marginTop: '1rem' }}>
                             <strong>Conclusión de Peligrosidad:</strong>
-                            <div style={{
-                                marginTop: '0.5rem',
-                                padding: '0.5rem',
-                                backgroundColor: hazardResult?.isHazardous ? '#fff3cd' : '#d4edda',
-                                color: hazardResult?.isHazardous ? '#856404' : '#155724',
-                                borderRadius: '4px',
-                                fontWeight: 600
-                            }}>
-                                {hazardResult?.isHazardous ? 'APLICA RD 665/1997 (Agente Cancerígeno/Mutágeno/Reprotóxico)' : 'No clasificado como CMR Cat 1A/1B'}
+                            <div style={{ marginTop: '0.5rem' }}>
+                                <TrafficLight
+                                    status={hazardResult?.isHazardous ? 'warning' : 'safe'}
+                                    text={hazardResult?.isHazardous ? 'APLICA RD 665/1997 (Agente Cancerígeno/Mutágeno/Reprotóxico)' : 'No clasificado como CMR Cat 1A/1B'}
+                                    icon={hazardResult?.isHazardous ? '☢️' : '✅'}
+                                />
                             </div>
                             {hazardResult?.justifications.map((j, i) => (
-                                <p key={i} style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
-                                    • {j.technical} ({j.legal.article})
+                                <p key={i} style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    • {j.technical} <LegalTooltip reference={j.legal.article} />
                                 </p>
                             ))}
                         </div>
@@ -86,15 +83,11 @@ export const FinalReport: React.FC<FinalReportProps> = ({ state, onReset }) => {
                         </div>
 
                         <div style={{ marginTop: '0.5rem' }}>
-                            <div style={{
-                                padding: '0.5rem',
-                                backgroundColor: state.exposureSieve.result?.isRelevant ? '#d1ecf1' : '#d4edda',
-                                color: state.exposureSieve.result?.isRelevant ? '#0c5460' : '#155724',
-                                borderRadius: '4px',
-                                fontWeight: 600
-                            }}>
-                                {state.exposureSieve.result?.isRelevant ? 'Exposición Potencialmente Relevante' : 'Exposición No Significativa'}
-                            </div>
+                            <TrafficLight
+                                status={state.exposureSieve.result?.isRelevant ? 'info' : 'safe'}
+                                text={state.exposureSieve.result?.isRelevant ? 'Exposición Potencialmente Relevante' : 'Exposición No Significativa'}
+                                icon={state.exposureSieve.result?.isRelevant ? 'ℹ️' : '✅'}
+                            />
                         </div>
                     </div>
 
@@ -111,16 +104,12 @@ export const FinalReport: React.FC<FinalReportProps> = ({ state, onReset }) => {
                             </div>
 
                             <div style={{ marginTop: '0.5rem' }}>
-                                <div style={{
-                                    padding: '0.5rem',
-                                    backgroundColor: state.hygienicEval.result.isSafe ? '#d4edda' : '#f8d7da',
-                                    color: state.hygienicEval.result.isSafe ? '#155724' : '#721c24',
-                                    borderRadius: '4px',
-                                    fontWeight: 600
-                                }}>
-                                    {state.hygienicEval.result.isSafe ? 'Situación CONFORME (Riesgo Controlado)' : 'Situación NO CONFORME (Riesgo Higiénico)'}
-                                </div>
-                                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
+                                <TrafficLight
+                                    status={state.hygienicEval.result.isSafe ? 'safe' : 'danger'}
+                                    text={state.hygienicEval.result.isSafe ? 'Situación CONFORME (Riesgo Controlado)' : 'Situación NO CONFORME (Riesgo Higiénico)'}
+                                    icon={state.hygienicEval.result.isSafe ? '✅' : '🛑'}
+                                />
+                                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem' }}>
                                     {state.hygienicEval.result.justification.technical}
                                 </p>
                             </div>
@@ -138,7 +127,7 @@ export const FinalReport: React.FC<FinalReportProps> = ({ state, onReset }) => {
                         <thead>
                             <tr style={{ backgroundColor: 'var(--color-primary)', color: 'white' }}>
                                 <th style={{ padding: '0.5rem', textAlign: 'left' }}>Medida</th>
-                                <th style={{ padding: '0.5rem', textAlign: 'center', width: '80px' }}>Estado</th>
+                                <th style={{ padding: '0.5rem', textAlign: 'center', width: '120px' }}>Estado</th>
                                 <th style={{ padding: '0.5rem', textAlign: 'left' }}>Justificación / Comentario</th>
                             </tr>
                         </thead>
@@ -147,14 +136,16 @@ export const FinalReport: React.FC<FinalReportProps> = ({ state, onReset }) => {
                                 <tr key={m.measureId} style={{ borderBottom: '1px solid #eee' }}>
                                     <td style={{ padding: '0.75rem 0.5rem' }}>
                                         <div style={{ fontWeight: 600 }}>{getMeasureText(m.measureId)}</div>
-                                        <div style={{ fontSize: '0.75rem', color: '#888' }}>{getArticle(m.measureId)}</div>
+                                        <div style={{ marginTop: '4px' }}>
+                                            <LegalTooltip reference={getArticle(m.measureId)} />
+                                        </div>
                                     </td>
                                     <td style={{ padding: '0.5rem', textAlign: 'center' }}>
-                                        {m.implemented ? (
-                                            <span style={{ color: 'green', fontWeight: 'bold' }}>SÍ</span>
-                                        ) : (
-                                            <span style={{ color: 'red', fontWeight: 'bold' }}>NO</span>
-                                        )}
+                                        <TrafficLight
+                                            status={m.implemented ? 'safe' : 'danger'}
+                                            text={m.implemented ? 'SÍ' : 'NO'}
+                                            size="sm"
+                                        />
                                     </td>
                                     <td style={{ padding: '0.5rem', fontStyle: 'italic', color: '#555' }}>
                                         {m.implemented ? 'Implantada' : m.justificationIfNo}
