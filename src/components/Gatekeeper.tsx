@@ -76,7 +76,16 @@ const Gatekeeper: React.FC<GatekeeperProps> = ({ children }) => {
         }}
       >
         <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>⛔ {error}</h1>
-        <p>Por favor, inicie sesión con un enlace válido.</p>
+        <p>
+          Por favor, inicie sesión a través del{" "}
+          <a
+            href="https://direccion-tecnica-ia-lab.vercel.app"
+            style={{ color: "#0284c7", fontWeight: "bold" }}
+          >
+            Portal Oficial
+          </a>
+          .
+        </p>
       </div>
     );
   }

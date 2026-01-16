@@ -1,319 +1,438 @@
-import React, { useState } from 'react';
-import { StepCard } from '../../ui/StepCard';
-import type { ExposureSieveInput, ExposureSieveAssessment } from '../../../types';
-import jsPDF from 'jspdf';
+import React, { useState } from "react";
+import { StepCard } from "../../ui/StepCard";
+import type {
+  ExposureSieveInput,
+  ExposureSieveAssessment,
+} from "../../../types";
+import jsPDF from "jspdf";
 
 interface ExposureFormProps {
-    onAnalyze: (input: ExposureSieveInput) => ExposureSieveAssessment;
-    onNext: () => void;
-    onBack?: () => void;
-    onFinish: () => void;
-    initialData?: ExposureSieveInput;
-    substanceName?: string;
+  onAnalyze: (input: ExposureSieveInput) => ExposureSieveAssessment;
+  onNext: () => void;
+  onBack?: () => void;
+  onFinish: () => void;
+  initialData?: ExposureSieveInput;
+  substanceName?: string;
 }
 
-export const ExposureForm: React.FC<ExposureFormProps> = ({ onAnalyze, onNext, onBack, onFinish, initialData, substanceName }) => {
-    const [formData, setFormData] = useState<ExposureSieveInput>(initialData || {
-        physicalForm: 'liquid_low_volatility',
-        hasContact: true
-    });
-    const [result, setResult] = useState<ExposureSieveAssessment | null>(null);
+export const ExposureForm: React.FC<ExposureFormProps> = ({
+  onAnalyze,
+  onNext,
+  onBack,
+  onFinish,
+  initialData,
+  substanceName,
+}) => {
+  const [formData, setFormData] = useState<ExposureSieveInput>(
+    initialData || {
+      physicalForm: "liquid_low_volatility",
+      hasContact: true,
+    },
+  );
+  const [result, setResult] = useState<ExposureSieveAssessment | null>(null);
 
-    const handleAnalyze = () => {
-        const assessment = onAnalyze(formData);
-        setResult(assessment);
-    };
+  const handleAnalyze = () => {
+    const assessment = onAnalyze(formData);
+    setResult(assessment);
+  };
 
+  const generateReport = async () => {
+    try {
+      const doc = new jsPDF();
+      const date = new Date().toLocaleDateString("es-ES");
+      const pageWidth = doc.internal.pageSize.width;
 
+      // --- Helper to Load Logo ---
+      const logoUrl = "/logo-direccion-tecnica.jpg";
+      const logoBase64 = await new Promise<string>((resolve) => {
+        const img = new Image();
+        img.src = logoUrl;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL("image/jpeg")); // changed to jpeg matching file extension
+        };
+        img.onerror = () => resolve(""); // Fallback if fails
+      });
 
-    const generateReport = async () => {
-        try {
-            const doc = new jsPDF();
-            const date = new Date().toLocaleDateString('es-ES');
-            const pageWidth = doc.internal.pageSize.width;
+      // --- Header With Logo ---
+      if (logoBase64) {
+        doc.addImage(logoBase64, "JPEG", 20, 10, 48, 0); // Keep aspect ratio, adjusted width
+      }
 
-            // --- Helper to Load Logo ---
-            const logoUrl = '/aspy_logo.png';
-            const logoBase64 = await new Promise<string>((resolve) => {
-                const img = new Image();
-                img.src = logoUrl;
-                img.onload = () => {
-                    const canvas = document.createElement("canvas");
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext("2d");
-                    ctx?.drawImage(img, 0, 0);
-                    resolve(canvas.toDataURL("image/png"));
-                };
-                img.onerror = () => resolve(''); // Fallback if fails
-            });
+      // --- Title Section ---
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.setTextColor(0, 155, 219); // Corporate Primary (#009bdb)
+      doc.text("INFORME TÉCNICO JUSTIFICATIVO", pageWidth / 2, 25, {
+        align: "center",
+      });
 
-            // --- Header With Logo ---
-            if (logoBase64) {
-                doc.addImage(logoBase64, 'PNG', 20, 10, 30, 0); // Keep aspect ratio
-            }
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(0, 0, 0);
+      doc.text(
+        "(Riesgo Químico - Agentes Cancerígenos y Mutágenos)",
+        pageWidth / 2,
+        32,
+        { align: "center" },
+      );
 
-            // --- Title Section ---
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(14);
-            doc.setTextColor(0, 155, 219); // ASPY Corporate Primary (#009bdb)
-            doc.text("INFORME TÉCNICO JUSTIFICATIVO", pageWidth / 2, 25, { align: "center" });
+      // --- Info Box ---
+      doc.setFillColor(248, 249, 250); // Light Gray
+      doc.setDrawColor(230, 230, 230);
+      doc.rect(20, 40, 170, 20, "FD");
 
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text("(Riesgo Químico - Agentes Cancerígenos y Mutágenos)", pageWidth / 2, 32, { align: "center" });
+      doc.setFontSize(9);
+      doc.setTextColor(50, 50, 50);
+      doc.text(`Fecha de Emisión: ${date}`, 25, 46);
 
-            // --- Info Box ---
-            doc.setFillColor(248, 249, 250); // Light Gray
-            doc.setDrawColor(230, 230, 230);
-            doc.rect(20, 40, 170, 20, 'FD');
+      doc.setFont("helvetica", "bold");
+      doc.text(
+        `Estado: EXPOSICIÓN NO RELEVANTE (Bajo Umbral Efectivo)`,
+        25,
+        51,
+      );
 
-            doc.setFontSize(9);
-            doc.setTextColor(50, 50, 50);
-            doc.text(`Fecha de Emisión: ${date}`, 25, 46);
+      doc.setFont("helvetica", "normal");
+      doc.text(
+        `Referencia Legal: Real Decreto 665/1997, de 12 de mayo`,
+        25,
+        56,
+      );
 
-            doc.setFont("helvetica", "bold");
-            doc.text(`Estado: EXPOSICIÓN NO RELEVANTE (Bajo Umbral Efectivo)`, 25, 51);
+      // --- 1. Identificación ---
+      let y = 75;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(0, 155, 219); // Corporate Primary (#009bdb)
+      doc.text("1. IDENTIFICACIÓN DE LA SITUACIÓN", 20, y);
+      doc.setDrawColor(200, 200, 200);
+      doc.line(20, y + 2, 190, y + 2);
+      y += 10;
 
-            doc.setFont("helvetica", "normal");
-            doc.text(`Referencia Legal: Real Decreto 665/1997, de 12 de mayo`, 25, 56);
+      // Map physical forms to Spanish
+      const formMap: Record<string, string> = {
+        solid_massive: "Sólido Masivo / Aleación (Pieza compacta)",
+        solid_dust: "Sólido Pulvurulento / Polvo",
+        liquid_low_volatility: "Líquido (Baja volatilidad)",
+        liquid_high_volatility: "Líquido (Alta volatilidad / Aerosol)",
+        gas: "Gas / Vapor",
+      };
+      const formText = formData.physicalForm
+        ? formMap[formData.physicalForm] || formData.physicalForm
+        : "No detectada";
 
-            // --- 1. Identificación ---
-            let y = 75;
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(11);
-            doc.setTextColor(0, 155, 219); // ASPY Corporate Primary (#009bdb)
-            doc.text("1. IDENTIFICACIÓN DE LA SITUACIÓN", 20, y);
-            doc.setDrawColor(200, 200, 200);
-            doc.line(20, y + 2, 190, y + 2);
-            y += 10;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.text(
+        `• Agente Químico: ${substanceName || "(No identificado)"}`,
+        25,
+        y,
+      );
+      y += 6;
+      doc.text(`• Forma Física Detectada: ${formText}`, 25, y);
+      y += 6;
+      doc.text(
+        `• ¿Contacto Directo / Liberación?: ${formData.hasContact ? "SÍ" : "NO"}`,
+        25,
+        y,
+      );
+      y += 12;
 
-            // Map physical forms to Spanish
-            const formMap: Record<string, string> = {
-                'solid_massive': 'Sólido Masivo / Aleación (Pieza compacta)',
-                'solid_dust': 'Sólido Pulvurulento / Polvo',
-                'liquid_low_volatility': 'Líquido (Baja volatilidad)',
-                'liquid_high_volatility': 'Líquido (Alta volatilidad / Aerosol)',
-                'gas': 'Gas / Vapor'
-            };
-            const formText = formData.physicalForm ? formMap[formData.physicalForm] || formData.physicalForm : 'No detectada';
+      // --- 2. Justificación Técnica ---
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(0, 155, 219); // Corporate Primary (#009bdb)
+      doc.text("2. JUSTIFICACIÓN TÉCNICA (Criterio Higiénico)", 20, y);
+      doc.line(20, y + 2, 190, y + 2);
+      y += 10;
 
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`• Agente Químico: ${substanceName || "(No identificado)"}`, 25, y); y += 6;
-            doc.text(`• Forma Física Detectada: ${formText}`, 25, y); y += 6;
-            doc.text(`• ¿Contacto Directo / Liberación?: ${formData.hasContact ? 'SÍ' : 'NO'}`, 25, y); y += 12;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      const introText =
+        "De acuerdo con la Guía Técnica del INSST para la evaluación y prevención de los riesgos relacionados con la exposición a agentes cancerígenos o mutágenos:";
+      doc.text(doc.splitTextToSize(introText, 170), 20, y);
+      y += 12;
 
-            // --- 2. Justificación Técnica ---
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(11);
-            doc.setTextColor(0, 155, 219); // ASPY Corporate Primary (#009bdb)
-            doc.text("2. JUSTIFICACIÓN TÉCNICA (Criterio Higiénico)", 20, y);
-            doc.line(20, y + 2, 190, y + 2);
-            y += 10;
+      // Quote Box with Translation Logic
+      doc.setFillColor(242, 242, 242); // Gray background for quote
+      doc.rect(25, y, 160, 18, "F");
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(9);
+      doc.setTextColor(80, 80, 80);
 
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            const introText = "De acuerdo con la Guía Técnica del INSST para la evaluación y prevención de los riesgos relacionados con la exposición a agentes cancerígenos o mutágenos:";
-            doc.text(doc.splitTextToSize(introText, 170), 20, y);
-            y += 12;
+      // Dynamic quote based on form
+      let quote =
+        '"Cuando el agente se presenta en forma de artículo sólido masivo... se considera que la Vía Inhalatoria es NO RELEVANTE."';
+      if (formData.physicalForm !== "solid_massive") {
+        quote =
+          '"No existe exposición por vía inhalatoria ni dérmica relevante al no haber contacto directo ni liberación de agente (Sistema Cerrado / Sin uso intencional)."';
+      }
 
-            // Quote Box with Translation Logic
-            doc.setFillColor(242, 242, 242); // Gray background for quote
-            doc.rect(25, y, 160, 18, 'F');
-            doc.setFont("helvetica", "italic");
-            doc.setFontSize(9);
-            doc.setTextColor(80, 80, 80);
+      doc.text(doc.splitTextToSize(quote, 150), 30, y + 6);
+      y += 24;
 
-            // Dynamic quote based on form
-            let quote = "\"Cuando el agente se presenta en forma de artículo sólido masivo... se considera que la Vía Inhalatoria es NO RELEVANTE.\"";
-            if (formData.physicalForm !== 'solid_massive') {
-                quote = "\"No existe exposición por vía inhalatoria ni dérmica relevante al no haber contacto directo ni liberación de agente (Sistema Cerrado / Sin uso intencional).\"";
-            }
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      const dermalText =
+        "Asimismo, al no existir contacto directo continuo o tratarse de un sistema donde la matriz del material impide la biodisponibilidad, se descarta la absorción dérmica.";
+      doc.text(doc.splitTextToSize(dermalText, 170), 20, y);
+      y += 15;
 
-            doc.text(doc.splitTextToSize(quote, 150), 30, y + 6);
-            y += 24;
+      // --- 3. Conclusión ---
+      y += 5;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(0, 155, 219); // Corporate Primary (#009bdb)
+      doc.text("3. CONCLUSIÓN JURÍDICA", 20, y);
+      doc.line(20, y + 2, 190, y + 2);
+      y += 10;
 
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            const dermalText = "Asimismo, al no existir contacto directo continuo o tratarse de un sistema donde la matriz del material impide la biodisponibilidad, se descarta la absorción dérmica.";
-            doc.text(doc.splitTextToSize(dermalText, 170), 20, y);
-            y += 15;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      const legalText =
+        "En base al Artículo 2 del RD 665/1997, no es necesaria la aplicación de medidas técnicas de control adicionales (Artículo 5) ni mediciones periódicas (Artículo 6).";
+      doc.text(doc.splitTextToSize(legalText, 170), 20, y);
+      y += 15;
 
-            // --- 3. Conclusión ---
-            y += 5;
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(11);
-            doc.setTextColor(0, 155, 219); // ASPY Corporate Primary (#009bdb)
-            doc.text("3. CONCLUSIÓN JURÍDICA", 20, y);
-            doc.line(20, y + 2, 190, y + 2);
-            y += 10;
+      // Dictamen Box (Green)
+      doc.setFillColor(209, 231, 221); // Light Green #d1e7dd
+      doc.setDrawColor(186, 219, 204);
+      doc.rect(40, y, 130, 18, "FD");
 
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            const legalText = "En base al Artículo 2 del RD 665/1997, no es necesaria la aplicación de medidas técnicas de control adicionales (Artículo 5) ni mediciones periódicas (Artículo 6).";
-            doc.text(doc.splitTextToSize(legalText, 170), 20, y);
-            y += 15;
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(15, 81, 50); // Dark Green #0f5132
+      doc.setFontSize(10);
+      doc.text("DICTAMEN: BAJO UMBRAL DE EXPOSICIÓN", pageWidth / 2, y + 7, {
+        align: "center",
+      });
+      doc.text(
+        "NO SE REQUIEREN ACCIONES DE HIGIENE INDUSTRIAL",
+        pageWidth / 2,
+        y + 13,
+        { align: "center" },
+      );
 
-            // Dictamen Box (Green)
-            doc.setFillColor(209, 231, 221); // Light Green #d1e7dd
-            doc.setDrawColor(186, 219, 204);
-            doc.rect(40, y, 130, 18, 'FD');
+      // Footer
+      const footerY = 280;
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(
+        "Documento generado automáticamente por sistema Dirección Técnica IA LAB.",
+        pageWidth / 2,
+        footerY,
+        { align: "center" },
+      );
 
-            doc.setFont("helvetica", "bold");
-            doc.setTextColor(15, 81, 50); // Dark Green #0f5132
-            doc.setFontSize(10);
-            doc.text("DICTAMEN: BAJO UMBRAL DE EXPOSICIÓN", pageWidth / 2, y + 7, { align: 'center' });
-            doc.text("NO SE REQUIEREN ACCIONES DE HIGIENE INDUSTRIAL", pageWidth / 2, y + 13, { align: 'center' });
+      // Save
+      doc.save("Informe_Justificativo_Exposicion_%_AGENTE.pdf");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("No se pudo generar el PDF por un error inesperado.");
+    }
+  };
 
-            // Footer
-            const footerY = 280;
-            doc.setFont("helvetica", "italic");
-            doc.setFontSize(8);
-            doc.setTextColor(150, 150, 150);
-            doc.text("Documento generado automáticamente por sistema ASPY AI LAB.", pageWidth / 2, footerY, { align: 'center' });
-
-            // Save
-            doc.save("Informe_Justificativo_Exposicion_%_AGENTE.pdf");
-        } catch (error) {
-            console.error("Error generating PDF:", error);
-            alert("No se pudo generar el PDF por un error inesperado.");
-        }
-    };
-
-    return (
-        <StepCard
-            title="Módulo B: Determinación de la presencia y/o exposición a agentes cancerígenos"
-            description="Evaluamos la forma de presentación y uso para descartar exposiciones no significativas."
-            icon="🛡️"
+  return (
+    <StepCard
+      title="Módulo B: Determinación de la presencia y/o exposición a agentes cancerígenos"
+      description="Evaluamos la forma de presentación y uso para descartar exposiciones no significativas."
+      icon="🛡️"
+    >
+      <div className="form-group mb-2">
+        <label
+          style={{ display: "block", fontWeight: 600, marginBottom: "0.5rem" }}
         >
-            <div className="form-group mb-2">
-                <label style={{ display: 'block', fontWeight: 600, marginBottom: '0.5rem' }}>Forma Física del Agente</label>
-                <select
-                    value={formData.physicalForm}
-                    onChange={e => setFormData({ ...formData, physicalForm: e.target.value as any })}
-                    style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+          Forma Física del Agente
+        </label>
+        <select
+          value={formData.physicalForm}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              physicalForm: e.target
+                .value as ExposureSieveInput["physicalForm"],
+            })
+          }
+          style={{
+            width: "100%",
+            padding: "0.5rem",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+          }}
+        >
+          <option value="solid_massive">
+            Sólido Masivo / Aleación (Pieza compacta)
+          </option>
+          <option value="solid_dust">Sólido Pulvurulento / Polvo</option>
+          <option value="liquid_low_volatility">
+            Líquido (Baja volatilidad)
+          </option>
+          <option value="liquid_high_volatility">
+            Líquido (Alta volatilidad / Aerosol)
+          </option>
+          <option value="gas">Gas / Vapor</option>
+        </select>
+      </div>
+
+      <div className="form-group mb-2">
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            cursor: "pointer",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={formData.hasContact}
+            onChange={(e) =>
+              setFormData({ ...formData, hasContact: e.target.checked })
+            }
+          />
+          <span style={{ fontWeight: 600 }}>
+            ¿Existe contacto directo o liberación intencional?
+          </span>
+        </label>
+        <p style={{ fontSize: "0.8rem", color: "#666", marginLeft: "1.5rem" }}>
+          Para sólidos masivos, desmarque si no hay tareas de corte, soldadura o
+          calentamiento.
+        </p>
+      </div>
+
+      <div
+        className="actions"
+        style={{
+          marginTop: "var(--spacing-lg)",
+          borderTop: "1px solid #eee",
+          paddingTop: "var(--spacing-md)",
+          display: "flex",
+          gap: "1rem",
+        }}
+      >
+        {onBack && (
+          <button
+            onClick={onBack}
+            style={{
+              padding: "0.75rem 1.5rem",
+              borderRadius: "6px",
+              border: "1px solid #ccc",
+              backgroundColor: "white",
+              color: "#666",
+              cursor: "pointer",
+              fontSize: "1rem",
+            }}
+          >
+            &larr; Anterior
+          </button>
+        )}
+        {!result ? (
+          <button
+            onClick={handleAnalyze}
+            style={{
+              flex: 1,
+              backgroundColor: "var(--color-primary)",
+              color: "white",
+              padding: "0.75rem",
+              borderRadius: "6px",
+              border: "none",
+              fontSize: "1rem",
+            }}
+          >
+            Verificar Relevancia
+          </button>
+        ) : (
+          <div
+            className={`result-box`}
+            style={{
+              padding: "1rem",
+              backgroundColor: result.isRelevant ? "#fff3cd" : "#d4edda",
+              border: `1px solid ${result.isRelevant ? "#ffecb5" : "#c3e6cb"}`,
+              borderRadius: "6px",
+            }}
+          >
+            <h4 style={{ color: result.isRelevant ? "#856404" : "#155724" }}>
+              {result.isRelevant
+                ? "Exposición Potencialmente Relevante"
+                : "Exposición No Relevante"}
+            </h4>
+            <p style={{ margin: "0.5rem 0", fontSize: "0.9rem" }}>
+              {result.justification.technical}
+            </p>
+
+            {!result.isRelevant && (
+              <div
+                style={{
+                  fontSize: "0.8rem",
+                  fontStyle: "italic",
+                  borderLeft: "2px solid rgba(0,0,0,0.2)",
+                  paddingLeft: "0.5rem",
+                }}
+              >
+                <strong>Base Legal:</strong>{" "}
+                {result.justification.legal.article} -{" "}
+                {result.justification.legal.text}
+              </div>
+            )}
+
+            <div
+              style={{
+                marginTop: "1rem",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              {/* DOWNLOAD JUSTIFICATION REPORT BUTTON (Only for Non-Relevant) */}
+              {!result.isRelevant && (
+                <button
+                  onClick={generateReport}
+                  style={{
+                    backgroundColor: "#28a745",
+                    color: "white",
+                    border: "none",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  }}
                 >
-                    <option value="solid_massive">Sólido Masivo / Aleación (Pieza compacta)</option>
-                    <option value="solid_dust">Sólido Pulvurulento / Polvo</option>
-                    <option value="liquid_low_volatility">Líquido (Baja volatilidad)</option>
-                    <option value="liquid_high_volatility">Líquido (Alta volatilidad / Aerosol)</option>
-                    <option value="gas">Gas / Vapor</option>
-                </select>
+                  <span>📄</span> Informe Justificativo
+                </button>
+              )}
+
+              <button
+                onClick={result.isRelevant ? onNext : onFinish}
+                style={{
+                  backgroundColor: "var(--color-primary)",
+                  color: "white",
+                  border: "none",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "4px",
+                  marginLeft: "auto",
+                }}
+              >
+                {result.isRelevant
+                  ? "Continuar a Evaluación Higiénica →"
+                  : "Finalizar Evaluación"}
+              </button>
             </div>
-
-            <div className="form-group mb-2">
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                    <input
-                        type="checkbox"
-                        checked={formData.hasContact}
-                        onChange={e => setFormData({ ...formData, hasContact: e.target.checked })}
-                    />
-                    <span style={{ fontWeight: 600 }}>¿Existe contacto directo o liberación intencional?</span>
-                </label>
-                <p style={{ fontSize: '0.8rem', color: '#666', marginLeft: '1.5rem' }}>
-                    Para sólidos masivos, desmarque si no hay tareas de corte, soldadura o calentamiento.
-                </p>
-            </div>
-
-            <div className="actions" style={{ marginTop: 'var(--spacing-lg)', borderTop: '1px solid #eee', paddingTop: 'var(--spacing-md)', display: 'flex', gap: '1rem' }}>
-                {onBack && (
-                    <button
-                        onClick={onBack}
-                        style={{
-                            padding: '0.75rem 1.5rem',
-                            borderRadius: '6px',
-                            border: '1px solid #ccc',
-                            backgroundColor: 'white',
-                            color: '#666',
-                            cursor: 'pointer',
-                            fontSize: '1rem'
-                        }}
-                    >
-                        &larr; Anterior
-                    </button>
-                )}
-                {!result ? (
-                    <button
-                        onClick={handleAnalyze}
-                        style={{
-                            flex: 1,
-                            backgroundColor: 'var(--color-primary)',
-                            color: 'white',
-                            padding: '0.75rem',
-                            borderRadius: '6px',
-                            border: 'none',
-                            fontSize: '1rem'
-                        }}
-                    >
-                        Verificar Relevancia
-                    </button>
-                ) : (
-                    <div className={`result-box`} style={{
-                        padding: '1rem',
-                        backgroundColor: result.isRelevant ? '#fff3cd' : '#d4edda',
-                        border: `1px solid ${result.isRelevant ? '#ffecb5' : '#c3e6cb'}`,
-                        borderRadius: '6px'
-                    }}>
-                        <h4 style={{ color: result.isRelevant ? '#856404' : '#155724' }}>
-                            {result.isRelevant ? 'Exposición Potencialmente Relevante' : 'Exposición No Relevante'}
-                        </h4>
-                        <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>{result.justification.technical}</p>
-
-                        {!result.isRelevant && <div style={{
-                            fontSize: '0.8rem',
-                            fontStyle: 'italic',
-                            borderLeft: '2px solid rgba(0,0,0,0.2)',
-                            paddingLeft: '0.5rem'
-                        }}>
-                            <strong>Base Legal:</strong> {result.justification.legal.article} - {result.justification.legal.text}
-                        </div>}
-
-                        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            {/* DOWNLOAD JUSTIFICATION REPORT BUTTON (Only for Non-Relevant) */}
-                            {!result.isRelevant && (
-                                <button
-                                    onClick={generateReport}
-                                    style={{
-                                        backgroundColor: '#28a745',
-                                        color: 'white',
-                                        border: 'none',
-                                        padding: '0.5rem 1rem',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '0.5rem',
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                                    }}
-                                >
-                                    <span>📄</span> Informe Justificativo
-                                </button>
-                            )}
-
-                            <button
-                                onClick={result.isRelevant ? onNext : onFinish}
-                                style={{
-                                    backgroundColor: 'var(--color-primary)',
-                                    color: 'white',
-                                    border: 'none',
-                                    padding: '0.5rem 1rem',
-                                    borderRadius: '4px',
-                                    marginLeft: 'auto'
-                                }}
-                            >
-                                {result.isRelevant ? 'Continuar a Evaluación Higiénica →' : 'Finalizar Evaluación'}
-                            </button>
-                        </div>
-                        <div style={{ clear: 'both' }}></div>
-                    </div>
-                )}
-            </div>
-        </StepCard>
-    );
+            <div style={{ clear: "both" }}></div>
+          </div>
+        )}
+      </div>
+    </StepCard>
+  );
 };
