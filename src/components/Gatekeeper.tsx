@@ -79,7 +79,7 @@ const Gatekeeper: React.FC<GatekeeperProps> = ({ children }) => {
         <p>
           Por favor, inicie sesión a través del{" "}
           <a
-            href="https://direccion-tecnica-ia-lab.vercel.app"
+            href="https://direccion-tecnica-chemicals.vercel.app"
             style={{ color: "#0284c7", fontWeight: "bold" }}
           >
             Portal Oficial
