@@ -1,4 +1,5 @@
-import React, { useEffect, useState, ReactNode } from "react";
+import React, { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 // Vital: VITE_SHARED_SECRET
 const SHARED_SECRET = import.meta.env.VITE_SHARED_SECRET;
 interface GatekeeperProps {
@@ -44,10 +45,11 @@ const Gatekeeper: React.FC<GatekeeperProps> = ({ children }) => {
           ["verify"],
         );
 
+        const signatureBuf = hexToBuf(signature);
         const verified = await crypto.subtle.verify(
           "HMAC",
           key,
-          hexToBuf(signature),
+          signatureBuf as any, // eslint-disable-line @typescript-eslint/no-explicit-any
           encoder.encode(timestamp),
         );
         if (verified) {
