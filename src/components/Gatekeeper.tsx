@@ -13,6 +13,10 @@ const Gatekeeper: React.FC<GatekeeperProps> = ({ children }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // DEBUG: Mostrar variables de entorno para diagnóstico en Vercel
+    console.log("DEBUG ENVIRONMENT:", JSON.stringify(import.meta.env));
+    console.log("DEBUG AUTH_HASH:", AUTH_HASH ? "CONFIGURED" : "MISSING");
+
     const verifyToken = async () => {
       // 1. Validar configuración
       if (!AUTH_HASH) {
