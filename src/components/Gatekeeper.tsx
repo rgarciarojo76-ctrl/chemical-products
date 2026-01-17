@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import React, { useEffect, useState, ReactNode } from "react";
 
-// ENS: Hash SHA-256 de la contraseña almacenado (no la contraseña real)
-const AUTH_HASH = import.meta.env.VITE_AUTH_HASH;
+// Vital: Esta variable la leerá de VITE_SHARED_SECRET
+const SHARED_SECRET = import.meta.env.VITE_SHARED_SECRET;
 
 interface GatekeeperProps {
   children: ReactNode;
@@ -13,54 +12,82 @@ const Gatekeeper: React.FC<GatekeeperProps> = ({ children }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // DEBUG: Mostrar variables de entorno para diagnóstico en Vercel
-    console.log("DEBUG ENVIRONMENT:", JSON.stringify(import.meta.env));
-    console.log("DEBUG AUTH_HASH:", AUTH_HASH ? "CONFIGURED" : "MISSING");
-
     const verifyToken = async () => {
-      // 1. Validar configuración
-      if (!AUTH_HASH) {
-        console.error("Falta VITE_AUTH_HASH en las variables de entorno");
-        setError("Error de Configuración de Seguridad");
+      // 1. Validar configuración: Si no encuentra el secreto, avisa.
+      if (!SHARED_SECRET) {
+        console.error("CRITICAL: VITE_SHARED_SECRET is missing.");
+        setError(" Error de Configuración (Falta VITE_SHARED_SECRET).");
         return;
       }
 
-      // 2. Leer parámetro de la URL (?k=...)
+      // 2. Leer parámetros de URL
       const params = new URLSearchParams(window.location.search);
-      const key = params.get("k");
+      const timestamp = params.get("t");
+      const signature = params.get("h");
 
-      if (!key) {
-        // Si ya estamos validados (podríamos usar localStorage, pero por ahora session-only)
-        setError("Acceso Denegado: Credencial no detectada.");
+      // 3. Validación básica
+      if (!timestamp || !signature) {
+        // Si entra sin nada, lo mandamos al Portal
+        window.location.href = "https://direccion-tecnica-ia-lab.vercel.app";
         return;
       }
 
-      // 3. Verificar Hash (SHA-256)
+      // 4. Protección Anti-Replay (60 segundos de vida)
+      const now = Date.now();
+      const timeDiff = now - parseInt(timestamp, 10);
+
+      // Permitimos 60s de retraso y 5s de adelanto (por relojes desajustados)
+      if (timeDiff > 60000 || timeDiff < -5000) {
+        setError(
+          "⛔ CRÍTICO: El enlace ha caducado. Vuelve a entrar desde el Portal.",
+        );
+        return;
+      }
+
+      // 5. Verificación Criptográfica (HMAC SHA-256)
       try {
         const encoder = new TextEncoder();
-        const data = encoder.encode(key);
-        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join("");
+        const key = await crypto.subtle.importKey(
+          "raw",
+          encoder.encode(SHARED_SECRET),
+          { name: "HMAC", hash: "SHA-256" },
+          false,
+          ["verify"],
+        );
 
-        if (hashHex === AUTH_HASH) {
+        // Regenerar firma esperada para comprobar la autenticidad
+        const verified = await crypto.subtle.verify(
+          "HMAC",
+          key,
+          hexToBuf(signature), // Hex de la URL -> Bytes
+          encoder.encode(timestamp), // Firmamos el timestamp recibido
+        );
+
+        if (verified) {
           setAccessGranted(true);
-          // Limpiar la URL para que no se vea la clave
+          // 6. Limpieza visual (Borrar parámetros paranoicos de la URL)
           window.history.replaceState(
             {},
             document.title,
             window.location.pathname,
           );
         } else {
-          setError("Acceso Inválido: Credencial incorrecta.");
+          setError("⛔ ACCESO DENEGADO: Firma Digital Inválida.");
         }
       } catch (e) {
         console.error(e);
-        setError("Error de Verificación de Seguridad.");
+        setError("Error interno de criptografía.");
       }
     };
+
+    // Helper para convertir Hex a Buffer
+    function hexToBuf(hex: string): Uint8Array {
+      const bytes = new Uint8Array(hex.length / 2);
+      for (let i = 0; i < hex.length; i += 2) {
+        bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
+      }
+      return bytes;
+    }
 
     verifyToken();
   }, []);
@@ -74,42 +101,34 @@ const Gatekeeper: React.FC<GatekeeperProps> = ({ children }) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          background: "#fef2f2",
+          color: "#991b1b",
           fontFamily: "sans-serif",
-          color: "#dc2626",
-          backgroundColor: "#fef2f2",
         }}
       >
-        <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>⛔ {error}</h1>
-        <p>
-          Por favor, inicie sesión a través del{" "}
-          <a
-            href="https://direccion-tecnica-chemicals.vercel.app"
-            style={{ color: "#0284c7", fontWeight: "bold" }}
-          >
-            Portal Oficial
-          </a>
-          .
-        </p>
+        <h1 style={{ fontSize: "2em", marginBottom: "10px" }}>
+          🛡️ Seguridad Activada
+        </h1>
+        <h3 style={{ fontWeight: "normal" }}>{error}</h3>
+        <a
+          href="https://direccion-tecnica-ia-lab.vercel.app"
+          style={{
+            marginTop: "20px",
+            padding: "10px 20px",
+            background: "#dc2626",
+            color: "white",
+            textDecoration: "none",
+            borderRadius: "5px",
+            fontWeight: "bold",
+          }}
+        >
+          Volver al Portal Oficial
+        </a>
       </div>
     );
   }
 
-  if (!accessGranted) {
-    return (
-      <div
-        style={{
-          height: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: "sans-serif",
-          color: "#666",
-        }}
-      >
-        Verificando credenciales de seguridad... 🔐
-      </div>
-    );
-  }
+  if (!accessGranted) return null; // O un spinner
 
   return <>{children}</>;
 };
