@@ -1,4 +1,4 @@
-import React from "react";
+import { AlertTriangle } from "lucide-react";
 
 const Header: React.FC = () => {
   return (
@@ -64,19 +64,16 @@ const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Center: Disclaimer */}
-        <div
-          className="show-on-desktop"
-          style={{
-            fontSize: "0.7rem",
-            color: "#d97706", // Amber-600
-            fontWeight: 500,
-            textAlign: "center",
-            margin: "0 1rem",
-          }}
-        >
-          AVISO: Apoyo técnico (no sustitutivo del criterio profesional). La
-          información debe ser validada.
+        {/* Center: Disclaimer (Premium Pill Standard) */}
+        <div className="status-disclaimer">
+          <AlertTriangle size={18} className="disclaimer-icon" />
+          <div className="disclaimer-content">
+            <span className="disclaimer-title">AVISO:</span>
+            <span className="disclaimer-body">
+              Apoyo técnico (no sustitutivo del criterio profesional). La
+              información debe ser validada.
+            </span>
+          </div>
         </div>
 
         {/* Right: Actions */}
