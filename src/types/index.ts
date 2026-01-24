@@ -119,14 +119,15 @@ export interface StoffenmanagerInput {
   workerSegregation: "isolated" | "cabin" | "none";
   ppeUsed: boolean;
   ppeType?: string;
-  exposureDuration: "min_30" | "hour_2" | "hour_4" | "hour_8";
+  exposureDuration: "min_15" | "min_30" | "hour_2" | "hour_4" | "hour_8";
   exposureFrequency:
     | "year_1"
     | "month_1"
     | "week_bi"
     | "week_1"
     | "week_2_3"
-    | "week_4_5";
+    | "week_4_5"
+    | "day_1";
 }
 
 export interface StoffenmanagerResult {
