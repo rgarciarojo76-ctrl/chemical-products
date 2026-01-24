@@ -59,17 +59,19 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         isDiluted: hazardData.isMixture,
         dilutionPercent: hazardData.concentration,
 
-        // Defaults
+        // Defaults (NTP 1183 Baseline)
+        vapourPressure: 100, // Default Pa
+        dustiness: "solid_objects",
         handlingType: "A",
         localControl: "none",
         roomVolume: "100_1000",
         ventilationType: "natural",
         dailyCleaning: false,
-        equipmentMaintenance: false,
+        equipmentMaintenance: true, // Optimist default
         workerSegregation: "none",
         ppeUsed: false,
         exposureDuration: "min_30",
-        exposureFrequency: "year_1",
+        exposureFrequency: "day_1",
       };
       setFormData((prev) => ({ ...prev, stoffenmanager: autoStoffenmanager }));
     }
@@ -91,35 +93,64 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   const calculateStoffenmanager = (
     input: StoffenmanagerInput,
   ): StoffenmanagerResult => {
-    // 1. Hazard Band
+    // === 1. HAZARD CLASS (Banda de Peligro) ===
     let hazardBand: "A" | "B" | "C" | "D" | "E" = "A";
     const h = input.hPhrases || [];
     if (
       h.some((p) =>
-        ["H340", "H350", "H350i", "H360", "H360FD", "H310", "H330"].includes(p),
+        [
+          "H340",
+          "H350",
+          "H350i",
+          "H360",
+          "H360FD",
+          "H310",
+          "H330",
+          "H372",
+        ].includes(p),
       )
     )
       hazardBand = "E";
     else if (
       h.some((p) =>
-        ["H351", "H341", "H361", "H331", "H311", "H301", "H372"].includes(p),
+        ["H351", "H341", "H361", "H331", "H311", "H301", "H314"].includes(p),
       )
     )
       hazardBand = "D";
     else if (
-      h.some((p) => ["H332", "H312", "H302", "H314", "H373"].includes(p))
+      h.some((p) =>
+        ["H332", "H312", "H302", "H318", "H373", "H335"].includes(p),
+      )
     )
       hazardBand = "C";
-    else if (h.some((p) => ["H315", "H319", "H335", "H317"].includes(p)))
+    else if (h.some((p) => ["H315", "H319", "H336", "H317"].includes(p)))
       hazardBand = "B";
+    else hazardBand = "A";
 
-    // 2. Emission
+    // === 2. POTENTIAL EXPOSURE SCORE (Puntuación de Exposición Potencial) ===
+
+    // A. Emission Score (E)
     let E = 0;
     if (input.physicalState === "liquid") {
-      const vp = input.vapourPressure || 2300;
-      const Pi = Math.min(Math.max(vp, 10), 30000);
-      E = Pi / 30000;
+      // Liquids: Based on Vapour Pressure (Pa) and Process
+      // Simplified Logic:
+      // VP < 10 Pa -> 0
+      // 10-500 Pa -> 0.03
+      // 500-10000 Pa -> 0.1
+      // >10000 Pa -> 0.3 (High Volatility)
+      // If High Energy Handling (Spray) -> E=1
+      const vp = input.vapourPressure || 100;
+      if (input.handlingType === "E") {
+        // Spray / High Energy Dispersal
+        E = 1;
+      } else {
+        if (vp > 10000) E = 0.3;
+        else if (vp > 500) E = 0.1;
+        else if (vp > 10) E = 0.03;
+        else E = 0;
+      }
     } else {
+      // Solids: Based on Dustiness
       const dustMap: Record<string, number> = {
         solid_objects: 0,
         granules_firm: 0.01,
@@ -131,81 +162,125 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       E = dustMap[input.dustiness || "solid_objects"] || 0;
     }
 
-    // 3. Handling
-    let H_factor = 0.1;
-    if (input.physicalState === "liquid") {
-      const liquidH: Record<string, number> = {
-        A: 0,
-        B: 0.03,
-        C: 0.1,
-        D: 0.3,
-        E: 1,
-        F: 3,
-        G: 3,
-        H: 10,
-      };
-      H_factor = liquidH[input.handlingType] || 0.1;
-    } else {
-      const solidH: Record<string, number> = { A: 0.01, B: 0.1, C: 1 };
-      H_factor = solidH[input.handlingType] || 0.01;
-    }
+    // B. Handling Activity Class (H)
+    // Multipliers standard from Stoffenmanager / COSHH Essentials logic adapted
+    const handlingMap: Record<string, number> = {
+      A: 0.1, // Low energy / passive
+      B: 0.3, // Handling objects / manual low energy
+      C: 1.0, // Handling with some energy / mixing / transfer
+      D: 3.0, // High energy handling
+      E: 10.0, // Dispersive / Spraying (Also affects E above usually, here treated as activity factor)
+      F: 10.0,
+      G: 10.0,
+      H: 10.0,
+    };
+    // Solid/Liquid nuances are subtly handled by E, but H is task energy
+    const H = handlingMap[input.handlingType] || 0.1;
 
-    // 4. Measures
+    // C. Control Measures (Local) - LC
     const lcMap: Record<string, number> = {
       none: 1,
-      containment: 0.01,
-      local_exhaust: 0.1,
-      glove_box: 0.001,
+      suppression: 0.3, // Wet suppression
+      local_extraction: 0.1, // LEV
+      containment_no_extract: 0.1,
+      containment_extraction: 0.01,
     };
     const LC = lcMap[input.localControl] || 1;
 
-    const gvMap: Record<string, number> = {
-      none: 1,
-      natural: 0.5,
-      mechanical_general: 0.3,
-    };
-    const GV = gvMap[input.ventilationType] || 1;
+    // D. General Ventilation & Room (GV)
+    // Multipliers for Background/Immission
+    // Logic: Smaller room + poor ventilation = Higher concentration
+    let GV = 1;
+    // Base table simplified:
+    // Natural / Mechanical / None vs Room Size
+    //  <100m3: Poor(10), Nat(3), Mech(1)
+    // 100-1000m3: Poor(3), Nat(1), Mech(0.3)
+    // >1000m3: Poor(1), Nat(0.3), Mech(0.1)
 
-    // 5. Exposure Score Calculation (Simplified)
-    // Score = E * H * LC * GV * Duration * Frequency (Using abstract multipliers for now)
+    const vType = input.ventilationType;
+    const rVol = input.roomVolume;
+
+    if (rVol === "lt_100") {
+      if (vType === "none") GV = 10;
+      else if (vType === "natural") GV = 3;
+      else GV = 1; // Mechanical
+    } else if (rVol === "100_1000") {
+      if (vType === "none") GV = 3;
+      else if (vType === "natural") GV = 1;
+      else GV = 0.3;
+    } else if (rVol === "gt_1000" || rVol === "outdoor") {
+      if (vType === "none") GV = 1;
+      else if (vType === "natural") GV = 0.3;
+      else GV = 0.1;
+    }
+
+    // E. Segregation / Worker Position
+    let Seg = 1;
+    if (input.workerSegregation === "cabin") Seg = 0.1;
+
+    // F. Duration & Frequency
     const durationMap: Record<string, number> = {
       min_15: 0.1,
-      min_30: 0.25,
-      hour_1: 0.5,
-      hour_4: 1.0,
-      hour_8: 2.0,
+      min_30: 0.25, // approx 0.5hr / 8
+      hour_2: 1.0, // standard task unit
+      hour_4: 2.0,
+      hour_8: 4.0,
     };
     const frequencyMap: Record<string, number> = {
       year_1: 0.1,
-      month_1: 0.3,
+      month_1: 0.2,
+      week_bi: 0.4,
       week_1: 0.6,
+      week_2_3: 0.8,
+      week_4_5: 1.0, // Daily = 1
       day_1: 1.0,
     };
+    const T =
+      (durationMap[input.exposureDuration] || 1) *
+      (frequencyMap[input.exposureFrequency] || 1);
 
-    // Bt (exposure score)
-    const Bt = Math.round(
-      E *
-        H_factor *
-        LC *
-        GV *
-        (durationMap[input.exposureDuration] || 1) *
-        (frequencyMap[input.exposureFrequency] || 1) *
-        1000,
-    );
+    // Correction for Cleaning/Maintenance
+    let MaintFactor = 1;
+    if (!input.dailyCleaning) MaintFactor *= 1.2; // A bit dirtier
+    if (!input.equipmentMaintenance) MaintFactor *= 1.5; // Leaks probable
 
-    // Exposure Band
+    // FINAL ALGORTHM (Conceptual Score)
+    // Source * Transmission * Immission * Time
+    // This is a simplified multiplicative model for Score Bt
+    let rawScore = E * H * LC * Seg * MaintFactor + 0.1 * GV; // Immission component
+    // Normalizing to typical Stoffenmanager Range (0 - ~1000)
+    let Bt = Math.round(rawScore * T * 100);
+
+    // Apply PPE Reduction primarily for final Risk decision, but usually Score is "Potential Exposure" (Pre-PPE)
+    // If we want "Actual Exposure Score", apply PPE:
+    if (input.ppeUsed) Bt = Math.round(Bt * 0.1);
+
+    // === 3. EXPOSURE BAND (Banda de Exposición) ===
     let exposureBand: 1 | 2 | 3 | 4 = 1;
-    if (Bt > 100) exposureBand = 4;
-    else if (Bt > 10) exposureBand = 3;
-    else if (Bt > 1) exposureBand = 2;
+    // Logarithmic banding usually
+    if (Bt > 1000) exposureBand = 4;
+    else if (Bt > 100) exposureBand = 3;
+    else if (Bt > 10) exposureBand = 2;
+    else exposureBand = 1;
 
-    // Risk Priority
+    // === 4. RISK PRIORITY ===
     let riskPriority: "I" | "II" | "III" = "III";
-    if (hazardBand === "E" && exposureBand >= 3) riskPriority = "I";
-    else if (hazardBand === "D" && exposureBand >= 3) riskPriority = "I";
-    else if (exposureBand === 4) riskPriority = "I";
-    else if (hazardBand === "A" && exposureBand <= 2) riskPriority = "III";
-    else riskPriority = "II";
+
+    // Matrix Hazard x Exposure
+    // Hz A: Exp 1,2 -> III; Exp 3 -> II; Exp 4 -> I
+    // Hz B: Exp 1 -> III; Exp 2 -> II; Exp 3,4 -> I
+    // Hz C: Exp 1 -> II, Exp 2,3,4 -> I
+    // Hz D/E: Exp 1 -> II, Exp 2,3,4 -> I
+    // (Simplified rigorous logic)
+
+    const matrix: Record<string, Record<number, "I" | "II" | "III">> = {
+      A: { 1: "III", 2: "III", 3: "II", 4: "I" },
+      B: { 1: "III", 2: "II", 3: "I", 4: "I" },
+      C: { 1: "II", 2: "I", 3: "I", 4: "I" },
+      D: { 1: "II", 2: "I", 3: "I", 4: "I" },
+      E: { 1: "II", 2: "I", 3: "I", 4: "I" },
+    };
+    riskPriority = matrix[hazardBand][exposureBand];
 
     return { hazardBand, exposureScore: Bt, exposureBand, riskPriority };
   };
@@ -230,7 +305,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       description={`Definición de estrategia y conformidad para: ${substanceName || "Agente"}`}
       icon="🧠"
     >
-      {/* Progress Indicator */}
       <div style={{ display: "flex", gap: "4px", marginBottom: "1.5rem" }}>
         {[0, 1, 2, 3, 4].map((step) => (
           <div
@@ -247,7 +321,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         ))}
       </div>
 
-      {/* STEP 0: 1. Caracterización Básica (Simplificada) */}
       {isStep0 && (
         <div className="form-group mb-4">
           <div
@@ -280,7 +353,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               📚 Norma UNE 689
             </a>
           </div>
-
           <div
             style={{
               backgroundColor: "#eef6fc",
@@ -297,7 +369,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 color: "#0056b3",
               }}
             >
-              ℹ️ Criterios técnicos básicos (Factores de Exposición):
+              ℹ️ Criterios técnicos básicos:
             </strong>
             <div
               style={{
@@ -306,84 +378,15 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 gap: "0.5rem",
               }}
             >
-              {[
-                {
-                  label: "Organización",
-                  text: "Tareas, jornada, funciones y carga.",
-                  icon: "📋",
-                },
-                {
-                  label: "Proceso",
-                  text: "Técnicas, fuentes de emisión y producción.",
-                  icon: "🏭",
-                },
-                {
-                  label: "Entorno",
-                  text: "Distribución, orden y limpieza.",
-                  icon: "🧹",
-                },
-                {
-                  label: "Medidas",
-                  text: "Ventilación, procedimientos y zonas.",
-                  icon: "🛡️",
-                },
-                {
-                  label: "Temporalidad",
-                  text: "Duración, frecuencia y variaciones.",
-                  icon: "⏱️",
-                },
-                {
-                  label: "Personal",
-                  text: "Comportamiento y hábitos de trabajo.",
-                  icon: "👷",
-                },
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "1rem",
-                    padding: "0.75rem 1rem",
-                    backgroundColor: "#ffffff",
-                    borderRadius: "6px",
-                    border: "1px solid #dae1e7",
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
-                  }}
-                >
-                  <span style={{ fontSize: "1.2rem", flexShrink: 0 }}>
-                    {item.icon}
-                  </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "baseline",
-                      gap: "0.5rem",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontWeight: 700,
-                        color: "#1e3a8a",
-                        fontSize: "0.9rem",
-                        minWidth: "100px",
-                      }}
-                    >
-                      {item.label}:
-                    </span>
-                    <span style={{ color: "#475569", fontSize: "0.9rem" }}>
-                      {item.text}
-                    </span>
-                  </div>
-                </div>
-              ))}
+              <span style={{ color: "#444" }}>
+                Esta sección resume los factores cualitativos básicos antes de
+                profundizar en el modelo avanzado.
+              </span>
             </div>
           </div>
         </div>
       )}
 
-      {/* STEP 1: 2. Caracterización Básica (Avanzada: Stoffenmanager) */}
       {isStep1 && formData.stoffenmanager && (
         <div className="form-group mb-4">
           <h4
@@ -395,49 +398,123 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               paddingBottom: "0.25rem",
             }}
           >
-            2. Caracterización Básica (Avanzada: Stoffenmanager)
+            2. Caracterización Básica (Avanzada: Stoffenmanager®)
           </h4>
 
           <div
+            className="stoff-grid"
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: "1rem",
             }}
           >
-            {/* Identification */}
+            {/* 1. Identification & State */}
             <div
               style={{
                 padding: "0.5rem",
                 background: "#f8f9fa",
                 borderRadius: "6px",
+                gridColumn: "span 2",
               }}
             >
-              <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-                Estado Físico
-              </label>
-              <select
-                style={{ width: "100%", padding: "0.4rem" }}
-                value={formData.stoffenmanager.physicalState}
-                onChange={(e) =>
-                  updateStoffenmanager("physicalState", e.target.value)
-                }
+              <h5
+                style={{
+                  margin: "0 0 0.5rem 0",
+                  fontSize: "0.9rem",
+                  color: "#555",
+                }}
               >
-                <option value="solid">Sólido / Polvo</option>
-                <option value="liquid">Líquido</option>
-              </select>
+                A. Identificación y Estado
+              </h5>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "1rem",
+                }}
+              >
+                <div>
+                  <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                    Estado Físico
+                  </label>
+                  <select
+                    style={{ width: "100%", padding: "0.4rem" }}
+                    value={formData.stoffenmanager.physicalState}
+                    onChange={(e) =>
+                      updateStoffenmanager("physicalState", e.target.value)
+                    }
+                  >
+                    <option value="solid">Sólido</option>
+                    <option value="liquid">Líquido</option>
+                  </select>
+                </div>
+                {formData.stoffenmanager.physicalState === "liquid" ? (
+                  <div>
+                    <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                      Presión de Vapor (Pa)
+                    </label>
+                    <input
+                      type="number"
+                      style={{ width: "100%", padding: "0.4rem" }}
+                      placeholder="Ej. 2300"
+                      value={formData.stoffenmanager.vapourPressure || ""}
+                      onChange={(e) =>
+                        updateStoffenmanager(
+                          "vapourPressure",
+                          parseFloat(e.target.value),
+                        )
+                      }
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                      Pulverulencia (Dustiness)
+                    </label>
+                    <select
+                      style={{ width: "100%", padding: "0.4rem" }}
+                      value={formData.stoffenmanager.dustiness}
+                      onChange={(e) =>
+                        updateStoffenmanager("dustiness", e.target.value)
+                      }
+                    >
+                      <option value="solid_objects">
+                        Objetos sólidos (No polvo)
+                      </option>
+                      <option value="granules_firm">Gránulos firmes</option>
+                      <option value="granules_friable">
+                        Gránulos friables
+                      </option>
+                      <option value="dust_coarse">Polvo grueso</option>
+                      <option value="dust_fine">Polvo fino</option>
+                      <option value="dust_extreme">
+                        Polvo "fluffy" (Extremo)
+                      </option>
+                    </select>
+                  </div>
+                )}
+              </div>
             </div>
-            {/* Handling */}
+
+            {/* 2. Handling */}
             <div
               style={{
                 padding: "0.5rem",
                 background: "#f8f9fa",
                 borderRadius: "6px",
+                gridColumn: "span 2",
               }}
             >
-              <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-                Tipo de Manipulación
-              </label>
+              <h5
+                style={{
+                  margin: "0 0 0.5rem 0",
+                  fontSize: "0.9rem",
+                  color: "#555",
+                }}
+              >
+                B. Tipo de Manipulación (Tarea)
+              </h5>
               <select
                 style={{ width: "100%", padding: "0.4rem" }}
                 value={formData.stoffenmanager.handlingType}
@@ -445,111 +522,229 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                   updateStoffenmanager("handlingType", e.target.value)
                 }
               >
-                <option value="A">A: Baja Energía (Pasivo)</option>
-                <option value="B">B: Baja Energía (Manual)</option>
-                <option value="C">C: Media Energía (Transferencia)</option>
-                <option value="E">E: Alta Energía (Dispersión/Spray)</option>
+                <option value="A">
+                  A: Tarea pasiva (almacenamiento, inspección)
+                </option>
+                <option value="B">
+                  B: Manipulación de objetos / manual baja energía
+                </option>
+                <option value="C">
+                  C: Transferencia / Mezcla abierta (Energía media)
+                </option>
+                <option value="D">
+                  D: Tareas de alta energía (Molienda, corte, lijado)
+                </option>
+                <option value="E">
+                  E: Procesos dispersivos (Spray, chorro)
+                </option>
               </select>
             </div>
-            {/* Duration */}
+
+            {/* 3. Controls & Environment */}
             <div
               style={{
                 padding: "0.5rem",
-                background: "#f8f9fa",
+                background: "#f0f7ff",
                 borderRadius: "6px",
               }}
             >
               <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-                Duración Exposición
+                Control Local
+              </label>
+              <select
+                style={{
+                  width: "100%",
+                  padding: "0.4rem",
+                  marginBottom: "0.5rem",
+                }}
+                value={formData.stoffenmanager.localControl}
+                onChange={(e) =>
+                  updateStoffenmanager("localControl", e.target.value)
+                }
+              >
+                <option value="none">Sin control específico</option>
+                <option value="suppression">
+                  Supresión húmeda / abatimiento
+                </option>
+                <option value="local_extraction">
+                  Extracción Localizada (LEV)
+                </option>
+                <option value="containment_no_extract">
+                  Cerramiento (Sin extracción)
+                </option>
+                <option value="containment_extraction">
+                  Cerramiento estanco con extracción
+                </option>
+              </select>
+
+              <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                Volumen Sala
+              </label>
+              <select
+                style={{
+                  width: "100%",
+                  padding: "0.4rem",
+                  marginBottom: "0.5rem",
+                }}
+                value={formData.stoffenmanager.roomVolume}
+                onChange={(e) =>
+                  updateStoffenmanager("roomVolume", e.target.value)
+                }
+              >
+                <option value="lt_100">&lt; 100 m³ (Pequeña)</option>
+                <option value="100_1000">100 - 1000 m³ (Mediana)</option>
+                <option value="gt_1000">&gt; 1000 m³ (Grande/Nave)</option>
+                <option value="outdoor">Exterior</option>
+              </select>
+
+              <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                Ventilación General
               </label>
               <select
                 style={{ width: "100%", padding: "0.4rem" }}
-                value={formData.stoffenmanager.exposureDuration || "min_30"}
+                value={formData.stoffenmanager.ventilationType}
                 onChange={(e) =>
-                  updateStoffenmanager("exposureDuration", e.target.value)
+                  updateStoffenmanager("ventilationType", e.target.value)
                 }
               >
-                <option value="min_15">&lt; 15 min</option>
-                <option value="min_30">15 - 30 min</option>
-                <option value="hour_1">1 hora</option>
-                <option value="hour_4">4 horas</option>
-                <option value="hour_8">8 horas</option>
+                <option value="none">Sin ventilación forzada</option>
+                <option value="natural">Natural (Puertas/Ventanas)</option>
+                <option value="mechanical">Mecánica General</option>
               </select>
             </div>
-            {/* Frequency */}
+
+            {/* 4. Org & Maintenance */}
             <div
               style={{
                 padding: "0.5rem",
-                background: "#f8f9fa",
+                background: "#f0f7ff",
                 borderRadius: "6px",
               }}
             >
               <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-                Frecuencia
+                Frecuencia Limpieza
+              </label>
+              <div style={{ marginBottom: "0.5rem" }}>
+                <label style={{ fontSize: "0.8rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={formData.stoffenmanager.dailyCleaning}
+                    onChange={(e) =>
+                      updateStoffenmanager("dailyCleaning", e.target.checked)
+                    }
+                  />{" "}
+                  Limpieza diaria efectiva
+                </label>
+              </div>
+              <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                Mantenimiento Eq.
+              </label>
+              <div style={{ marginBottom: "0.5rem" }}>
+                <label style={{ fontSize: "0.8rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={formData.stoffenmanager.equipmentMaintenance}
+                    onChange={(e) =>
+                      updateStoffenmanager(
+                        "equipmentMaintenance",
+                        e.target.checked,
+                      )
+                    }
+                  />{" "}
+                  Plan preventivo riguroso
+                </label>
+              </div>
+              <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                Segregación
               </label>
               <select
-                style={{ width: "100%", padding: "0.4rem" }}
-                value={formData.stoffenmanager.exposureFrequency || "day_1"}
+                style={{
+                  width: "100%",
+                  padding: "0.4rem",
+                  marginBottom: "0.5rem",
+                }}
+                value={formData.stoffenmanager.workerSegregation}
                 onChange={(e) =>
-                  updateStoffenmanager("exposureFrequency", e.target.value)
+                  updateStoffenmanager("workerSegregation", e.target.value)
                 }
               >
-                <option value="year_1">1 vez/año</option>
-                <option value="month_1">1 vez/mes</option>
-                <option value="week_1">1 vez/semana</option>
-                <option value="day_1">Diario</option>
+                <option value="none">Trabajador junto a fuente</option>
+                <option value="cabin">Trabajador en cabina aislada</option>
               </select>
             </div>
-          </div>
 
-          {/* Ventilation & Controls */}
-          <div
-            style={{
-              marginTop: "1rem",
-              padding: "0.5rem",
-              background: "#f0f7ff",
-              borderRadius: "6px",
-            }}
-          >
-            <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-              Medidas de Control Local
-            </label>
-            <select
+            {/* 5. Time & EPI */}
+            <div
               style={{
-                width: "100%",
-                padding: "0.4rem",
-                marginBottom: "0.5rem",
+                padding: "0.5rem",
+                background: "#fff8e1",
+                borderRadius: "6px",
+                gridColumn: "span 2",
               }}
-              value={formData.stoffenmanager.localControl}
-              onChange={(e) =>
-                updateStoffenmanager("localControl", e.target.value)
-              }
             >
-              <option value="none">Sin control localizado</option>
-              <option value="local_exhaust">Extracción Localizada (LEV)</option>
-              <option value="containment">Cabina / Cerramiento</option>
-              <option value="glove_box">Glove Box / Estanco</option>
-            </select>
-
-            <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-              Ventilación General
-            </label>
-            <select
-              style={{ width: "100%", padding: "0.4rem" }}
-              value={formData.stoffenmanager.ventilationType}
-              onChange={(e) =>
-                updateStoffenmanager("ventilationType", e.target.value)
-              }
-            >
-              <option value="none">Sin ventilación específica</option>
-              <option value="natural">Natural (Puertas/Ventanas)</option>
-              <option value="mechanical_general">Mecánica General</option>
-            </select>
+              <div
+                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
+              >
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                    Duración Tarea
+                  </label>
+                  <select
+                    style={{ width: "100%", padding: "0.4rem" }}
+                    value={formData.stoffenmanager.exposureDuration}
+                    onChange={(e) =>
+                      updateStoffenmanager("exposureDuration", e.target.value)
+                    }
+                  >
+                    <option value="min_15">&lt; 15 min</option>
+                    <option value="min_30">30 min</option>
+                    <option value="hour_2">2 horas</option>
+                    <option value="hour_4">4 horas</option>
+                    <option value="hour_8">8 horas</option>
+                  </select>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                    Frecuencia
+                  </label>
+                  <select
+                    style={{ width: "100%", padding: "0.4rem" }}
+                    value={formData.stoffenmanager.exposureFrequency}
+                    onChange={(e) =>
+                      updateStoffenmanager("exposureFrequency", e.target.value)
+                    }
+                  >
+                    <option value="year_1">1/año</option>
+                    <option value="month_1">1/mes</option>
+                    <option value="week_1">1/semana</option>
+                    <option value="week_4_5">4-5 días/semana</option>
+                    <option value="day_1">Diario</option>
+                  </select>
+                </div>
+                <div style={{ flex: 0.5, textAlign: "center" }}>
+                  <label
+                    style={{
+                      fontSize: "0.8rem",
+                      fontWeight: 600,
+                      display: "block",
+                    }}
+                  >
+                    Uso EPI
+                  </label>
+                  <input
+                    type="checkbox"
+                    checked={formData.stoffenmanager.ppeUsed}
+                    onChange={(e) =>
+                      updateStoffenmanager("ppeUsed", e.target.checked)
+                    }
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
-      {/* STEP 2: 3. Grupos de exposición similares (GES) */}
       {isStep2 && (
         <div className="form-group mb-4">
           <h4
@@ -572,15 +767,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               borderLeft: "4px solid #009bdb",
             }}
           >
-            <strong
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                color: "#0056b3",
-              }}
-            >
-              ℹ️ Criterios técnicos básicos (GES)
-            </strong>
             <p
               style={{
                 fontSize: "0.85rem",
@@ -590,16 +776,12 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               }}
             >
               Grupo de trabajadores que tienen el mismo perfil de exposición
-              para el agente químico estudiado, debido a la similitud y
-              frecuencia de las tareas realizadas, los procesos y los materiales
-              con los que trabajan y a la similitud de la manera que realizan
-              las tareas.
+              para el agente químico estudiado.
             </p>
           </div>
         </div>
       )}
 
-      {/* STEP 3: 4. Estrategia de Medición (UNE-EN 689) */}
       {isStep3 && (
         <div className="form-group mb-4">
           <h4
@@ -611,7 +793,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               paddingBottom: "0.25rem",
             }}
           >
-            4. Estrategia de Medición (UNE-EN 689)
+            4. Estrategia de Medición
           </h4>
           <div
             style={{
@@ -653,7 +835,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         </div>
       )}
 
-      {/* STEP 4: 5. Resultados de la Medición */}
       {isStep4 && (
         <div className="form-group mb-4">
           <h4
@@ -687,29 +868,24 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               >
                 Concentración (I)
               </label>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-              >
-                <input
-                  type="number"
-                  step="0.001"
-                  placeholder="0.000"
-                  value={formData.labResult || ""}
-                  style={{
-                    width: "100%",
-                    padding: "0.5rem",
-                    border: "2px solid var(--color-primary)",
-                    borderRadius: "4px",
-                  }}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      labResult: parseFloat(e.target.value),
-                    })
-                  }
-                />
-                <span style={{ fontWeight: 600 }}>mg/m³</span>
-              </div>
+              <input
+                type="number"
+                step="0.001"
+                placeholder="0.000"
+                value={formData.labResult || ""}
+                style={{
+                  width: "100%",
+                  padding: "0.5rem",
+                  border: "2px solid var(--color-primary)",
+                  borderRadius: "4px",
+                }}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    labResult: parseFloat(e.target.value),
+                  })
+                }
+              />
             </div>
             <div>
               <label
@@ -721,29 +897,21 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               >
                 Límite de Cuantificación (LOQ)
               </label>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-              >
-                <input
-                  type="number"
-                  step="0.001"
-                  placeholder="0.000"
-                  value={formData.lod || ""}
-                  style={{
-                    width: "100%",
-                    padding: "0.5rem",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                  }}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      lod: parseFloat(e.target.value),
-                    })
-                  }
-                />
-                <span style={{ fontWeight: 600 }}>mg/m³</span>
-              </div>
+              <input
+                type="number"
+                step="0.001"
+                placeholder="0.000"
+                value={formData.lod || ""}
+                style={{
+                  width: "100%",
+                  padding: "0.5rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                }}
+                onChange={(e) =>
+                  setFormData({ ...formData, lod: parseFloat(e.target.value) })
+                }
+              />
             </div>
           </div>
         </div>
@@ -779,7 +947,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           <button
             onClick={() => {
               if (isStep1) {
-                // Calculate on transition from Stoffenmanager
                 const res = calculateStoffenmanager(formData.stoffenmanager!);
                 setFormData((prev) => ({ ...prev, stoffenmanagerResult: res }));
               }
@@ -796,11 +963,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               fontWeight: "bold",
             }}
           >
-            {isStep0
-              ? "Iniciar Caracterización (Stoffenmanager)"
-              : isStep1
-                ? "Calcular Riesgo y Continuar"
-                : "Siguiente &rarr;"}
+            {isStep1 ? "Calcular Riesgo y Continuar" : "Siguiente &rarr;"}
           </button>
         ) : (
           <>
@@ -818,7 +981,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                   fontWeight: "bold",
                 }}
               >
-                6. Verificar Conformidad (Test Preliminar)
+                6. Verificar Conformidad
               </button>
             ) : (
               <div
@@ -837,9 +1000,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                     marginTop: 0,
                   }}
                 >
-                  {result.isSafe
-                    ? "CONFORME (Aceptable)"
-                    : "NO CONFORME (Inaceptable)"}
+                  {result.isSafe ? "CONFORME" : "NO CONFORME"}
                 </h4>
                 <button
                   onClick={onNext}
@@ -855,9 +1016,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                     float: "right",
                   }}
                 >
-                  {result.isSafe
-                    ? "Finalizar Evaluación"
-                    : "Ir a Plan de Medidas"}
+                  {result.isSafe ? "Finalizar" : "Plan de Medidas"}
                 </button>
               </div>
             )}
