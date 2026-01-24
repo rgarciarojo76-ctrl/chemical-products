@@ -36,10 +36,11 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
   const [result, setResult] = useState<HygienicAssessment | null>(null);
 
-  // 0: Info (Points 1 & 2)
-  // 1: Stoffenmanager (Point 3)
-  // 2: Strategy (Points 4 & 5 - previously 3 & 4)
-  // 3: Results (Point 6 - previously 5)
+  // 0: Caracterización básica (Simplificada) - Old Point 1
+  // 1: Caracterización básica (Avanzada: Stoffenmanager) - New Stoffenmanager
+  // 2: Grupos de exposición similares (GES) - Old Point 2
+  // 3: Estrategia de Medición - Prior Point 4, now 4
+  // 4: Resultados - Prior Point 5, now 5
   const [internalStep, setInternalStep] = useState(0);
 
   // Auto-fill Stoffenmanager defaults
@@ -221,6 +222,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   const isStep1 = internalStep === 1;
   const isStep2 = internalStep === 2;
   const isStep3 = internalStep === 3;
+  const isStep4 = internalStep === 4;
 
   return (
     <StepCard
@@ -230,7 +232,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     >
       {/* Progress Indicator */}
       <div style={{ display: "flex", gap: "4px", marginBottom: "1.5rem" }}>
-        {[0, 1, 2, 3].map((step) => (
+        {[0, 1, 2, 3, 4].map((step) => (
           <div
             key={step}
             style={{
@@ -245,531 +247,506 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         ))}
       </div>
 
-      {/* STEP 0: ORIGINAL INFORMATIONAL POINTS 1 & 2 */}
+      {/* STEP 0: 1. Caracterización Básica (Simplificada) */}
       {isStep0 && (
-        <>
-          {/* 1. Caracterización Básica */}
-          <div className="form-group mb-4">
+        <div className="form-group mb-4">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "0.5rem",
+              borderBottom: "2px solid #0056b3",
+              paddingBottom: "0.25rem",
+            }}
+          >
+            <h4 style={{ fontSize: "1rem", margin: 0, color: "#0056b3" }}>
+              1. Caracterización Básica (Simplificada)
+            </h4>
+            <a
+              href="https://files.infocentre.io/files/docs_clients/3646_2008110792_2318118_UNE-EN%20689_2019.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: "0.8rem",
+                color: "#009bdb",
+                textDecoration: "none",
+                fontWeight: 600,
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
+            >
+              📚 Norma UNE 689
+            </a>
+          </div>
+
+          <div
+            style={{
+              backgroundColor: "#eef6fc",
+              padding: "1rem",
+              borderRadius: "6px",
+              marginBottom: "1rem",
+              borderLeft: "4px solid #009bdb",
+            }}
+          >
+            <strong
+              style={{
+                display: "block",
+                marginBottom: "0.5rem",
+                color: "#0056b3",
+              }}
+            >
+              ℹ️ Criterios técnicos básicos (Factores de Exposición):
+            </strong>
             <div
               style={{
                 display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "0.5rem",
-                borderBottom: "2px solid #0056b3",
-                paddingBottom: "0.25rem",
+                flexDirection: "column",
+                gap: "0.5rem",
               }}
             >
-              <h4 style={{ fontSize: "1rem", margin: 0, color: "#0056b3" }}>
-                1. Caracterización Básica
-              </h4>
-              <a
-                href="https://files.infocentre.io/files/docs_clients/3646_2008110792_2318118_UNE-EN%20689_2019.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: "0.8rem",
-                  color: "#009bdb",
-                  textDecoration: "none",
-                  fontWeight: 600,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                }}
-              >
-                📚 Norma UNE 689
-              </a>
-            </div>
-
-            <div
-              style={{
-                backgroundColor: "#eef6fc",
-                padding: "1rem",
-                borderRadius: "6px",
-                marginBottom: "1rem",
-                borderLeft: "4px solid #009bdb",
-              }}
-            >
-              <strong
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  color: "#0056b3",
-                }}
-              >
-                ℹ️ Criterios técnicos básicos (Factores de Exposición):
-              </strong>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.5rem",
-                }}
-              >
-                {[
-                  {
-                    label: "Organización",
-                    text: "Tareas, jornada, funciones y carga.",
-                    icon: "📋",
-                  },
-                  {
-                    label: "Proceso",
-                    text: "Técnicas, fuentes de emisión y producción.",
-                    icon: "🏭",
-                  },
-                  {
-                    label: "Entorno",
-                    text: "Distribución, orden y limpieza.",
-                    icon: "🧹",
-                  },
-                  {
-                    label: "Medidas",
-                    text: "Ventilación, procedimientos y zonas.",
-                    icon: "🛡️",
-                  },
-                  {
-                    label: "Temporalidad",
-                    text: "Duración, frecuencia y variaciones.",
-                    icon: "⏱️",
-                  },
-                  {
-                    label: "Personal",
-                    text: "Comportamiento y hábitos de trabajo.",
-                    icon: "👷",
-                  },
-                ].map((item, idx) => (
+              {[
+                {
+                  label: "Organización",
+                  text: "Tareas, jornada, funciones y carga.",
+                  icon: "📋",
+                },
+                {
+                  label: "Proceso",
+                  text: "Técnicas, fuentes de emisión y producción.",
+                  icon: "🏭",
+                },
+                {
+                  label: "Entorno",
+                  text: "Distribución, orden y limpieza.",
+                  icon: "🧹",
+                },
+                {
+                  label: "Medidas",
+                  text: "Ventilación, procedimientos y zonas.",
+                  icon: "🛡️",
+                },
+                {
+                  label: "Temporalidad",
+                  text: "Duración, frecuencia y variaciones.",
+                  icon: "⏱️",
+                },
+                {
+                  label: "Personal",
+                  text: "Comportamiento y hábitos de trabajo.",
+                  icon: "👷",
+                },
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    padding: "0.75rem 1rem",
+                    backgroundColor: "#ffffff",
+                    borderRadius: "6px",
+                    border: "1px solid #dae1e7",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <span style={{ fontSize: "1.2rem", flexShrink: 0 }}>
+                    {item.icon}
+                  </span>
                   <div
-                    key={idx}
                     style={{
                       display: "flex",
-                      alignItems: "center",
-                      gap: "1rem",
-                      padding: "0.75rem 1rem",
-                      backgroundColor: "#ffffff",
-                      borderRadius: "6px",
-                      border: "1px solid #dae1e7",
-                      boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+                      alignItems: "baseline",
+                      gap: "0.5rem",
+                      flexWrap: "wrap",
                     }}
                   >
-                    <span style={{ fontSize: "1.2rem", flexShrink: 0 }}>
-                      {item.icon}
-                    </span>
-                    <div
+                    <span
                       style={{
-                        display: "flex",
-                        alignItems: "baseline",
-                        gap: "0.5rem",
-                        flexWrap: "wrap",
+                        fontWeight: 700,
+                        color: "#1e3a8a",
+                        fontSize: "0.9rem",
+                        minWidth: "100px",
                       }}
                     >
-                      <span
-                        style={{
-                          fontWeight: 700,
-                          color: "#1e3a8a",
-                          fontSize: "0.9rem",
-                          minWidth: "100px",
-                        }}
-                      >
-                        {item.label}:
-                      </span>
-                      <span style={{ color: "#475569", fontSize: "0.9rem" }}>
-                        {item.text}
-                      </span>
-                    </div>
+                      {item.label}:
+                    </span>
+                    <span style={{ color: "#475569", fontSize: "0.9rem" }}>
+                      {item.text}
+                    </span>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
-
-          {/* 2. Similar Exposure Groups (GES) */}
-          <div className="form-group mb-4">
-            <h4
-              style={{
-                fontSize: "1rem",
-                marginBottom: "0.5rem",
-                color: "#0056b3",
-                borderBottom: "2px solid #0056b3",
-                paddingBottom: "0.25rem",
-              }}
-            >
-              2. Grupos de exposición similar
-            </h4>
-            <div
-              style={{
-                backgroundColor: "#eef6fc",
-                padding: "1rem",
-                borderRadius: "6px",
-                marginBottom: "1rem",
-                borderLeft: "4px solid #009bdb",
-              }}
-            >
-              <strong
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  color: "#0056b3",
-                }}
-              >
-                ℹ️ Criterios técnicos básicos (GES)
-              </strong>
-              <p
-                style={{
-                  fontSize: "0.85rem",
-                  margin: 0,
-                  color: "#333",
-                  lineHeight: "1.4",
-                }}
-              >
-                Grupo de trabajadores que tienen el mismo perfil de exposición
-                para el agente químico estudiado, debido a la similitud y
-                frecuencia de las tareas realizadas, los procesos y los
-                materiales con los que trabajan y a la similitud de la manera
-                que realizan las tareas.
-              </p>
-            </div>
-          </div>
-        </>
+        </div>
       )}
 
-      {/* STEP 1: NEW STOFFENMANAGER SECTION */}
+      {/* STEP 1: 2. Caracterización Básica (Avanzada: Stoffenmanager) */}
       {isStep1 && formData.stoffenmanager && (
-        <>
-          <div className="form-group mb-4">
-            <h4
-              style={{
-                fontSize: "1rem",
-                marginBottom: "0.5rem",
-                color: "#0056b3",
-                borderBottom: "2px solid #0056b3",
-                paddingBottom: "0.25rem",
-              }}
-            >
-              3. Caracterización Cualitativa (Stoffenmanager®)
-            </h4>
+        <div className="form-group mb-4">
+          <h4
+            style={{
+              fontSize: "1rem",
+              marginBottom: "0.5rem",
+              color: "#0056b3",
+              borderBottom: "2px solid #0056b3",
+              paddingBottom: "0.25rem",
+            }}
+          >
+            2. Caracterización Básica (Avanzada: Stoffenmanager)
+          </h4>
 
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "1rem",
+            }}
+          >
+            {/* Identification */}
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
-              }}
-            >
-              {/* Identification */}
-              <div
-                style={{
-                  padding: "0.5rem",
-                  background: "#f8f9fa",
-                  borderRadius: "6px",
-                }}
-              >
-                <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-                  Estado Físico
-                </label>
-                <select
-                  style={{ width: "100%", padding: "0.4rem" }}
-                  value={formData.stoffenmanager.physicalState}
-                  onChange={(e) =>
-                    updateStoffenmanager("physicalState", e.target.value)
-                  }
-                >
-                  <option value="solid">Sólido / Polvo</option>
-                  <option value="liquid">Líquido</option>
-                </select>
-              </div>
-              {/* Handling */}
-              <div
-                style={{
-                  padding: "0.5rem",
-                  background: "#f8f9fa",
-                  borderRadius: "6px",
-                }}
-              >
-                <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-                  Tipo de Manipulación
-                </label>
-                <select
-                  style={{ width: "100%", padding: "0.4rem" }}
-                  value={formData.stoffenmanager.handlingType}
-                  onChange={(e) =>
-                    updateStoffenmanager("handlingType", e.target.value)
-                  }
-                >
-                  <option value="A">A: Baja Energía (Pasivo)</option>
-                  <option value="B">B: Baja Energía (Manual)</option>
-                  <option value="C">C: Media Energía (Transferencia)</option>
-                  <option value="E">E: Alta Energía (Dispersión/Spray)</option>
-                </select>
-              </div>
-              {/* Duration */}
-              <div
-                style={{
-                  padding: "0.5rem",
-                  background: "#f8f9fa",
-                  borderRadius: "6px",
-                }}
-              >
-                <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-                  Duración Exposición
-                </label>
-                <select
-                  style={{ width: "100%", padding: "0.4rem" }}
-                  value={formData.stoffenmanager.exposureDuration || "min_30"}
-                  onChange={(e) =>
-                    updateStoffenmanager("exposureDuration", e.target.value)
-                  }
-                >
-                  <option value="min_15">&lt; 15 min</option>
-                  <option value="min_30">15 - 30 min</option>
-                  <option value="hour_1">1 hora</option>
-                  <option value="hour_4">4 horas</option>
-                  <option value="hour_8">8 horas</option>
-                </select>
-              </div>
-              {/* Frequency */}
-              <div
-                style={{
-                  padding: "0.5rem",
-                  background: "#f8f9fa",
-                  borderRadius: "6px",
-                }}
-              >
-                <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-                  Frecuencia
-                </label>
-                <select
-                  style={{ width: "100%", padding: "0.4rem" }}
-                  value={formData.stoffenmanager.exposureFrequency || "day_1"}
-                  onChange={(e) =>
-                    updateStoffenmanager("exposureFrequency", e.target.value)
-                  }
-                >
-                  <option value="year_1">1 vez/año</option>
-                  <option value="month_1">1 vez/mes</option>
-                  <option value="week_1">1 vez/semana</option>
-                  <option value="day_1">Diario</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Ventilation & Controls */}
-            <div
-              style={{
-                marginTop: "1rem",
                 padding: "0.5rem",
-                background: "#f0f7ff",
+                background: "#f8f9fa",
                 borderRadius: "6px",
               }}
             >
               <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-                Medidas de Control Local
-              </label>
-              <select
-                style={{
-                  width: "100%",
-                  padding: "0.4rem",
-                  marginBottom: "0.5rem",
-                }}
-                value={formData.stoffenmanager.localControl}
-                onChange={(e) =>
-                  updateStoffenmanager("localControl", e.target.value)
-                }
-              >
-                <option value="none">Sin control localizado</option>
-                <option value="local_exhaust">
-                  Extracción Localizada (LEV)
-                </option>
-                <option value="containment">Cabina / Cerramiento</option>
-                <option value="glove_box">Glove Box / Estanco</option>
-              </select>
-
-              <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-                Ventilación General
+                Estado Físico
               </label>
               <select
                 style={{ width: "100%", padding: "0.4rem" }}
-                value={formData.stoffenmanager.ventilationType}
+                value={formData.stoffenmanager.physicalState}
                 onChange={(e) =>
-                  updateStoffenmanager("ventilationType", e.target.value)
+                  updateStoffenmanager("physicalState", e.target.value)
                 }
               >
-                <option value="none">Sin ventilación específica</option>
-                <option value="natural">Natural (Puertas/Ventanas)</option>
-                <option value="mechanical_general">Mecánica General</option>
+                <option value="solid">Sólido / Polvo</option>
+                <option value="liquid">Líquido</option>
               </select>
             </div>
-          </div>
-        </>
-      )}
-
-      {/* STEP 2: STRATEGY (OLD POINT 3 & 4) */}
-      {isStep2 && (
-        <>
-          {/* 4. Estrategia de Medición */}
-          <div className="form-group mb-4">
-            <h4
-              style={{
-                fontSize: "1rem",
-                marginBottom: "0.5rem",
-                color: "#0056b3",
-                borderBottom: "2px solid #0056b3",
-                paddingBottom: "0.25rem",
-              }}
-            >
-              4. Estrategia de Medición (UNE-EN 689)
-            </h4>
+            {/* Handling */}
             <div
               style={{
-                marginBottom: "1rem",
-                padding: "1rem",
-                backgroundColor: "#fff8e1",
-                borderRadius: "8px",
-                border: "1px solid #ffead0",
+                padding: "0.5rem",
+                background: "#f8f9fa",
+                borderRadius: "6px",
               }}
             >
-              <div
-                style={{
-                  fontWeight: 600,
-                  fontSize: "0.9rem",
-                  marginBottom: "0.5rem",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                }}
-              >
-                <span>📉</span> Perfil de Exposición Temporal
-              </div>
+              <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                Tipo de Manipulación
+              </label>
               <select
-                style={{
-                  width: "100%",
-                  padding: "0.5rem",
-                  marginBottom: "1rem",
-                }}
-                value={formData.strategyType || ""}
+                style={{ width: "100%", padding: "0.4rem" }}
+                value={formData.stoffenmanager.handlingType}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    strategyType: e.target.value as any,
-                  })
+                  updateStoffenmanager("handlingType", e.target.value)
                 }
               >
-                <option value="">Seleccione...</option>
-                <option value="continuous">Continuo</option>
-                <option value="peaks">Picos</option>
-                <option value="variable">Variable</option>
+                <option value="A">A: Baja Energía (Pasivo)</option>
+                <option value="B">B: Baja Energía (Manual)</option>
+                <option value="C">C: Media Energía (Transferencia)</option>
+                <option value="E">E: Alta Energía (Dispersión/Spray)</option>
+              </select>
+            </div>
+            {/* Duration */}
+            <div
+              style={{
+                padding: "0.5rem",
+                background: "#f8f9fa",
+                borderRadius: "6px",
+              }}
+            >
+              <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                Duración Exposición
+              </label>
+              <select
+                style={{ width: "100%", padding: "0.4rem" }}
+                value={formData.stoffenmanager.exposureDuration || "min_30"}
+                onChange={(e) =>
+                  updateStoffenmanager("exposureDuration", e.target.value)
+                }
+              >
+                <option value="min_15">&lt; 15 min</option>
+                <option value="min_30">15 - 30 min</option>
+                <option value="hour_1">1 hora</option>
+                <option value="hour_4">4 horas</option>
+                <option value="hour_8">8 horas</option>
+              </select>
+            </div>
+            {/* Frequency */}
+            <div
+              style={{
+                padding: "0.5rem",
+                background: "#f8f9fa",
+                borderRadius: "6px",
+              }}
+            >
+              <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                Frecuencia
+              </label>
+              <select
+                style={{ width: "100%", padding: "0.4rem" }}
+                value={formData.stoffenmanager.exposureFrequency || "day_1"}
+                onChange={(e) =>
+                  updateStoffenmanager("exposureFrequency", e.target.value)
+                }
+              >
+                <option value="year_1">1 vez/año</option>
+                <option value="month_1">1 vez/mes</option>
+                <option value="week_1">1 vez/semana</option>
+                <option value="day_1">Diario</option>
               </select>
             </div>
           </div>
 
-          {/* Sampling Matrix Display */}
-          {/* (Simplified for brevity, assuming existing context) */}
-        </>
+          {/* Ventilation & Controls */}
+          <div
+            style={{
+              marginTop: "1rem",
+              padding: "0.5rem",
+              background: "#f0f7ff",
+              borderRadius: "6px",
+            }}
+          >
+            <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+              Medidas de Control Local
+            </label>
+            <select
+              style={{
+                width: "100%",
+                padding: "0.4rem",
+                marginBottom: "0.5rem",
+              }}
+              value={formData.stoffenmanager.localControl}
+              onChange={(e) =>
+                updateStoffenmanager("localControl", e.target.value)
+              }
+            >
+              <option value="none">Sin control localizado</option>
+              <option value="local_exhaust">Extracción Localizada (LEV)</option>
+              <option value="containment">Cabina / Cerramiento</option>
+              <option value="glove_box">Glove Box / Estanco</option>
+            </select>
+
+            <label style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+              Ventilación General
+            </label>
+            <select
+              style={{ width: "100%", padding: "0.4rem" }}
+              value={formData.stoffenmanager.ventilationType}
+              onChange={(e) =>
+                updateStoffenmanager("ventilationType", e.target.value)
+              }
+            >
+              <option value="none">Sin ventilación específica</option>
+              <option value="natural">Natural (Puertas/Ventanas)</option>
+              <option value="mechanical_general">Mecánica General</option>
+            </select>
+          </div>
+        </div>
       )}
 
-      {/* STEP 3: RESULTS (OLD POINT 5) */}
-      {isStep3 && (
-        <>
-          <div className="form-group mb-4">
-            <h4
+      {/* STEP 2: 3. Grupos de exposición similares (GES) */}
+      {isStep2 && (
+        <div className="form-group mb-4">
+          <h4
+            style={{
+              fontSize: "1rem",
+              marginBottom: "0.5rem",
+              color: "#0056b3",
+              borderBottom: "2px solid #0056b3",
+              paddingBottom: "0.25rem",
+            }}
+          >
+            3. Grupos de exposición similares (GES)
+          </h4>
+          <div
+            style={{
+              backgroundColor: "#eef6fc",
+              padding: "1rem",
+              borderRadius: "6px",
+              marginBottom: "1rem",
+              borderLeft: "4px solid #009bdb",
+            }}
+          >
+            <strong
               style={{
-                fontSize: "1rem",
+                display: "block",
                 marginBottom: "0.5rem",
                 color: "#0056b3",
-                borderBottom: "2px solid #0056b3",
-                paddingBottom: "0.25rem",
               }}
             >
-              5. Resultados de la Medición
-            </h4>
+              ℹ️ Criterios técnicos básicos (GES)
+            </strong>
+            <p
+              style={{
+                fontSize: "0.85rem",
+                margin: 0,
+                color: "#333",
+                lineHeight: "1.4",
+              }}
+            >
+              Grupo de trabajadores que tienen el mismo perfil de exposición
+              para el agente químico estudiado, debido a la similitud y
+              frecuencia de las tareas realizadas, los procesos y los materiales
+              con los que trabajan y a la similitud de la manera que realizan
+              las tareas.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* STEP 3: 4. Estrategia de Medición (UNE-EN 689) */}
+      {isStep3 && (
+        <div className="form-group mb-4">
+          <h4
+            style={{
+              fontSize: "1rem",
+              marginBottom: "0.5rem",
+              color: "#0056b3",
+              borderBottom: "2px solid #0056b3",
+              paddingBottom: "0.25rem",
+            }}
+          >
+            4. Estrategia de Medición (UNE-EN 689)
+          </h4>
+          <div
+            style={{
+              marginBottom: "1rem",
+              padding: "1rem",
+              backgroundColor: "#fff8e1",
+              borderRadius: "8px",
+              border: "1px solid #ffead0",
+            }}
+          >
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
-                backgroundColor: "#f9f9f9",
-                padding: "1rem",
-                borderRadius: "8px",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                marginBottom: "0.5rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
               }}
             >
-              <div>
-                <label
+              <span>📉</span> Perfil de Exposición Temporal
+            </div>
+            <select
+              style={{ width: "100%", padding: "0.5rem", marginBottom: "1rem" }}
+              value={formData.strategyType || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  strategyType: e.target.value as any,
+                })
+              }
+            >
+              <option value="">Seleccione...</option>
+              <option value="continuous">Continuo</option>
+              <option value="peaks">Picos</option>
+              <option value="variable">Variable</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      {/* STEP 4: 5. Resultados de la Medición */}
+      {isStep4 && (
+        <div className="form-group mb-4">
+          <h4
+            style={{
+              fontSize: "1rem",
+              marginBottom: "0.5rem",
+              color: "#0056b3",
+              borderBottom: "2px solid #0056b3",
+              paddingBottom: "0.25rem",
+            }}
+          >
+            5. Resultados de la Medición
+          </h4>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "1rem",
+              backgroundColor: "#f9f9f9",
+              padding: "1rem",
+              borderRadius: "8px",
+            }}
+          >
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "0.9rem",
+                  fontWeight: 600,
+                }}
+              >
+                Concentración (I)
+              </label>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
+                <input
+                  type="number"
+                  step="0.001"
+                  placeholder="0.000"
+                  value={formData.labResult || ""}
                   style={{
-                    display: "block",
-                    fontSize: "0.9rem",
-                    fontWeight: 600,
+                    width: "100%",
+                    padding: "0.5rem",
+                    border: "2px solid var(--color-primary)",
+                    borderRadius: "4px",
                   }}
-                >
-                  Concentración (I)
-                </label>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <input
-                    type="number"
-                    step="0.001"
-                    placeholder="0.000"
-                    value={formData.labResult || ""}
-                    style={{
-                      width: "100%",
-                      padding: "0.5rem",
-                      border: "2px solid var(--color-primary)",
-                      borderRadius: "4px",
-                    }}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        labResult: parseFloat(e.target.value),
-                      })
-                    }
-                  />
-                  <span style={{ fontWeight: 600 }}>mg/m³</span>
-                </div>
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      labResult: parseFloat(e.target.value),
+                    })
+                  }
+                />
+                <span style={{ fontWeight: 600 }}>mg/m³</span>
               </div>
-              <div>
-                <label
+            </div>
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "0.9rem",
+                  fontWeight: 600,
+                }}
+              >
+                Límite de Cuantificación (LOQ)
+              </label>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
+                <input
+                  type="number"
+                  step="0.001"
+                  placeholder="0.000"
+                  value={formData.lod || ""}
                   style={{
-                    display: "block",
-                    fontSize: "0.9rem",
-                    fontWeight: 600,
+                    width: "100%",
+                    padding: "0.5rem",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
                   }}
-                >
-                  Límite de Cuantificación (LOQ)
-                </label>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <input
-                    type="number"
-                    step="0.001"
-                    placeholder="0.000"
-                    value={formData.lod || ""}
-                    style={{
-                      width: "100%",
-                      padding: "0.5rem",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                    }}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        lod: parseFloat(e.target.value),
-                      })
-                    }
-                  />
-                  <span style={{ fontWeight: 600 }}>mg/m³</span>
-                </div>
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      lod: parseFloat(e.target.value),
+                    })
+                  }
+                />
+                <span style={{ fontWeight: 600 }}>mg/m³</span>
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
 
       {/* ACTIONS */}
@@ -798,7 +775,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           &larr; Anterior
         </button>
 
-        {!isStep3 ? (
+        {!isStep4 ? (
           <button
             onClick={() => {
               if (isStep1) {
@@ -820,7 +797,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             }}
           >
             {isStep0
-              ? "Iniciar Caracterización Stoffenmanager ®"
+              ? "Iniciar Caracterización (Stoffenmanager)"
               : isStep1
                 ? "Calcular Riesgo y Continuar"
                 : "Siguiente &rarr;"}
