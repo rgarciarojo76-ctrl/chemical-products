@@ -133,12 +133,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     let E = 0;
     if (input.physicalState === "liquid") {
       // Liquids: Based on Vapour Pressure (Pa) and Process
-      // Simplified Logic:
-      // VP < 10 Pa -> 0
-      // 10-500 Pa -> 0.03
-      // 500-10000 Pa -> 0.1
-      // >10000 Pa -> 0.3 (High Volatility)
-      // If High Energy Handling (Spray) -> E=1
       const vp = input.vapourPressure || 100;
       if (input.handlingType === "E") {
         // Spray / High Energy Dispersal
@@ -163,7 +157,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     }
 
     // B. Handling Activity Class (H)
-    // Multipliers standard from Stoffenmanager / COSHH Essentials logic adapted
     const handlingMap: Record<string, number> = {
       A: 0.1, // Low energy / passive
       B: 0.3, // Handling objects / manual low energy
@@ -174,7 +167,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       G: 10.0,
       H: 10.0,
     };
-    // Solid/Liquid nuances are subtly handled by E, but H is task energy
     const H = handlingMap[input.handlingType] || 0.1;
 
     // C. Control Measures (Local) - LC
@@ -188,15 +180,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     const LC = lcMap[input.localControl] || 1;
 
     // D. General Ventilation & Room (GV)
-    // Multipliers for Background/Immission
-    // Logic: Smaller room + poor ventilation = Higher concentration
     let GV = 1;
-    // Base table simplified:
-    // Natural / Mechanical / None vs Room Size
-    //  <100m3: Poor(10), Nat(3), Mech(1)
-    // 100-1000m3: Poor(3), Nat(1), Mech(0.3)
-    // >1000m3: Poor(1), Nat(0.3), Mech(0.1)
-
     const vType = input.ventilationType;
     const rVol = input.roomVolume;
 
@@ -246,18 +230,14 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
     // FINAL ALGORTHM (Conceptual Score)
     // Source * Transmission * Immission * Time
-    // This is a simplified multiplicative model for Score Bt
-    let rawScore = E * H * LC * Seg * MaintFactor + 0.1 * GV; // Immission component
-    // Normalizing to typical Stoffenmanager Range (0 - ~1000)
+    let rawScore = E * H * LC * Seg * MaintFactor + 0.1 * GV; // Immission component (Simplified)
     let Bt = Math.round(rawScore * T * 100);
 
-    // Apply PPE Reduction primarily for final Risk decision, but usually Score is "Potential Exposure" (Pre-PPE)
-    // If we want "Actual Exposure Score", apply PPE:
+    // Apply PPE Reduction
     if (input.ppeUsed) Bt = Math.round(Bt * 0.1);
 
     // === 3. EXPOSURE BAND (Banda de Exposición) ===
     let exposureBand: 1 | 2 | 3 | 4 = 1;
-    // Logarithmic banding usually
     if (Bt > 1000) exposureBand = 4;
     else if (Bt > 100) exposureBand = 3;
     else if (Bt > 10) exposureBand = 2;
@@ -265,13 +245,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
     // === 4. RISK PRIORITY ===
     let riskPriority: "I" | "II" | "III" = "III";
-
-    // Matrix Hazard x Exposure
-    // Hz A: Exp 1,2 -> III; Exp 3 -> II; Exp 4 -> I
-    // Hz B: Exp 1 -> III; Exp 2 -> II; Exp 3,4 -> I
-    // Hz C: Exp 1 -> II, Exp 2,3,4 -> I
-    // Hz D/E: Exp 1 -> II, Exp 2,3,4 -> I
-    // (Simplified rigorous logic)
 
     const matrix: Record<string, Record<number, "I" | "II" | "III">> = {
       A: { 1: "III", 2: "III", 3: "II", 4: "I" },
@@ -353,6 +326,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               📚 Norma UNE 689
             </a>
           </div>
+
           <div
             style={{
               backgroundColor: "#eef6fc",
@@ -369,7 +343,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 color: "#0056b3",
               }}
             >
-              ℹ️ Criterios técnicos básicos:
+              ℹ️ Criterios técnicos básicos (Factores de Exposición):
             </strong>
             <div
               style={{
@@ -378,10 +352,78 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 gap: "0.5rem",
               }}
             >
-              <span style={{ color: "#444" }}>
-                Esta sección resume los factores cualitativos básicos antes de
-                profundizar en el modelo avanzado.
-              </span>
+              {[
+                {
+                  label: "Organización",
+                  text: "Tareas, jornada, funciones y carga.",
+                  icon: "📋",
+                },
+                {
+                  label: "Proceso",
+                  text: "Técnicas, fuentes de emisión y producción.",
+                  icon: "🏭",
+                },
+                {
+                  label: "Entorno",
+                  text: "Distribución, orden y limpieza.",
+                  icon: "🧹",
+                },
+                {
+                  label: "Medidas",
+                  text: "Ventilación, procedimientos y zonas.",
+                  icon: "🛡️",
+                },
+                {
+                  label: "Temporalidad",
+                  text: "Duración, frecuencia y variaciones.",
+                  icon: "⏱️",
+                },
+                {
+                  label: "Personal",
+                  text: "Comportamiento y hábitos de trabajo.",
+                  icon: "👷",
+                },
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    padding: "0.75rem 1rem",
+                    backgroundColor: "#ffffff",
+                    borderRadius: "6px",
+                    border: "1px solid #dae1e7",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <span style={{ fontSize: "1.2rem", flexShrink: 0 }}>
+                    {item.icon}
+                  </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: "0.5rem",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        color: "#1e3a8a",
+                        fontSize: "0.9rem",
+                        minWidth: "100px",
+                      }}
+                    >
+                      {item.label}:
+                    </span>
+                    <span style={{ color: "#475569", fontSize: "0.9rem" }}>
+                      {item.text}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -767,6 +809,15 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               borderLeft: "4px solid #009bdb",
             }}
           >
+            <strong
+              style={{
+                display: "block",
+                marginBottom: "0.5rem",
+                color: "#0056b3",
+              }}
+            >
+              ℹ️ Criterios técnicos básicos (GES)
+            </strong>
             <p
               style={{
                 fontSize: "0.85rem",
@@ -776,7 +827,10 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               }}
             >
               Grupo de trabajadores que tienen el mismo perfil de exposición
-              para el agente químico estudiado.
+              para el agente químico estudiado, debido a la similitud y
+              frecuencia de las tareas realizadas, los procesos y los materiales
+              con los que trabajan y a la similitud de la manera que realizan
+              las tareas.
             </p>
           </div>
         </div>
