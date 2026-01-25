@@ -137,7 +137,42 @@ export interface StoffenmanagerResult {
   riskPriority: "I" | "II" | "III";
 }
 
+export interface BasicCharacterizationInput {
+  // A. Process
+  processDescription: string;
+  isOpenProcess: boolean;
+
+  // B. Measures (Hierarchy)
+  technicalMeasure:
+    | "closed_system"
+    | "local_extraction"
+    | "general_ventilation"
+    | "none";
+  measureJustification?: string; // If < Closed System for Cancer 1A/1B
+
+  // C. Environment
+  cleaningMethod: "hepa_wet" | "sweeping" | "none";
+
+  // D. Organization
+  accessRestricted: boolean;
+  signageGHS08: boolean;
+
+  // E. Personal
+  respiratoryPPE: string; // Free text or enum later
+  dermalPPE: string;
+  hygieneRights: boolean; // 10 min
+
+  // F. Time
+  frequency: "daily" | "weekly" | "sporadic";
+  duration: "lt_15m" | "15m_2h" | "2h_4h" | "gt_4h";
+
+  // Narrative
+  autoNarrative?: string;
+  complianceResult?: "green" | "red" | "unknown";
+}
+
 export interface HygienicEvalInput {
+  basicCharacterization?: BasicCharacterizationInput;
   labResult?: number; // mg/m3
   lod?: number; // Limit of Detection
   vla?: number; // Reference Limit (VLA-ED)

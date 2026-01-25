@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { StepCard } from "../../ui/StepCard";
+import { BasicCharacterizationStep } from "./BasicCharacterizationStep";
 import type {
   HygienicEvalInput,
   HygienicAssessment,
@@ -36,11 +37,11 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
   const [result, setResult] = useState<HygienicAssessment | null>(null);
 
-  // 0: Caracterización básica (Simplificada) - Old Point 1
-  // 1: Caracterización básica (Avanzada: Stoffenmanager) - New Stoffenmanager
-  // 2: Grupos de exposición similares (GES) - Old Point 2
-  // 3: Estrategia de Medición - Prior Point 4, now 4
-  // 4: Resultados - Prior Point 5, now 5
+  // 0: Caracterización básica (Simplificada / Avanzada)
+  // 1: Caracterización básica (Avanzada: Stoffenmanager)
+  // 2: Grupos de exposición similares (GES)
+  // 3: Estrategia de Medición
+  // 4: Resultados
   const [internalStep, setInternalStep] = useState(0);
 
   // Auto-fill Stoffenmanager defaults
@@ -132,7 +133,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     // A. Emission Score (E)
     let E = 0;
     if (input.physicalState === "liquid") {
-      // Liquids: Based on Vapour Pressure (Pa) and Process
       const vp = input.vapourPressure || 100;
       if (input.handlingType === "E") {
         // Spray / High Energy Dispersal
@@ -144,7 +144,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         else E = 0;
       }
     } else {
-      // Solids: Based on Dustiness
       const dustMap: Record<string, number> = {
         solid_objects: 0,
         granules_firm: 0.01,
@@ -229,8 +228,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     if (!input.equipmentMaintenance) MaintFactor *= 1.5; // Leaks probable
 
     // FINAL ALGORTHM (Conceptual Score)
-    // Source * Transmission * Immission * Time
-    let rawScore = E * H * LC * Seg * MaintFactor + 0.1 * GV; // Immission component (Simplified)
+    let rawScore = E * H * LC * Seg * MaintFactor + 0.1 * GV;
     let Bt = Math.round(rawScore * T * 100);
 
     // Apply PPE Reduction
@@ -294,6 +292,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         ))}
       </div>
 
+      {/* STEP 0: 1. Caracterización Básica (Simplificada / Avanzada) */}
       {isStep0 && (
         <div className="form-group mb-4">
           <div
@@ -327,108 +326,17 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             </a>
           </div>
 
-          <div
-            style={{
-              backgroundColor: "#eef6fc",
-              padding: "1rem",
-              borderRadius: "6px",
-              marginBottom: "1rem",
-              borderLeft: "4px solid #009bdb",
-            }}
-          >
-            <strong
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                color: "#0056b3",
-              }}
-            >
-              ℹ️ Criterios técnicos básicos (Factores de Exposición):
-            </strong>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5rem",
-              }}
-            >
-              {[
-                {
-                  label: "Organización",
-                  text: "Tareas, jornada, funciones y carga.",
-                  icon: "📋",
-                },
-                {
-                  label: "Proceso",
-                  text: "Técnicas, fuentes de emisión y producción.",
-                  icon: "🏭",
-                },
-                {
-                  label: "Entorno",
-                  text: "Distribución, orden y limpieza.",
-                  icon: "🧹",
-                },
-                {
-                  label: "Medidas",
-                  text: "Ventilación, procedimientos y zonas.",
-                  icon: "🛡️",
-                },
-                {
-                  label: "Temporalidad",
-                  text: "Duración, frecuencia y variaciones.",
-                  icon: "⏱️",
-                },
-                {
-                  label: "Personal",
-                  text: "Comportamiento y hábitos de trabajo.",
-                  icon: "👷",
-                },
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "1rem",
-                    padding: "0.75rem 1rem",
-                    backgroundColor: "#ffffff",
-                    borderRadius: "6px",
-                    border: "1px solid #dae1e7",
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
-                  }}
-                >
-                  <span style={{ fontSize: "1.2rem", flexShrink: 0 }}>
-                    {item.icon}
-                  </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "baseline",
-                      gap: "0.5rem",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontWeight: 700,
-                        color: "#1e3a8a",
-                        fontSize: "0.9rem",
-                        minWidth: "100px",
-                      }}
-                    >
-                      {item.label}:
-                    </span>
-                    <span style={{ color: "#475569", fontSize: "0.9rem" }}>
-                      {item.text}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <BasicCharacterizationStep
+            data={formData.basicCharacterization}
+            onUpdate={(data) =>
+              setFormData((prev) => ({ ...prev, basicCharacterization: data }))
+            }
+            hazardData={hazardData}
+          />
         </div>
       )}
 
+      {/* STEP 1: 2. Caracterización Básica (Avanzada: Stoffenmanager) */}
       {isStep1 && formData.stoffenmanager && (
         <div className="form-group mb-4">
           <h4
@@ -787,6 +695,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         </div>
       )}
 
+      {/* STEP 2: 3. Grupos de exposición similares (GES) */}
       {isStep2 && (
         <div className="form-group mb-4">
           <h4
@@ -827,15 +736,13 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               }}
             >
               Grupo de trabajadores que tienen el mismo perfil de exposición
-              para el agente químico estudiado, debido a la similitud y
-              frecuencia de las tareas realizadas, los procesos y los materiales
-              con los que trabajan y a la similitud de la manera que realizan
-              las tareas.
+              para el agente químico estudiado.
             </p>
           </div>
         </div>
       )}
 
+      {/* STEP 4: 4. Estrategia de Medición */}
       {isStep3 && (
         <div className="form-group mb-4">
           <h4
@@ -889,6 +796,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         </div>
       )}
 
+      {/* STEP 5: 5. Resultados de la Medición */}
       {isStep4 && (
         <div className="form-group mb-4">
           <h4
