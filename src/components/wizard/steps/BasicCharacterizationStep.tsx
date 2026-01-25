@@ -10,8 +10,10 @@ import {
   AlertOctagon,
 } from "lucide-react";
 import type { BasicCharacterizationInput, HazardInput } from "../../../types";
-import { StandardScenarios_DB } from "../../../data/standardScenarios";
-import type { StandardScenario } from "../../../data/standardScenarios";
+import {
+  StandardScenarios_DB,
+  StandardScenario,
+} from "../../../data/standardScenarios";
 
 interface BasicCharacterizationStepProps {
   data: BasicCharacterizationInput | undefined;
@@ -248,90 +250,134 @@ export const BasicCharacterizationStep: React.FC<
     );
   }
 
+  // PREMIUM ASSISTANT UI
   if (mode === "assistant") {
     return (
-      <div className="space-y-6 animate-fadeIn">
-        <div className="text-center mb-6 bg-blue-50 p-4 rounded-lg border border-blue-100 mx-auto max-w-2xl">
-          <h3 className="text-lg font-bold text-gray-800 flex items-center justify-center gap-2 mb-3">
-            <BookOpen size={20} className="text-blue-600" /> Buscador de
-            Escenarios Estándar
-          </h3>
-          <p className="text-sm text-gray-600 mb-3">
-            Seleccione una situación de trabajo validada para cargar
-            automáticamente las medidas de control recomendadas oficialmente.
-          </p>
-          <div className="flex flex-wrap justify-center gap-2 text-xs text-blue-800 font-medium opacity-80">
-            <span
-              className="flex items-center gap-1 bg-white px-2 py-1 rounded border border-blue-200"
-              title="Instituto Nacional de Seguridad y Salud en el Trabajo"
-            >
-              🏛️ Fuente: Fichas BASEQUIM (INSST)
-            </span>
-            <span
-              className="flex items-center gap-1 bg-white px-2 py-1 rounded border border-blue-200"
-              title="Real Decreto sobre agentes cancerígenos"
-            >
-              ⚖️ Guía Téc. RD 665/1997
-            </span>
-            <span
-              className="flex items-center gap-1 bg-white px-2 py-1 rounded border border-blue-200"
-              title="Metodología cualitativa de control"
-            >
-              🌍 COSHH Essentials
-            </span>
+      <div className="space-y-8 animate-fadeIn">
+        <div className="bg-gradient-to-br from-slate-50 to-blue-50/50 p-6 rounded-2xl border border-blue-100 mb-8">
+          <div className="text-center mb-6">
+            <h3 className="text-xl font-bold text-slate-800 flex items-center justify-center gap-2 mb-2">
+              <BookOpen size={24} className="text-blue-600" />
+              Asistente de Escenarios Estándar
+            </h3>
+            <p className="text-slate-600 max-w-2xl mx-auto text-sm">
+              Seleccione una situación de trabajo. El sistema cargará
+              automáticamente las medidas de control validadas por las
+              siguientes autoridades técnicas:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Trust Card 1: INSST */}
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center text-center hover:border-blue-300 transition-colors">
+              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-3">
+                <span className="text-xl">🏛️</span>
+              </div>
+              <h4 className="font-bold text-slate-800 text-sm mb-1">
+                Fichas BASEQUIM
+              </h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Situaciones de trabajo estandarizadas por el{" "}
+                <strong>INSST</strong>.
+              </p>
+            </div>
+
+            {/* Trust Card 2: Legal */}
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center text-center hover:border-orange-300 transition-colors">
+              <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 mb-3">
+                <span className="text-xl">⚖️</span>
+              </div>
+              <h4 className="font-bold text-slate-800 text-sm mb-1">
+                Guía Téc. RD 665/1997
+              </h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Cumplimiento estricto de priorización (Sustitución / Sist.
+                Cerrado).
+              </p>
+            </div>
+
+            {/* Trust Card 3: COSHH */}
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center text-center hover:border-emerald-300 transition-colors">
+              <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-3">
+                <span className="text-xl">🌍</span>
+              </div>
+              <h4 className="font-bold text-slate-800 text-sm mb-1">
+                COSHH Essentials
+              </h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Modelo cualitativo de control del <strong>HSE (UK)</strong>.
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="relative max-w-lg mx-auto mb-6">
-          <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+        {/* Search Bar */}
+        <div className="relative max-w-xl mx-auto">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+            <Search size={20} />
+          </div>
           <input
             type="text"
-            className="w-full pl-10 p-3 border rounded shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
-            placeholder="Buscar tarea... Ej: 'Soldadura', 'Madera', 'Humo'..."
+            className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-xl shadow-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium"
+            placeholder="Buscar proceso... Ej: 'Soldadura', 'Madera', 'Sílice', 'Diésel'..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             autoFocus
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Results Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {filteredScenarios.map((scenario) => (
             <div
               key={scenario.id}
-              className="p-4 border border-gray-200 rounded-lg hover:shadow-md cursor-pointer hover:border-blue-300 transition-all bg-white"
               onClick={() => selectScenario(scenario)}
+              className="group relative bg-white border border-gray-200 rounded-xl p-5 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-blue-400 transition-all cursor-pointer flex items-start gap-4 active:scale-[0.99]"
             >
-              <div className="flex items-start gap-3">
-                <span className="text-2xl">{scenario.icon}</span>
-                <div>
-                  <h4 className="font-bold text-gray-800 text-sm">
+              <div className="flex-shrink-0 w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center text-3xl group-hover:bg-blue-50 transition-colors">
+                {scenario.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <h4 className="font-bold text-gray-900 line-clamp-1 group-hover:text-blue-700 transition-colors">
                     {scenario.title}
                   </h4>
-                  <span className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded inline-block mb-1">
-                    {scenario.source}
-                  </span>
-                  <p className="text-xs text-gray-600 line-clamp-2">
-                    {scenario.description}
-                  </p>
+                </div>
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 mb-2 border border-blue-100">
+                  <BookOpen size={10} className="mr-1" /> {scenario.source}
+                </span>
+                <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
+                  {scenario.description}
+                </p>
+
+                {/* Micro-CTA */}
+                <div className="mt-3 flex items-center text-xs font-semibold text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-300">
+                  Cargar Escenario <span className="ml-1">→</span>
                 </div>
               </div>
             </div>
           ))}
 
           {filteredScenarios.length === 0 && (
-            <p className="col-span-2 text-center text-gray-400 py-8">
-              No se encontraron escenarios. Pruebe otra búsqueda o use el Modo
-              Experto.
-            </p>
+            <div className="col-span-2 text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+              <div className="text-4xl mb-3">🔍</div>
+              <h3 className="text-gray-900 font-medium mb-1">
+                No se encontraron escenarios
+              </h3>
+              <p className="text-gray-500 text-sm">
+                Intente con términos como "humo", "polvo", "metal" o use el Modo
+                Experto.
+              </p>
+            </div>
           )}
         </div>
 
-        <div className="text-center mt-6">
+        <div className="text-center pt-4">
           <button
             onClick={() => setMode("selection")}
-            className="text-sm text-gray-500 hover:text-gray-700 underline"
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors flex items-center justify-center gap-1 mx-auto"
           >
-            Volver atrás
+            ← Volver a la selección de modo
           </button>
         </div>
       </div>
