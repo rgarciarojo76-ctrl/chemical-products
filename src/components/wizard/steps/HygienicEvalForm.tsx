@@ -9,6 +9,7 @@ import type {
   HazardInput,
   StoffenmanagerInput,
 } from "../../../types";
+import type { CnaeEntry } from "../../../data/cnaeData";
 import { ReportPreviewModal } from "../../modals/ReportPreviewModal";
 import { generateReportData } from "../../../utils/reportGenerator";
 
@@ -20,6 +21,7 @@ interface HygienicEvalFormProps {
   vlaReference?: number;
   substanceName?: string;
   hazardData?: HazardInput;
+  selectedCnae?: CnaeEntry | null;
 }
 
 export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
@@ -30,6 +32,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   vlaReference,
   substanceName,
   hazardData,
+  selectedCnae,
 }) => {
   const [formData, setFormData] = useState<HygienicEvalInput>(
     initialData || {
@@ -413,6 +416,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               setFormData((prev) => ({ ...prev, basicCharacterization: data }))
             }
             hazardData={hazardData}
+            selectedCnae={selectedCnae}
           />
         </div>
       )}
@@ -1009,24 +1013,24 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         </button>
 
         {isStep5 && (
-            <button
-                onClick={() => setShowReportModal(true)}
-                style={{
-                    padding: "0.5rem 1rem",
-                    backgroundColor: "white",
-                    color: "#059669",
-                    border: "1px solid #059669",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    marginRight: "0.5rem",
-                    fontWeight: 600,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem"
-                }}
-            >
-                📄 Generar Informe
-            </button>
+          <button
+            onClick={() => setShowReportModal(true)}
+            style={{
+              padding: "0.5rem 1rem",
+              backgroundColor: "white",
+              color: "#059669",
+              border: "1px solid #059669",
+              borderRadius: "4px",
+              cursor: "pointer",
+              marginRight: "0.5rem",
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            📄 Generar Informe
+          </button>
         )}
 
         {isStep5 ? (
@@ -1060,17 +1064,16 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         )}
       </div>
 
-
       <ReportPreviewModal
         isOpen={showReportModal}
         onClose={() => setShowReportModal(false)}
         data={generateReportData({
-            hazard: { input: hazardData || {} as HazardInput },
-            hygienicEval: { input: formData, result },
-            // @ts-ignore
-            exposureSieve: {}, // Not needed for report yet
-            // @ts-ignore
-            measures: {}, // Not needed for report yet
+          hazard: { input: hazardData || ({} as HazardInput) },
+          hygienicEval: { input: formData, result },
+          // @ts-ignore
+          exposureSieve: {}, // Not needed for report yet
+          // @ts-ignore
+          measures: {}, // Not needed for report yet
         } as any)}
       />
     </StepCard>

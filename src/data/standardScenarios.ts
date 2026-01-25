@@ -7,6 +7,8 @@ export interface StandardScenario {
   source: string; // e.g., "BASEQUIM 011"
   documentUrl: string; // Actual URL
   risks: ("carcinogen" | "mutagen" | "reprotoxic" | "sensitizer" | "other")[];
+  relatedSubstances?: string[]; // e.g. ["formaldehído", "styrene"] - lowercase
+  relatedCNAEs?: string[]; // e.g. ["86", "20"] - startsWith matching
   icon: string; // Emoji or Icon name
   description: string;
 
@@ -25,7 +27,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Soldadura TIG en Acero Inoxidable",
     keywords: ["soldadura", "tig", "acero", "inox", "cromo", "níquel"],
     source: "BASEQUIM Ficha 011",
-    documentUrl: "https://www.insst.es/documents/94886/566858/Ficha+011+Soldadura+manual+con+arco+de+tungueno+y+gas+inerte+%28TIG%29.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/566858/Ficha+011+Soldadura+manual+con+arco+de+tungueno+y+gas+inerte+%28TIG%29.pdf",
     risks: ["carcinogen", "sensitizer"],
     icon: "🔥",
     description: "Volatilización de metales (Cr VI, Ni) por arco eléctrico.",
@@ -50,7 +53,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Soldadura MIG/MAG (Acero Carbono)",
     keywords: ["soldadura", "mig", "mag", "hilo", "humos", "manganeso"],
     source: "INSST NTP 1022",
-    documentUrl: "https://www.insst.es/documents/94886/327446/NTP+1022+Soldadura+MIG+MAG+Prevencion.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/327446/NTP+1022+Soldadura+MIG+MAG+Prevencion.pdf",
     risks: ["carcinogen", "reprotoxic"], // Mn is Repro, Fumes Carcinogen
     icon: "⚡",
     description: "Soldadura de hilo continuo. Alta generación de humos y Mn.",
@@ -102,7 +106,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Lijado/Mecanizado de Maderas Duras",
     keywords: ["madera", "lijado", "polvo", "carpintería", "roble", "haya"],
     source: "BASEQUIM 017 / Guía RD 665",
-    documentUrl: "https://www.insst.es/documents/94886/566858/Ficha+017+Lijado+de+madera.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/566858/Ficha+017+Lijado+de+madera.pdf",
     risks: ["carcinogen"], // Wood dust
     icon: "🪚",
     description: "Polvo de madera dura (Cancerígeno) por abrasión mecánica.",
@@ -162,7 +167,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "disolvente",
     ],
     source: "BASEQUIM 054",
-    documentUrl: "https://www.insst.es/documents/94886/566858/Ficha+054+Aplicacion+de+pintura+con+pistola.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/566858/Ficha+054+Aplicacion+de+pintura+con+pistola.pdf",
     risks: ["sensitizer", "carcinogen"], // Isocyanates and some solvent/pigments
     icon: "🎨",
     description:
@@ -222,7 +228,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "mek",
     ],
     source: "INSST NTP 768",
-    documentUrl: "https://www.insst.es/documents/94886/327446/NTP+768+Limpieza+manual+con+disolventes.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/327446/NTP+768+Limpieza+manual+con+disolventes.pdf",
     risks: ["reprotoxic"], // Many solvents are repro (Toluene)
     icon: "🧽",
     description: "Limpieza de piezas con trapos impregnados en disolvente.",
@@ -275,7 +282,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Corte/Perforación (Sílice Cristalina)",
     keywords: ["sílice", "corte", "hormigón", "ladrillo", "cantera", "rcs"],
     source: "Guía Técnica Sílice (INSST)",
-    documentUrl: "https://www.insst.es/documents/94886/524376/Guia+Tecnica+Agentes+Quimicos+2021.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/524376/Guia+Tecnica+Agentes+Quimicos+2021.pdf",
     risks: ["carcinogen"],
     icon: "🧱",
     description:
@@ -301,7 +309,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Demolición Manual (Martillo Picador)",
     keywords: ["demolición", "martillo", "obra", "escombros", "sílice"],
     source: "Guía Técnica Sílice",
-    documentUrl: "https://www.insst.es/documents/94886/524376/Guia+Tecnica+Agentes+Quimicos+2021.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/524376/Guia+Tecnica+Agentes+Quimicos+2021.pdf",
     risks: ["carcinogen"],
     icon: "🔨",
     description: "Picado de hormigón/paredes. Alta emisión de polvo.",
@@ -327,7 +336,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Retirada de Amianto (Fibrocemento)",
     keywords: ["amianto", "uralita", "fibrocemento", "tejado"],
     source: "RD 396/2006 (Plan de Trabajo)",
-    documentUrl: "https://www.insst.es/documents/94886/96076/Guia_Tecnica_Amianto.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/96076/Guia_Tecnica_Amianto.pdf",
     risks: ["carcinogen"],
     icon: "☠️",
     description:
@@ -356,7 +366,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Manipulación en Vitrina de Gases",
     keywords: ["laboratorio", "vitrina", "reactivos", "química", "ácido"],
     source: "NTP 672 (Vitrina)",
-    documentUrl: "https://www.insst.es/documents/94886/326775/NTP+672+Vitrinas+de+gases+criterios+de+seleccion+y+uso.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/326775/NTP+672+Vitrinas+de+gases+criterios+de+seleccion+y+uso.pdf",
     risks: ["carcinogen", "mutagen", "reprotoxic"], // Generic lab
     icon: "⚗️",
     description: "Trasvases o reacciones dentro de vitrina extractora.",
@@ -382,8 +393,11 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Uso de Formol (Anatomía Patológica)",
     keywords: ["formol", "formaldehído", "hospital", "biopsia", "cancerígeno"],
     source: "Protocolo Sanitario Formol",
-    documentUrl: "https://www.mscbs.gob.es/ciudadanos/saludAmbLaboral/docs/ProtocoloVigilanciaSanitariaFormaldehido.pdf",
+    documentUrl:
+      "https://www.mscbs.gob.es/ciudadanos/saludAmbLaboral/docs/ProtocoloVigilanciaSanitariaFormaldehido.pdf",
     risks: ["carcinogen", "sensitizer"],
+    relatedSubstances: ["formaldehído", "formol"],
+    relatedCNAEs: ["86", "8610", "7500"], // Sanidad y Veterinaria
     icon: "🏥",
     description: "Tallado de muestras en formol. Cancerígeno 1B.",
     defaults: {
@@ -402,6 +416,68 @@ export const StandardScenarios_DB: StandardScenario[] = [
     minTechnicalMeasure: "local_extraction",
     gapWarning:
       "El formaldehído es cancerígeno y sensibilizante. Obligatorio mesa de tallado con extracción trasera/inferior.",
+  },
+  {
+    id: "formaldehyde_embalming",
+    title: "Tanatopraxia / Embalsamamiento",
+    keywords: [
+      "funeraria",
+      "embalsamamiento",
+      "formol",
+      "cadáver",
+      "tanatorio",
+    ],
+    source: "Guía Bioseguridad Funeraria",
+    documentUrl:
+      "https://www.insst.es/documents/94886/326827/NTP+1077+Prevencion+riesgo+quimico+tanatopraxia.pdf",
+    risks: ["carcinogen", "sensitizer"],
+    relatedSubstances: ["formaldehído", "formol", "metanal"],
+    relatedCNAEs: ["9603"],
+    icon: "⚰️",
+    description: "Inyección y drenaje con fluidos de conservación (Formol).",
+    defaults: {
+      processDescription: "Inyección arterial de fluidos con formaldehído.",
+      isOpenProcess: true,
+      technicalMeasure: "local_extraction", // Mesa con extracción
+      cleaningMethod: "hepa_wet",
+      accessRestricted: true,
+      signageGHS08: true,
+      respiratoryPPE: "Máscara media cara A2P2 (altas conc.)",
+      frequency: "daily",
+      duration: "2h_4h",
+      dermalPPE: "Delantal impermeable + Guantes Nitrilo caña larga",
+    },
+    minTechnicalMeasure: "local_extraction",
+    gapWarning:
+      "Altas concentraciones en inyección. Ventilación general insuficiente (requiere 15 ren/h o extracción en mesa).",
+  },
+  {
+    id: "resins_manufacture",
+    title: "Fabricación Resinas Fenólicas/Urea",
+    keywords: ["resina", "fenol", "formaldehído", "tableros", "cola"],
+    source: "NTP 873 (Tableros)",
+    documentUrl:
+      "https://www.insst.es/documents/94886/326853/NTP+873+Tableros+madera+formaldehido.pdf",
+    risks: ["carcinogen", "sensitizer"],
+    relatedSubstances: ["formaldehído", "formol", "fenol"],
+    relatedCNAEs: ["20", "16"], // Química y Madera
+    icon: "🏭",
+    description: "Síntesis o uso industrial de resinas con formaldehído libre.",
+    defaults: {
+      processDescription: "Mezcla y reacción de componentes para resinas.",
+      isOpenProcess: false, // Reactores cerrados usualmente
+      technicalMeasure: "closed_system",
+      cleaningMethod: "hepa_wet",
+      accessRestricted: true,
+      signageGHS08: true,
+      respiratoryPPE: "A2 (Mantenimiento/Fugas)",
+      frequency: "daily",
+      duration: "gt_4h",
+      dermalPPE: "Traje Químico Tipo 3/4",
+    },
+    minTechnicalMeasure: "closed_system",
+    gapWarning:
+      "En fabricación industrial, el sistema cerrado es el estándar. Fugas críticas en bombas/válvulas.",
   },
 
   // --- OTHERS ---
@@ -434,7 +510,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Polvo de Harina (Panadería)",
     keywords: ["harina", "panadería", "obrador", "asma", "polvo"],
     source: "NTP 1060 (Enzimas/Harina)",
-    documentUrl: "https://www.insst.es/documents/94886/329555/NTP+1060+Exposicion+a+polvo+de+harina+y+enzimas+en+panaderia.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/329555/NTP+1060+Exposicion+a+polvo+de+harina+y+enzimas+en+panaderia.pdf",
     risks: ["sensitizer"], // NOT CARCINOGEN - Should be filtered out
     icon: "🥖",
     description: "Sensibilizante (Asma del panadero).",
@@ -459,7 +536,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Carga de Baterías (Plomo-Ácido)",
     keywords: ["batería", "ácido", "hidrógeno", "elektror"],
     source: "NTP 1074 (H2)",
-    documentUrl: "https://www.insst.es/documents/94886/329555/NTP+1074+Baterias+de+traccion+carga+y+mantenimiento.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/329555/NTP+1074+Baterias+de+traccion+carga+y+mantenimiento.pdf",
     risks: ["other"], // Physical risk + Corrosive
     icon: "🔋",
     description: "Emisión de Hidrógeno (Explosivo) y nieblas ácidas.",
@@ -484,7 +562,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Aplicación Fitosanitarios (Mochila)",
     keywords: ["pesticida", "herbicida", "mochila", "campo", "sulfatar"],
     source: "INSST Guía Fito",
-    documentUrl: "https://www.insst.es/documents/94886/524376/Guia+Fitosanitarios.pdf",
+    documentUrl:
+      "https://www.insst.es/documents/94886/524376/Guia+Fitosanitarios.pdf",
     risks: ["carcinogen", "reprotoxic"], // Many are suspected
     icon: "🌾",
     description: "Pulverización manual de productos químicos agrícolas.",

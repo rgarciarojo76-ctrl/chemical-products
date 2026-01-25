@@ -12,16 +12,18 @@ import {
 import type { BasicCharacterizationInput, HazardInput } from "../../../types";
 import { StandardScenarios_DB } from "../../../data/standardScenarios";
 import type { StandardScenario } from "../../../data/standardScenarios";
+import type { CnaeEntry } from "../../../data/cnaeData";
 
 interface BasicCharacterizationStepProps {
   data: BasicCharacterizationInput | undefined;
   onUpdate: (data: BasicCharacterizationInput) => void;
   hazardData?: HazardInput;
+  selectedCnae?: CnaeEntry | null;
 }
 
 export const BasicCharacterizationStep: React.FC<
   BasicCharacterizationStepProps
-> = ({ data, onUpdate, hazardData }) => {
+> = ({ data, onUpdate, hazardData, selectedCnae }) => {
   // Mode Selection: 'selection' | 'assistant' | 'expert'
   const [mode, setMode] = useState<"selection" | "assistant" | "expert">(
     data ? "expert" : "selection",
@@ -213,7 +215,26 @@ export const BasicCharacterizationStep: React.FC<
         )) &&
       // Strict Filter: Only show CMR relevant scenarios
       s.risks.some((r) => ["carcinogen", "mutagen", "reprotoxic"].includes(r)),
-  );
+  ).sort((a, b) => {
+    let scoreA = 0;
+    let scoreB = 0;
+
+    const subName = hazardData?.substanceName?.toLowerCase() || "";
+    const cnaeCode = selectedCnae?.code || "";
+
+    // 1. Matches Substance Name
+    if (a.relatedSubstances?.some((s) => subName.includes(s))) scoreA += 100;
+    if (b.relatedSubstances?.some((s) => subName.includes(s))) scoreB += 100;
+
+    // 2. Matches CNAE
+    if (a.relatedCNAEs?.some((c) => cnaeCode.startsWith(c))) scoreA += 50;
+    if (b.relatedCNAEs?.some((c) => cnaeCode.startsWith(c))) scoreB += 50;
+
+    return scoreB - scoreA;
+  });
+
+  // Auto-Select Logic (Optional - if only 1 high match)
+  // ...
 
   if (mode === "selection") {
     return (
@@ -558,9 +579,45 @@ export const BasicCharacterizationStep: React.FC<
                       fontWeight: 700,
                       color: "var(--color-text-main)",
                       marginBottom: "0.25rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
                     }}
                   >
                     {scenario.title}
+                    {/* Recommendation Badges */}
+                    {hazardData?.substanceName &&
+                      scenario.relatedSubstances?.some((s) =>
+                        hazardData.substanceName?.toLowerCase().includes(s),
+                      ) && (
+                        <span
+                          style={{
+                            fontSize: "0.6rem",
+                            background: "#dcfce7",
+                            color: "#166534",
+                            padding: "2px 6px",
+                            borderRadius: "99px",
+                          }}
+                        >
+                          Recomendado (Sustancia)
+                        </span>
+                      )}
+                    {selectedCnae &&
+                      scenario.relatedCNAEs?.some((c) =>
+                        selectedCnae.code.startsWith(c),
+                      ) && (
+                        <span
+                          style={{
+                            fontSize: "0.6rem",
+                            background: "#e0f2fe",
+                            color: "#0369a1",
+                            padding: "2px 6px",
+                            borderRadius: "99px",
+                          }}
+                        >
+                          Recomendado (Sector)
+                        </span>
+                      )}
                   </h4>
                   <span
                     style={{
@@ -657,7 +714,7 @@ export const BasicCharacterizationStep: React.FC<
                 gap: "4px",
                 textDecoration: "none",
                 transition: "background-color 0.2s",
-                border: "1px solid #dbeafe"
+                border: "1px solid #dbeafe",
               }}
               className="hover:bg-blue-100"
             >

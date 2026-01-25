@@ -7,10 +7,12 @@ import { HygienicEvalForm } from "./wizard/steps/HygienicEvalForm";
 import { MeasuresForm } from "./wizard/steps/MeasuresForm";
 import { FinalReport } from "./wizard/steps/FinalReport";
 import { CnaeSearchForm } from "./wizard/steps/CnaeSearchForm";
+import type { CnaeEntry } from "../data/cnaeData";
 
 const MainContent = () => {
   const [started, setStarted] = useState(false);
   const engine = useDecisionEngine();
+  const [selectedCnae, setSelectedCnae] = useState<CnaeEntry | null>(null);
 
   const handleAgentSelect = (agentName: string) => {
     // Pre-fill Hazard Input with the selected name
@@ -87,6 +89,7 @@ const MainContent = () => {
         <CnaeSearchForm
           onNext={engine.nextStep}
           onSelectAgent={handleAgentSelect}
+          onSelectCnae={setSelectedCnae}
         />
       )}
 
@@ -119,6 +122,7 @@ const MainContent = () => {
           vlaReference={engine.state.hygienicEval.input.vla}
           substanceName={engine.state.hazard.input.substanceName}
           hazardData={engine.state.hazard.input}
+          selectedCnae={selectedCnae}
         />
       )}
 
