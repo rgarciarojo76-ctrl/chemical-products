@@ -800,7 +800,9 @@ export const BasicCharacterizationStep: React.FC<
                 "technicalMeasure",
                 e.target.value as
                   | "closed_system"
+                  | "containment_extraction"
                   | "local_extraction"
+                  | "suppression"
                   | "general_ventilation"
                   | "none",
               )
@@ -812,11 +814,17 @@ export const BasicCharacterizationStep: React.FC<
             <option value="closed_system">
               1. Sistema Cerrado Estanco (Prioritario)
             </option>
-            <option value="local_extraction">
-              2. Extracción Localizada (LEV)
+            <option value="containment_extraction">
+              2. Cerramiento con Extracción (Vitrinas/Cabinas)
             </option>
-            <option value="general_ventilation">3. Ventilación General</option>
-            <option value="none">4. Ninguna / Ventilación Natural</option>
+            <option value="local_extraction">
+              3. Extracción Localizada (LEV)
+            </option>
+            <option value="suppression">
+              4. Supresión Húmeda / Abatimiento
+            </option>
+            <option value="general_ventilation">5. Ventilación General</option>
+            <option value="none">6. Ninguna / Ventilación Natural</option>
           </select>
         </div>
 
