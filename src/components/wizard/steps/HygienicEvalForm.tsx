@@ -238,7 +238,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                   margin: "0 auto 1.5rem auto",
                 }}
               >
-                🅰️
+                <Zap size={48} color="var(--color-primary)" />
               </div>
               <h4
                 style={{
@@ -320,7 +320,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                   margin: "0 auto 1.5rem auto",
                 }}
               >
-                🅱️
+                <Calculator size={48} color="#a855f7" />
               </div>
               <h4
                 style={{
@@ -365,29 +365,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             </div>
           </div>
 
-          <div className="text-center mt-8">
-            <button
-              onClick={handleInternalNext}
-              disabled={!formData.evaluationMethod}
-              style={{
-                padding: "0.75rem 2rem",
-                borderRadius: "0.75rem",
-                fontWeight: 700,
-                fontSize: "1rem",
-                background: !formData.evaluationMethod
-                  ? "#e2e8f0"
-                  : "var(--color-primary)",
-                color: !formData.evaluationMethod ? "#94a3b8" : "white",
-                cursor: !formData.evaluationMethod ? "not-allowed" : "pointer",
-                border: "none",
-                boxShadow: !formData.evaluationMethod
-                  ? "none"
-                  : "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              Continuar →
-            </button>
-          </div>
+          {/* Continue button removed as cards auto-advance */}
         </div>
       )}
 
