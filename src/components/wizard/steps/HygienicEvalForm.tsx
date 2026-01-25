@@ -200,7 +200,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           <h3 className="text-xl font-bold text-center text-slate-800 mb-6">
             Seleccione el Tipo de Evaluación
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto px-4">
             {/* Option A: Simplified */}
             <div
               onClick={() => {
@@ -221,11 +221,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 boxShadow:
                   formData.evaluationMethod === "simplified"
                     ? "0 10px 15px -3px rgba(59, 130, 246, 0.1)"
-                    : "none",
-                transform:
-                  formData.evaluationMethod === "simplified"
-                    ? "scale(1.02)"
-                    : "scale(1)",
+                    : "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
               }}
             >
               <div
@@ -307,11 +303,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 boxShadow:
                   formData.evaluationMethod === "advanced"
                     ? "0 10px 15px -3px rgba(168, 85, 247, 0.1)"
-                    : "none",
-                transform:
-                  formData.evaluationMethod === "advanced"
-                    ? "scale(1.02)"
-                    : "scale(1)",
+                    : "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
               }}
             >
               <div
