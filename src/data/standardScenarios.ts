@@ -1,4 +1,4 @@
-import { BasicCharacterizationInput } from "../types";
+import type { BasicCharacterizationInput } from "../types";
 
 export interface StandardScenario {
   id: string;
@@ -77,7 +77,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
       signageGHS08: true,
       respiratoryPPE: "Mascarilla FFP2 o superior",
       frequency: "daily",
-      duration: "hour_4",
+      duration: "gt_4h", // Corrected from hour_4
     },
     minTechnicalMeasure: "local_extraction",
     gapWarning:
@@ -109,7 +109,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
       respiratoryPPE: "Mascarilla FFP3 con carbón activo (olores)",
       hygieneRights: true, // Specific mention
       frequency: "sporadic", // Often variable
-      duration: "min_30",
+      duration: "15m_2h", // Corrected from min_30
     },
     minTechnicalMeasure: "local_extraction",
     gapWarning:
@@ -136,16 +136,16 @@ export const StandardScenarios_DB: StandardScenario[] = [
       processDescription:
         "Corte de material de construcción con disco abrasivo.",
       isOpenProcess: true,
-      technicalMeasure: "suppression", // Wet suppresion usually, mapped to suppression or local
+      technicalMeasure: "local_extraction", // Mapped suppression to closest valid enum
       cleaningMethod: "hepa_wet",
       accessRestricted: true,
       signageGHS08: true,
       respiratoryPPE: "Mascarilla P3",
       frequency: "daily",
-      duration: "hour_2",
+      duration: "2h_4h", // Corrected from hour_2
     },
-    minTechnicalMeasure: "suppression", // Allow wet suppression as minimal valid
+    minTechnicalMeasure: "local_extraction", // Mapped from suppression
     gapWarning:
-      "La sílice cristalina requiere vía húmeda o extracción en la herramienta. Trabajar en seco sin captación está prohibido.",
+      "La sílice cristalina requiere vía húmeda (asimilada aquí a control localizado) o extracción en la herramienta. Trabajar en seco sin captación está prohibido.",
   },
 ];

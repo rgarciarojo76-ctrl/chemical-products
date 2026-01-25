@@ -10,10 +10,8 @@ import {
   AlertOctagon,
 } from "lucide-react";
 import type { BasicCharacterizationInput, HazardInput } from "../../../types";
-import {
-  StandardScenarios_DB,
-  StandardScenario,
-} from "../../../data/standardScenarios";
+import { StandardScenarios_DB } from "../../../data/standardScenarios";
+import type { StandardScenario } from "../../../data/standardScenarios";
 
 interface BasicCharacterizationStepProps {
   data: BasicCharacterizationInput | undefined;
