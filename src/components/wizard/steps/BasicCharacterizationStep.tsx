@@ -251,14 +251,35 @@ export const BasicCharacterizationStep: React.FC<
   if (mode === "assistant") {
     return (
       <div className="space-y-6 animate-fadeIn">
-        <div className="text-center mb-6">
-          <h3 className="text-lg font-bold text-gray-800 flex items-center justify-center gap-2">
+        <div className="text-center mb-6 bg-blue-50 p-4 rounded-lg border border-blue-100 mx-auto max-w-2xl">
+          <h3 className="text-lg font-bold text-gray-800 flex items-center justify-center gap-2 mb-3">
             <BookOpen size={20} className="text-blue-600" /> Buscador de
             Escenarios Estándar
           </h3>
-          <p className="text-sm text-gray-500">
-            Basado en Fichas Técnicas del INSST y Guías de Buenas Prácticas
+          <p className="text-sm text-gray-600 mb-3">
+            Seleccione una situación de trabajo validada para cargar
+            automáticamente las medidas de control recomendadas oficialmente.
           </p>
+          <div className="flex flex-wrap justify-center gap-2 text-xs text-blue-800 font-medium opacity-80">
+            <span
+              className="flex items-center gap-1 bg-white px-2 py-1 rounded border border-blue-200"
+              title="Instituto Nacional de Seguridad y Salud en el Trabajo"
+            >
+              🏛️ Fuente: Fichas BASEQUIM (INSST)
+            </span>
+            <span
+              className="flex items-center gap-1 bg-white px-2 py-1 rounded border border-blue-200"
+              title="Real Decreto sobre agentes cancerígenos"
+            >
+              ⚖️ Guía Téc. RD 665/1997
+            </span>
+            <span
+              className="flex items-center gap-1 bg-white px-2 py-1 rounded border border-blue-200"
+              title="Metodología cualitativa de control"
+            >
+              🌍 COSHH Essentials
+            </span>
+          </div>
         </div>
 
         <div className="relative max-w-lg mx-auto mb-6">
