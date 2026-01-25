@@ -176,6 +176,9 @@ export interface BasicCharacterizationInput {
   // Narrative
   autoNarrative?: string;
   complianceResult?: "green" | "red" | "unknown";
+
+  // Observations (Issue #1 & #2: editable field for technician notes)
+  observations?: string;
 }
 
 export interface HygienicEvalInput {

@@ -65,12 +65,9 @@ export const generateReportData = (state: AssessmentState): ReportData => {
   }
 
   // --- Physical Data Formatting ---
-  const densityText = hazard.density
-    ? `${hazard.density} g/cm³`
-    : "No disponible";
-  const bpText = hazard.boilingPoint
-    ? `${hazard.boilingPoint} ºC`
-    : "No disponible";
+  // Only include if data is available (Issue #5: hide "No disponible")
+  const densityText = hazard.density ? `${hazard.density} g/cm³` : undefined;
+  const bpText = hazard.boilingPoint ? `${hazard.boilingPoint} ºC` : undefined;
 
   // 2. Narrative Engine
   // Default values to prevent crashes if Basic Characterization is missing (e.g. Stoffenmanager path)
@@ -92,11 +89,18 @@ export const generateReportData = (state: AssessmentState): ReportData => {
       }[basic.duration]
     : "duración no definida";
 
-  const narrative = `La tarea evaluada, "${taskName}", implica la manipulación del agente en estado ${statePhys} con una ${
-    hazard.vapourPressure
-      ? `presión de vapor de ${volatility}`
-      : "volatilidad estimada"
-  } (P.Ebullición: ${bpText}). El proceso se desarrolla en un régimen de ${procType}, manipulándose ${quantity}. La frecuencia de exposición es ${frequency} con una duración por ciclo de ${duration}.`;
+  // Build narrative with bullet points (Issue #6)
+  const narrativeParts = [
+    `La tarea evaluada, "${taskName}", implica la manipulación del agente en estado ${statePhys}.`,
+    hazard.vapourPressure ? `Presión de vapor: ${volatility}` : null,
+    bpText ? `Punto de ebullición: ${bpText}` : null,
+    `El proceso se desarrolla en un régimen de ${procType}.`,
+    `Cantidad manipulada: ${quantity}.`,
+    `Frecuencia de exposición: ${frequency}.`,
+    `Duración por ciclo: ${duration}.`,
+  ].filter(Boolean);
+
+  const narrative = narrativeParts.join("\n");
 
   const ppeSummary = basic
     ? [

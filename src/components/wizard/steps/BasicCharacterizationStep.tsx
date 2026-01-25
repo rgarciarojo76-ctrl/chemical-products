@@ -1195,20 +1195,30 @@ export const BasicCharacterizationStep: React.FC<
         </div>
       </div>
 
-      {/* Narrative Preview */}
-      <div
-        style={{
-          marginTop: "2rem",
-          padding: "1rem",
-          background: "#f3f4f6",
-          borderRadius: "8px",
-          borderLeft: "4px solid #9ca3af",
-          fontStyle: "italic",
-          color: "#4b5563",
-          fontSize: "0.9rem",
-        }}
-      >
-        "{form.autoNarrative}"
+      {/* Editable Observations Field (Issue #1 & #2) */}
+      <div style={{ marginTop: "1.5rem" }}>
+        <label
+          className="expert-label"
+          style={{ marginBottom: "0.5rem", display: "block" }}
+        >
+          Observaciones Adicionales
+        </label>
+        <textarea
+          className="expert-input"
+          placeholder="Añadir observaciones o detalles adicionales sobre la tarea..."
+          value={form.observations || ""}
+          onChange={(e) => handleChange("observations", e.target.value)}
+          rows={3}
+          style={{
+            width: "100%",
+            padding: "0.75rem",
+            borderRadius: "6px",
+            border: "1px solid #d1d5db",
+            fontSize: "0.9rem",
+            fontFamily: "inherit",
+            resize: "vertical",
+          }}
+        />
       </div>
     </div>
   );
