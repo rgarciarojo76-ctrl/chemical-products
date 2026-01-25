@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { StepCard } from "../../ui/StepCard";
+import { Zap, Calculator } from "lucide-react";
 import { BasicCharacterizationStep } from "./BasicCharacterizationStep";
 import type {
   HygienicEvalInput,
