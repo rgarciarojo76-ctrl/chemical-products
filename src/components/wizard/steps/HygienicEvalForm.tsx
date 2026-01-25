@@ -203,9 +203,10 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {/* Option A: Simplified */}
             <div
-              onClick={() =>
-                setFormData({ ...formData, evaluationMethod: "simplified" })
-              }
+              onClick={() => {
+                setFormData({ ...formData, evaluationMethod: "simplified" });
+                setInternalStep(1);
+              }}
               style={{
                 cursor: "pointer",
                 padding: "2rem",
@@ -288,9 +289,10 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
             {/* Option B: Advanced */}
             <div
-              onClick={() =>
-                setFormData({ ...formData, evaluationMethod: "advanced" })
-              }
+              onClick={() => {
+                setFormData({ ...formData, evaluationMethod: "advanced" });
+                setInternalStep(2);
+              }}
               style={{
                 cursor: "pointer",
                 padding: "2rem",
