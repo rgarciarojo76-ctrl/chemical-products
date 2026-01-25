@@ -7,7 +7,6 @@ import type {
   HygienicAssessment,
   HazardInput,
   StoffenmanagerInput,
-  StoffenmanagerResult,
 } from "../../../types";
 
 interface HygienicEvalFormProps {
