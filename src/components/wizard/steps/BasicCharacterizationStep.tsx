@@ -26,6 +26,7 @@ export const BasicCharacterizationStep: React.FC<
     data ? "expert" : "selection",
   );
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
   const [selectedScenarioId, setSelectedScenarioId] = useState<
     string | undefined
   >(undefined);
@@ -212,76 +213,121 @@ export const BasicCharacterizationStep: React.FC<
     return (
       <div className="animate-fadeIn h-full flex flex-col">
         {/* Trust Header */}
-        <div className="mb-8 text-center">
-          <h3 className="text-xl font-bold text-slate-800 mb-2">
+        <div className="mb-4 text-center">
+          <h3
+            style={{
+              fontSize: "1.25rem",
+              fontWeight: 700,
+              marginBottom: "0.5rem",
+              color: "var(--color-primary-dark)",
+            }}
+          >
             Seleccione el Método de Evaluación
           </h3>
-          <p className="text-slate-600 text-sm max-w-2xl mx-auto mb-6">
+          <p
+            style={{
+              fontSize: "0.9rem",
+              color: "var(--color-text-light)",
+              maxWidth: "600px",
+              margin: "0 auto 1.5rem auto",
+            }}
+          >
             Esta herramienta integra las metodologías oficiales para garantizar
             la seguridad jurídica y técnica.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-3 opacity-90">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full border border-blue-100">
-              🏛️ Fichas BASEQUIM (INSST)
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-50 text-orange-700 text-xs font-bold rounded-full border border-orange-100">
-              ⚖️ Priorización RD 665/1997
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-100">
-              🌍 Modelo COSHH Essentials
-            </span>
+          <div className="trust-badge-container">
+            <span className="trust-badge">🏛️ Fichas BASEQUIM (INSST)</span>
+            <span className="trust-badge">⚖️ Priorización RD 665/1997</span>
+            <span className="trust-badge">🌍 Modelo COSHH Essentials</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
+        <div
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 routes-grid"
+          style={{ gridTemplateColumns: "1fr 1fr", gap: "2rem" }}
+        >
           {/* Card 1: Assistant (Recommended) */}
           <div
-            className="group relative bg-gradient-to-br from-blue-50 to-white border border-blue-200 rounded-2xl p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-blue-400 transition-all cursor-pointer flex flex-col items-center text-center"
+            className="selection-card recommended"
             onClick={() => setMode("assistant")}
           >
-            <div className="absolute top-4 right-4 bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide uppercase">
+            <div
+              style={{
+                position: "absolute",
+                top: "1rem",
+                right: "1rem",
+                background: "var(--color-primary)",
+                color: "white",
+                fontSize: "0.7rem",
+                padding: "0.25rem 0.75rem",
+                fontWeight: 700,
+                borderRadius: "99px",
+                textTransform: "uppercase",
+              }}
+            >
               Recomendado
             </div>
 
-            <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform duration-300 ring-4 ring-blue-50">
+            <div className="card-icon-wrapper">
               <BookOpen size={32} strokeWidth={2} />
             </div>
 
-            <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-700 transition-colors">
+            <h3
+              style={{
+                fontSize: "1.1rem",
+                fontWeight: 700,
+                marginBottom: "0.5rem",
+                color: "var(--color-text-main)",
+              }}
+            >
               Asistente de Escenarios Estándar
             </h3>
-            <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+            <p
+              style={{
+                fontSize: "0.9rem",
+                color: "var(--color-text-light)",
+                marginBottom: "1.5rem",
+                lineHeight: 1.5,
+              }}
+            >
               Utilice situaciones de trabajo pre-validadas por el{" "}
               <strong>INSST</strong>. Carga automáticamente medidas de control,
               EPIs y perfiles de exposición conformes a normativa.
             </p>
 
-            <button className="mt-auto px-6 py-2 bg-white border border-blue-200 text-blue-700 text-sm font-bold rounded-lg group-hover:bg-blue-600 group-hover:text-white group-hover:border-transparent transition-all shadow-sm">
-              Abrir Asistente
-            </button>
+            <button className="card-btn">Abrir Asistente</button>
           </div>
 
           {/* Card 2: Expert Mode */}
-          <div
-            className="group relative bg-white border border-slate-200 rounded-2xl p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-slate-400 transition-all cursor-pointer flex flex-col items-center text-center"
-            onClick={() => setMode("expert")}
-          >
-            <div className="w-16 h-16 bg-slate-50 rounded-2xl shadow-sm flex items-center justify-center text-slate-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+          <div className="selection-card" onClick={() => setMode("expert")}>
+            <div className="card-icon-wrapper">
               <Shield size={32} strokeWidth={2} />
             </div>
 
-            <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-slate-900 transition-colors">
+            <h3
+              style={{
+                fontSize: "1.1rem",
+                fontWeight: 700,
+                marginBottom: "0.5rem",
+                color: "var(--color-text-main)",
+              }}
+            >
               Modo Experto / Libre
             </h3>
-            <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+            <p
+              style={{
+                fontSize: "0.9rem",
+                color: "var(--color-text-light)",
+                marginBottom: "1.5rem",
+                lineHeight: 1.5,
+              }}
+            >
               Configure manualmente cada parámetro de la evaluación cualitativa.
               Ideal para procesos atípicos o no estandarizados.
             </p>
 
-            <button className="mt-auto px-6 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-lg group-hover:bg-slate-800 group-hover:text-white group-hover:border-transparent transition-all shadow-sm">
-              Configuración Manual
-            </button>
+            <button className="card-btn">Configuración Manual</button>
           </div>
         </div>
       </div>
@@ -292,130 +338,228 @@ export const BasicCharacterizationStep: React.FC<
   if (mode === "assistant") {
     return (
       <div className="space-y-8 animate-fadeIn">
-        <div className="bg-gradient-to-br from-slate-50 to-blue-50/50 p-6 rounded-2xl border border-blue-100 mb-8">
+        <div
+          className="premium-gradient-bg mb-4"
+          style={{ padding: "2rem", borderRadius: "12px" }}
+        >
           <div className="text-center mb-6">
-            <h3 className="text-xl font-bold text-slate-800 flex items-center justify-center gap-2 mb-2">
-              <BookOpen size={24} className="text-blue-600" />
+            <h3
+              style={{
+                fontSize: "1.25rem",
+                fontWeight: 700,
+                marginBottom: "0.5rem",
+                color: "var(--color-primary-dark)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.5rem",
+              }}
+            >
+              <BookOpen size={24} color="var(--color-primary)" />
               Asistente de Escenarios Estándar
             </h3>
-            <p className="text-slate-600 max-w-2xl mx-auto text-sm">
+            <p
+              style={{
+                fontSize: "0.9rem",
+                color: "var(--color-text-light)",
+                maxWidth: "600px",
+                margin: "0 auto",
+              }}
+            >
               Seleccione una situación de trabajo. El sistema cargará
               automáticamente las medidas de control validadas por las
               siguientes autoridades técnicas:
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Trust Card 1: INSST */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center text-center hover:border-blue-300 transition-colors">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-3">
-                <span className="text-xl">🏛️</span>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: "1rem",
+            }}
+          >
+            <div
+              style={{
+                padding: "1rem",
+                background: "white",
+                borderRadius: "8px",
+                border: "1px solid var(--color-border)",
+                textAlign: "center",
+              }}
+            >
+              <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+                🏛️
               </div>
-              <h4 className="font-bold text-slate-800 text-sm mb-1">
+              <div style={{ fontWeight: 700, fontSize: "0.8rem" }}>
                 Fichas BASEQUIM
-              </h4>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Situaciones de trabajo estandarizadas por el{" "}
-                <strong>INSST</strong>.
-              </p>
-            </div>
-
-            {/* Trust Card 2: Legal */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center text-center hover:border-orange-300 transition-colors">
-              <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 mb-3">
-                <span className="text-xl">⚖️</span>
               </div>
-              <h4 className="font-bold text-slate-800 text-sm mb-1">
-                Guía Téc. RD 665/1997
-              </h4>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Cumplimiento estricto de priorización (Sustitución / Sist.
-                Cerrado).
-              </p>
+              <div style={{ fontSize: "0.7rem", color: "#666" }}>INSST</div>
             </div>
-
-            {/* Trust Card 3: COSHH */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center text-center hover:border-emerald-300 transition-colors">
-              <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-3">
-                <span className="text-xl">🌍</span>
+            <div
+              style={{
+                padding: "1rem",
+                background: "white",
+                borderRadius: "8px",
+                border: "1px solid var(--color-border)",
+                textAlign: "center",
+              }}
+            >
+              <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+                ⚖️
               </div>
-              <h4 className="font-bold text-slate-800 text-sm mb-1">
+              <div style={{ fontWeight: 700, fontSize: "0.8rem" }}>
+                Guía Téc. RD 665
+              </div>
+              <div style={{ fontSize: "0.7rem", color: "#666" }}>
+                Priorización Legal
+              </div>
+            </div>
+            <div
+              style={{
+                padding: "1rem",
+                background: "white",
+                borderRadius: "8px",
+                border: "1px solid var(--color-border)",
+                textAlign: "center",
+              }}
+            >
+              <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+                🌍
+              </div>
+              <div style={{ fontWeight: 700, fontSize: "0.8rem" }}>
                 COSHH Essentials
-              </h4>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Modelo cualitativo de control del <strong>HSE (UK)</strong>.
-              </p>
+              </div>
+              <div style={{ fontSize: "0.7rem", color: "#666" }}>
+                HSE Methodology
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative max-w-xl mx-auto">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-            <Search size={20} />
+        {/* Enhanced Search Bar */}
+        <div className="premium-search-container">
+          <div className="search-icon-absolute">
+            <Search size={22} />
           </div>
           <input
             type="text"
-            className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-xl shadow-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium"
-            placeholder="Buscar proceso... Ej: 'Soldadura', 'Madera', 'Sílice', 'Diésel'..."
+            className="premium-search-input"
+            placeholder="Buscar proceso... (Ej: Soldadura, Madera, Sílice...)"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
             autoFocus
           />
         </div>
 
         {/* Results Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {filteredScenarios.map((scenario) => (
-            <div
-              key={scenario.id}
-              onClick={() => selectScenario(scenario)}
-              className="group relative bg-white border border-gray-200 rounded-xl p-5 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-blue-400 transition-all cursor-pointer flex items-start gap-4 active:scale-[0.99]"
-            >
-              <div className="flex-shrink-0 w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center text-3xl group-hover:bg-blue-50 transition-colors">
-                {scenario.icon}
+        {(searchFocused || searchTerm.length > 0) && (
+          <div className="scenario-grid">
+            {/* Custom Create Option */}
+            {searchTerm.length > 0 && (
+              <div
+                onClick={() => {
+                  setForm({ ...form, processDescription: searchTerm });
+                  setMode("expert");
+                }}
+                className="scenario-card"
+                style={{
+                  backgroundColor: "#eff6ff",
+                  borderStyle: "dashed",
+                  borderColor: "var(--color-primary)",
+                }}
+              >
+                <div style={{ fontSize: "2rem" }}>✨</div>
+                <div>
+                  <h4
+                    style={{
+                      fontWeight: 700,
+                      color: "var(--color-primary-dark)",
+                    }}
+                  >
+                    ¿No encuentra su escenario?
+                  </h4>
+                  <p
+                    style={{
+                      fontSize: "0.85rem",
+                      color: "var(--color-text-light)",
+                    }}
+                  >
+                    Usar <strong>"{searchTerm}"</strong> como descripción
+                    personalizada.
+                  </p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <h4 className="font-bold text-gray-900 line-clamp-1 group-hover:text-blue-700 transition-colors">
+            )}
+
+            {filteredScenarios.map((scenario) => (
+              <div
+                key={scenario.id}
+                onClick={() => selectScenario(scenario)}
+                className="scenario-card"
+              >
+                <div style={{ fontSize: "2rem" }}>{scenario.icon}</div>
+                <div style={{ flex: 1 }}>
+                  <h4
+                    style={{
+                      fontWeight: 700,
+                      color: "var(--color-text-main)",
+                      marginBottom: "0.25rem",
+                    }}
+                  >
                     {scenario.title}
                   </h4>
-                </div>
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 mb-2 border border-blue-100">
-                  <BookOpen size={10} className="mr-1" /> {scenario.source}
-                </span>
-                <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
-                  {scenario.description}
-                </p>
-
-                {/* Micro-CTA */}
-                <div className="mt-3 flex items-center text-xs font-semibold text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-300">
-                  Cargar Escenario <span className="ml-1">→</span>
+                  <span
+                    style={{
+                      fontSize: "0.7rem",
+                      background: "#eff6ff",
+                      color: "var(--color-primary)",
+                      padding: "2px 6px",
+                      borderRadius: "4px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {scenario.source}
+                  </span>
+                  <p
+                    style={{
+                      fontSize: "0.85rem",
+                      color: "var(--color-text-light)",
+                      marginTop: "0.5rem",
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {scenario.description}
+                  </p>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        )}
 
-          {filteredScenarios.length === 0 && (
-            <div className="col-span-2 text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-              <div className="text-4xl mb-3">🔍</div>
-              <h3 className="text-gray-900 font-medium mb-1">
-                No se encontraron escenarios
-              </h3>
-              <p className="text-gray-500 text-sm">
-                Intente con términos como "humo", "polvo", "metal" o use el Modo
-                Experto.
-              </p>
-            </div>
-          )}
-        </div>
+        {!searchFocused && searchTerm.length === 0 && (
+          <div style={{ textAlign: "center", padding: "3rem", color: "#ccc" }}>
+            👆 Pulse en la barra de búsqueda para ver los escenarios disponibles
+          </div>
+        )}
 
-        <div className="text-center pt-4">
+        <div className="text-center" style={{ marginTop: "2rem" }}>
           <button
             onClick={() => setMode("selection")}
-            className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors flex items-center justify-center gap-1 mx-auto"
+            style={{
+              background: "none",
+              border: "none",
+              color: "#999",
+              fontSize: "0.9rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              margin: "0 auto",
+            }}
           >
-            ← Volver a la selección de modo
+            ← Volver a selección
           </button>
         </div>
       </div>
