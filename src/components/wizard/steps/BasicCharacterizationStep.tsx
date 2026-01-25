@@ -259,8 +259,7 @@ export const BasicCharacterizationStep: React.FC<
               margin: "0 auto 1.5rem auto",
             }}
           >
-            Esta herramienta integra las metodologías oficiales para garantizar
-            la seguridad jurídica y técnica.
+            Seleccione un escenario o busque por proceso.
           </p>
         </div>
 
@@ -527,8 +526,9 @@ export const BasicCharacterizationStep: React.FC<
         </div>
 
         {/* Results Grid */}
+        {/* Results Grid - Split into Recommended and Others */}
         {(searchFocused || searchTerm.length > 0) && (
-          <div className="scenario-grid">
+          <div className="scenario-grid-container">
             {/* Custom Create Option */}
             {searchTerm.length > 0 && (
               <div
@@ -541,6 +541,7 @@ export const BasicCharacterizationStep: React.FC<
                   backgroundColor: "#eff6ff",
                   borderStyle: "dashed",
                   borderColor: "var(--color-primary)",
+                  marginBottom: "1rem",
                 }}
               >
                 <div style={{ fontSize: "2rem" }}>✨</div>
@@ -566,84 +567,182 @@ export const BasicCharacterizationStep: React.FC<
               </div>
             )}
 
-            {filteredScenarios.map((scenario) => (
-              <div
-                key={scenario.id}
-                onClick={() => selectScenario(scenario)}
-                className="scenario-card"
-              >
-                <div style={{ fontSize: "2rem" }}>{scenario.icon}</div>
-                <div style={{ flex: 1 }}>
-                  <h4
-                    style={{
-                      fontWeight: 700,
-                      color: "var(--color-text-main)",
-                      marginBottom: "0.25rem",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    {scenario.title}
-                    {/* Recommendation Badges */}
-                    {hazardData?.substanceName &&
-                      scenario.relatedSubstances?.some((s) =>
-                        hazardData.substanceName?.toLowerCase().includes(s),
-                      ) && (
+            {(() => {
+              // Split Logic
+              const subName = hazardData?.substanceName?.toLowerCase() || "";
+
+              const recommended = filteredScenarios.filter(
+                (s) =>
+                  hazardData?.substanceName &&
+                  s.relatedSubstances?.some((rs) => subName.includes(rs)),
+              );
+
+              const others = filteredScenarios.filter(
+                (s) => !recommended.includes(s),
+              );
+
+              const renderScenario = (scenario: StandardScenario) => (
+                <div
+                  key={scenario.id}
+                  onClick={() => selectScenario(scenario)}
+                  className="scenario-card"
+                >
+                  <div style={{ fontSize: "2rem" }}>{scenario.icon}</div>
+                  <div style={{ flex: 1 }}>
+                    <h4
+                      style={{
+                        fontWeight: 700,
+                        color: "var(--color-text-main)",
+                        marginBottom: "0.25rem",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {scenario.title}
+                      {/* Recommendation Badges */}
+                      {recommended.includes(scenario) && (
                         <span
                           style={{
                             fontSize: "0.6rem",
-                            background: "#dcfce7",
-                            color: "#166534",
+                            background: "#dcfce7", // green-100
+                            color: "#166534", // green-800
                             padding: "2px 6px",
                             borderRadius: "99px",
+                            border: "1px solid #bbf7d0",
                           }}
                         >
-                          Recomendado (Sustancia)
+                          Recomendado ({hazardData?.substanceName})
                         </span>
                       )}
-                    {selectedCnae &&
-                      scenario.relatedCNAEs?.some((c) =>
-                        selectedCnae.code.startsWith(c),
-                      ) && (
+                    </h4>
+
+                    {/* Tags for Substance and Category */}
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "4px",
+                        flexWrap: "wrap",
+                        marginBottom: "0.5rem",
+                      }}
+                    >
+                      {scenario.relatedSubstances?.map((rs) => (
                         <span
+                          key={rs}
                           style={{
-                            fontSize: "0.6rem",
-                            background: "#e0f2fe",
-                            color: "#0369a1",
-                            padding: "2px 6px",
-                            borderRadius: "99px",
+                            fontSize: "0.65rem",
+                            background: "#f1f5f9",
+                            color: "#475569",
+                            padding: "1px 6px",
+                            borderRadius: "4px",
                           }}
                         >
-                          Recomendado (Sector)
+                          🧬 {rs}
                         </span>
-                      )}
-                  </h4>
-                  <span
-                    style={{
-                      fontSize: "0.7rem",
-                      background: "#eff6ff",
-                      color: "var(--color-primary)",
-                      padding: "2px 6px",
-                      borderRadius: "4px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {scenario.source}
-                  </span>
-                  <p
-                    style={{
-                      fontSize: "0.85rem",
-                      color: "var(--color-text-light)",
-                      marginTop: "0.5rem",
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {scenario.description}
-                  </p>
+                      ))}
+                      {scenario.risks.map((r) => {
+                        const riskLabel =
+                          {
+                            carcinogen: "Cancerígeno",
+                            mutagen: "Mutágeno",
+                            reprotoxic: "Reprotóxico",
+                            sensitizer: "Sensibilizante",
+                            other: "Otro Riesgo",
+                          }[r] || r;
+                        return (
+                          <span
+                            key={r}
+                            style={{
+                              fontSize: "0.65rem",
+                              background: "#fee2e2",
+                              color: "#991b1b",
+                              padding: "1px 6px",
+                              borderRadius: "4px",
+                            }}
+                          >
+                            ☢️ {riskLabel}
+                          </span>
+                        );
+                      })}
+                    </div>
+
+                    <span
+                      style={{
+                        fontSize: "0.7rem",
+                        background: "#eff6ff",
+                        color: "var(--color-primary)",
+                        padding: "2px 6px",
+                        borderRadius: "4px",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {scenario.source}
+                    </span>
+                    <p
+                      style={{
+                        fontSize: "0.85rem",
+                        color: "var(--color-text-light)",
+                        marginTop: "0.5rem",
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {scenario.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+
+              return (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "2rem",
+                  }}
+                >
+                  {recommended.length > 0 && (
+                    <div>
+                      <h4
+                        style={{
+                          fontSize: "1rem",
+                          color: "#166534",
+                          marginBottom: "1rem",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <CheckCircle2 size={18} /> Escenarios Vinculados a{" "}
+                        {hazardData?.substanceName}
+                      </h4>
+                      <div className="scenario-grid">
+                        {recommended.map(renderScenario)}
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    {recommended.length > 0 && (
+                      <h4
+                        style={{
+                          fontSize: "1rem",
+                          color: "#64748b",
+                          marginBottom: "1rem",
+                          borderTop: "1px solid #e2e8f0",
+                          paddingTop: "1rem",
+                        }}
+                      >
+                        Otros Escenarios de Exposición
+                      </h4>
+                    )}
+                    <div className="scenario-grid">
+                      {others.map(renderScenario)}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
 

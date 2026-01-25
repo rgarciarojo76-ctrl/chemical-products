@@ -27,8 +27,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Soldadura TIG en Acero Inoxidable",
     keywords: ["soldadura", "tig", "acero", "inox", "cromo", "níquel"],
     source: "BASEQUIM Ficha 011",
-    documentUrl:
-      "https://www.insst.es/documents/94886/566858/Ficha+011+Soldadura+manual+con+arco+de+tungueno+y+gas+inerte+%28TIG%29.pdf",
+    documentUrl: "https://www.insst.es/basequim",
     risks: ["carcinogen", "sensitizer"],
     icon: "🔥",
     description: "Volatilización de metales (Cr VI, Ni) por arco eléctrico.",
@@ -54,7 +53,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["soldadura", "mig", "mag", "hilo", "humos", "manganeso"],
     source: "INSST NTP 1022",
     documentUrl:
-      "https://www.insst.es/documents/94886/327446/NTP+1022+Soldadura+MIG+MAG+Prevencion.pdf",
+      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
     risks: ["carcinogen", "reprotoxic"], // Mn is Repro, Fumes Carcinogen
     icon: "⚡",
     description: "Soldadura de hilo continuo. Alta generación de humos y Mn.",
@@ -106,8 +105,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Lijado/Mecanizado de Maderas Duras",
     keywords: ["madera", "lijado", "polvo", "carpintería", "roble", "haya"],
     source: "BASEQUIM 017 / Guía RD 665",
-    documentUrl:
-      "https://www.insst.es/documents/94886/566858/Ficha+017+Lijado+de+madera.pdf",
+    documentUrl: "https://www.insst.es/basequim",
     risks: ["carcinogen"], // Wood dust
     icon: "🪚",
     description: "Polvo de madera dura (Cancerígeno) por abrasión mecánica.",
@@ -167,8 +165,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "disolvente",
     ],
     source: "BASEQUIM 054",
-    documentUrl:
-      "https://www.insst.es/documents/94886/566858/Ficha+054+Aplicacion+de+pintura+con+pistola.pdf",
+    documentUrl: "https://www.insst.es/basequim",
     risks: ["sensitizer", "carcinogen"], // Isocyanates and some solvent/pigments
     icon: "🎨",
     description:
@@ -229,7 +226,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     ],
     source: "INSST NTP 768",
     documentUrl:
-      "https://www.insst.es/documents/94886/327446/NTP+768+Limpieza+manual+con+disolventes.pdf",
+      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
     risks: ["reprotoxic"], // Many solvents are repro (Toluene)
     icon: "🧽",
     description: "Limpieza de piezas con trapos impregnados en disolvente.",
@@ -283,7 +280,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["sílice", "corte", "hormigón", "ladrillo", "cantera", "rcs"],
     source: "Guía Técnica Sílice (INSST)",
     documentUrl:
-      "https://www.insst.es/documents/94886/524376/Guia+Tecnica+Agentes+Quimicos+2021.pdf",
+      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/guias-tecnicas",
     risks: ["carcinogen"],
     icon: "🧱",
     description:
@@ -310,7 +307,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["demolición", "martillo", "obra", "escombros", "sílice"],
     source: "Guía Técnica Sílice",
     documentUrl:
-      "https://www.insst.es/documents/94886/524376/Guia+Tecnica+Agentes+Quimicos+2021.pdf",
+      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/guias-tecnicas",
     risks: ["carcinogen"],
     icon: "🔨",
     description: "Picado de hormigón/paredes. Alta emisión de polvo.",
@@ -337,7 +334,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["amianto", "uralita", "fibrocemento", "tejado"],
     source: "RD 396/2006 (Plan de Trabajo)",
     documentUrl:
-      "https://www.insst.es/documents/94886/96076/Guia_Tecnica_Amianto.pdf",
+      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/guias-tecnicas",
     risks: ["carcinogen"],
     icon: "☠️",
     description:
@@ -367,7 +364,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["laboratorio", "vitrina", "reactivos", "química", "ácido"],
     source: "NTP 672 (Vitrina)",
     documentUrl:
-      "https://www.insst.es/documents/94886/326775/NTP+672+Vitrinas+de+gases+criterios+de+seleccion+y+uso.pdf",
+      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
     risks: ["carcinogen", "mutagen", "reprotoxic"], // Generic lab
     icon: "⚗️",
     description: "Trasvases o reacciones dentro de vitrina extractora.",
@@ -429,7 +426,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     ],
     source: "Guía Bioseguridad Funeraria",
     documentUrl:
-      "https://www.insst.es/documents/94886/326827/NTP+1077+Prevencion+riesgo+quimico+tanatopraxia.pdf",
+      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
     risks: ["carcinogen", "sensitizer"],
     relatedSubstances: ["formaldehído", "formol", "metanal"],
     relatedCNAEs: ["9603"],
@@ -457,7 +454,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["resina", "fenol", "formaldehído", "tableros", "cola"],
     source: "NTP 873 (Tableros)",
     documentUrl:
-      "https://www.insst.es/documents/94886/326853/NTP+873+Tableros+madera+formaldehido.pdf",
+      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
     risks: ["carcinogen", "sensitizer"],
     relatedSubstances: ["formaldehído", "formol", "fenol"],
     relatedCNAEs: ["20", "16"], // Química y Madera
@@ -511,7 +508,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["harina", "panadería", "obrador", "asma", "polvo"],
     source: "NTP 1060 (Enzimas/Harina)",
     documentUrl:
-      "https://www.insst.es/documents/94886/329555/NTP+1060+Exposicion+a+polvo+de+harina+y+enzimas+en+panaderia.pdf",
+      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
     risks: ["sensitizer"], // NOT CARCINOGEN - Should be filtered out
     icon: "🥖",
     description: "Sensibilizante (Asma del panadero).",
@@ -537,7 +534,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["batería", "ácido", "hidrógeno", "elektror"],
     source: "NTP 1074 (H2)",
     documentUrl:
-      "https://www.insst.es/documents/94886/329555/NTP+1074+Baterias+de+traccion+carga+y+mantenimiento.pdf",
+      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
     risks: ["other"], // Physical risk + Corrosive
     icon: "🔋",
     description: "Emisión de Hidrógeno (Explosivo) y nieblas ácidas.",
@@ -563,7 +560,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["pesticida", "herbicida", "mochila", "campo", "sulfatar"],
     source: "INSST Guía Fito",
     documentUrl:
-      "https://www.insst.es/documents/94886/524376/Guia+Fitosanitarios.pdf",
+      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/guias-tecnicas",
     risks: ["carcinogen", "reprotoxic"], // Many are suspected
     icon: "🌾",
     description: "Pulverización manual de productos químicos agrícolas.",

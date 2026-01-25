@@ -22,6 +22,7 @@ interface HygienicEvalFormProps {
   substanceName?: string;
   hazardData?: HazardInput;
   selectedCnae?: CnaeEntry | null;
+  onShowReport?: (currentData: HygienicEvalInput) => void;
 }
 
 export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
@@ -33,6 +34,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   substanceName,
   hazardData,
   selectedCnae,
+  onShowReport,
 }) => {
   const [formData, setFormData] = useState<HygienicEvalInput>(
     initialData || {
@@ -409,6 +411,31 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               📚 Norma UNE 689
             </a>
           </div>
+          {/* Report Button for Step 1 */}
+          <div
+            style={{
+              marginBottom: "1rem",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <button
+              onClick={() => onShowReport && onShowReport(formData)}
+              style={{
+                fontSize: "0.85rem",
+                background: "white",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                padding: "0.25rem 0.75rem",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              📄 Generar PDF (Pre-Informe)
+            </button>
+          </div>
 
           <BasicCharacterizationStep
             data={formData.basicCharacterization}
@@ -424,17 +451,44 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       {/* STEP 1B: Caracterización Básica (Avanzada: Stoffenmanager) */}
       {isStep2 && formData.stoffenmanager && (
         <div className="form-group mb-4 animate-slideIn">
-          <h4
+          <div
             style={{
-              fontSize: "1rem",
-              marginBottom: "0.5rem",
-              color: "#0056b3",
-              borderBottom: "2px solid #0056b3",
-              paddingBottom: "0.25rem",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "1rem",
             }}
           >
-            2. Caracterización Básica (Avanzada: Stoffenmanager®)
-          </h4>
+            <h4
+              style={{
+                fontSize: "1rem",
+                margin: 0,
+                color: "#0056b3",
+                borderBottom: "2px solid #0056b3",
+                paddingBottom: "0.25rem",
+                flex: 1,
+              }}
+            >
+              2. Caracterización Básica (Avanzada: Stoffenmanager®)
+            </h4>
+            <button
+              onClick={() => onShowReport && onShowReport(formData)}
+              style={{
+                marginLeft: "1rem",
+                fontSize: "0.85rem",
+                background: "white",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                padding: "0.25rem 0.75rem",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              📄 PDF
+            </button>
+          </div>
 
           <div
             className="stoff-grid"

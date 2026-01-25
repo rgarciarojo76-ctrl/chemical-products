@@ -20,6 +20,8 @@ const Header: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "1rem",
         }}
       >
         {/* Left: Branding */}
@@ -91,23 +93,6 @@ const Header: React.FC = () => {
           >
             Estado: Piloto interno
           </span>
-
-          <button
-            style={{
-              backgroundColor: "white",
-              border: "1px solid #e5e7eb",
-              borderRadius: "6px",
-              padding: "0.4rem 0.8rem",
-              fontSize: "0.85rem",
-              fontWeight: 500,
-              color: "#374151",
-              cursor: "not-allowed", // Disabled for now
-              opacity: 0.6,
-              boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-            }}
-          >
-            Exportar PDF
-          </button>
         </div>
       </div>
     </header>

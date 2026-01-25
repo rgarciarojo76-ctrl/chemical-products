@@ -469,7 +469,7 @@ export const FinalReport: React.FC<FinalReportProps> = ({
             cursor: "pointer",
           }}
         >
-          🖨️ Imprimir Informe
+          📄 Exportar PDF / Imprimir
         </button>
       </div>
     </StepCard>
