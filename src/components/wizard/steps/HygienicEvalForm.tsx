@@ -199,7 +199,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       {isStep0 && (
         <div className="animate-fadeIn">
           <h3 className="text-xl font-bold text-center text-slate-800 mb-6">
-            Seleccione el Tipo de Evaluación
+            Seleccione el Tipo de Caracterización
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto px-4">
             {/* Option A: Simplified */}
@@ -331,7 +331,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                   color: "#1e293b",
                 }}
               >
-                Avanzada: Stoffenmanager®
+                Caracterización Avanzada: Stoffenmanager®
               </h4>
               <p
                 style={{
