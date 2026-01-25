@@ -437,14 +437,43 @@ export const BasicCharacterizationStep: React.FC<
           </div>
         </div>
 
-        {/* Enhanced Search Bar */}
-        <div className="premium-search-container">
-          <div className="search-icon-absolute">
+        {/* Enhanced Search Bar (Inline Styles for robustness) */}
+        <div
+          style={{
+            position: "relative",
+            maxWidth: "600px",
+            margin: "0 auto 2rem auto",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              left: "1rem",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "#9ca3af",
+              pointerEvents: "none",
+            }}
+          >
             <Search size={22} />
           </div>
           <input
             type="text"
-            className="premium-search-input"
+            style={{
+              width: "100%",
+              padding: "1rem 1rem 1rem 3.5rem",
+              fontSize: "1rem",
+              border: searchFocused
+                ? "2px solid var(--color-primary)"
+                : "2px solid #e5e7eb",
+              borderRadius: "50px",
+              outline: "none",
+              transition: "all 0.3s ease",
+              boxShadow: searchFocused
+                ? "0 4px 12px rgba(0, 155, 219, 0.1)"
+                : "0 1px 2px rgba(0,0,0,0.05)",
+              backgroundColor: "#fff",
+            }}
             placeholder="Buscar proceso... (Ej: Soldadura, Madera, Sílice...)"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
