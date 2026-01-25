@@ -9,6 +9,8 @@ import type {
   HazardInput,
   StoffenmanagerInput,
 } from "../../../types";
+import { ReportPreviewModal } from "../../modals/ReportPreviewModal";
+import { generateReportData } from "../../../utils/reportGenerator";
 
 interface HygienicEvalFormProps {
   onAnalyze: (input: HygienicEvalInput) => HygienicAssessment;
@@ -44,6 +46,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   // 4: Estrategia de Medición
   // 5: Resultados
   const [internalStep, setInternalStep] = useState(0);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   // Auto-fill Stoffenmanager defaults
   useEffect(() => {
@@ -1005,6 +1008,27 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           Anterior
         </button>
 
+        {isStep5 && (
+            <button
+                onClick={() => setShowReportModal(true)}
+                style={{
+                    padding: "0.5rem 1rem",
+                    backgroundColor: "white",
+                    color: "#059669",
+                    border: "1px solid #059669",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    marginRight: "0.5rem",
+                    fontWeight: 600,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem"
+                }}
+            >
+                📄 Generar Informe
+            </button>
+        )}
+
         {isStep5 ? (
           <button
             onClick={onNext}
@@ -1035,6 +1059,20 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           </button>
         )}
       </div>
+
+
+      <ReportPreviewModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        data={generateReportData({
+            hazard: { input: hazardData || {} as HazardInput },
+            hygienicEval: { input: formData, result },
+            // @ts-ignore
+            exposureSieve: {}, // Not needed for report yet
+            // @ts-ignore
+            measures: {}, // Not needed for report yet
+        } as any)}
+      />
     </StepCard>
   );
 };

@@ -5,6 +5,8 @@ export interface StandardScenario {
   title: string;
   keywords: string[];
   source: string; // e.g., "BASEQUIM 011"
+  documentUrl: string; // Actual URL
+  risks: ("carcinogen" | "mutagen" | "reprotoxic" | "sensitizer" | "other")[];
   icon: string; // Emoji or Icon name
   description: string;
 
@@ -23,6 +25,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Soldadura TIG en Acero Inoxidable",
     keywords: ["soldadura", "tig", "acero", "inox", "cromo", "níquel"],
     source: "BASEQUIM Ficha 011",
+    documentUrl: "https://www.insst.es/documents/94886/566858/Ficha+011+Soldadura+manual+con+arco+de+tungueno+y+gas+inerte+%28TIG%29.pdf",
+    risks: ["carcinogen", "sensitizer"],
     icon: "🔥",
     description: "Volatilización de metales (Cr VI, Ni) por arco eléctrico.",
     defaults: {
@@ -46,6 +50,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Soldadura MIG/MAG (Acero Carbono)",
     keywords: ["soldadura", "mig", "mag", "hilo", "humos", "manganeso"],
     source: "INSST NTP 1022",
+    documentUrl: "https://www.insst.es/documents/94886/327446/NTP+1022+Soldadura+MIG+MAG+Prevencion.pdf",
+    risks: ["carcinogen", "reprotoxic"], // Mn is Repro, Fumes Carcinogen
     icon: "⚡",
     description: "Soldadura de hilo continuo. Alta generación de humos y Mn.",
     defaults: {
@@ -69,6 +75,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Corte por Plasma / Oxicorte",
     keywords: ["corte", "plasma", "laser", "oxicorte", "chapa", "humos"],
     source: "HSE COSHH WL14",
+    documentUrl: "https://www.hse.gov.uk/pubns/guidance/wl14.pdf",
+    risks: ["carcinogen"], // Fumes
     icon: "🎆",
     description:
       "Corte térmico de metales. Emisión masiva de humos metálicos y gases (NOx, O3).",
@@ -94,6 +102,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Lijado/Mecanizado de Maderas Duras",
     keywords: ["madera", "lijado", "polvo", "carpintería", "roble", "haya"],
     source: "BASEQUIM 017 / Guía RD 665",
+    documentUrl: "https://www.insst.es/documents/94886/566858/Ficha+017+Lijado+de+madera.pdf",
+    risks: ["carcinogen"], // Wood dust
     icon: "🪚",
     description: "Polvo de madera dura (Cancerígeno) por abrasión mecánica.",
     defaults: {
@@ -116,6 +126,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Amolado/Desbaste de Metal",
     keywords: ["radial", "amoladora", "desbaste", "chispa", "polvo"],
     source: "HSE COSHH WL2",
+    documentUrl: "https://www.hse.gov.uk/pubns/guidance/wl2.pdf",
+    risks: ["carcinogen"],
     icon: "⚙️",
     description:
       "Eliminación de material con disco abrasivo de alta velocidad.",
@@ -150,6 +162,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "disolvente",
     ],
     source: "BASEQUIM 054",
+    documentUrl: "https://www.insst.es/documents/94886/566858/Ficha+054+Aplicacion+de+pintura+con+pistola.pdf",
+    risks: ["sensitizer", "carcinogen"], // Isocyanates and some solvent/pigments
     icon: "🎨",
     description:
       "Aplicación de pintura en spray. Riesgo por isocianatos y VOCs.",
@@ -174,6 +188,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Pintura a Brocha/Rodillo (Disolvente)",
     keywords: ["pintura", "manual", "rodillo", "brocha", "disolvente"],
     source: "HSE COSHH SR2",
+    documentUrl: "https://www.hse.gov.uk/pubns/guidance/sr2.pdf",
+    risks: ["other"], // Typically solvents, not CMR by default
     icon: "🖌️",
     description:
       "Aplicación manual. Evaporación pasiva de disolventes orgánicos.",
@@ -206,6 +222,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "mek",
     ],
     source: "INSST NTP 768",
+    documentUrl: "https://www.insst.es/documents/94886/327446/NTP+768+Limpieza+manual+con+disolventes.pdf",
+    risks: ["reprotoxic"], // Many solvents are repro (Toluene)
     icon: "🧽",
     description: "Limpieza de piezas con trapos impregnados en disolvente.",
     defaults: {
@@ -230,6 +248,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Lavadora de Piezas (Estática)",
     keywords: ["lavadora", "piezas", "hidrocarburos", "batea"],
     source: "HSE COSHH SR18",
+    documentUrl: "https://www.hse.gov.uk/pubns/guidance/sr18.pdf",
+    risks: ["reprotoxic"],
     icon: "🛁",
     description: "Uso de fuente de desengrase con recirculación.",
     defaults: {
@@ -255,6 +275,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Corte/Perforación (Sílice Cristalina)",
     keywords: ["sílice", "corte", "hormigón", "ladrillo", "cantera", "rcs"],
     source: "Guía Técnica Sílice (INSST)",
+    documentUrl: "https://www.insst.es/documents/94886/524376/Guia+Tecnica+Agentes+Quimicos+2021.pdf",
+    risks: ["carcinogen"],
     icon: "🧱",
     description:
       "Generación de SCR (Sílice Cristalina Respirable) Cancerígeno 1A.",
@@ -279,6 +301,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Demolición Manual (Martillo Picador)",
     keywords: ["demolición", "martillo", "obra", "escombros", "sílice"],
     source: "Guía Técnica Sílice",
+    documentUrl: "https://www.insst.es/documents/94886/524376/Guia+Tecnica+Agentes+Quimicos+2021.pdf",
+    risks: ["carcinogen"],
     icon: "🔨",
     description: "Picado de hormigón/paredes. Alta emisión de polvo.",
     defaults: {
@@ -303,6 +327,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Retirada de Amianto (Fibrocemento)",
     keywords: ["amianto", "uralita", "fibrocemento", "tejado"],
     source: "RD 396/2006 (Plan de Trabajo)",
+    documentUrl: "https://www.insst.es/documents/94886/96076/Guia_Tecnica_Amianto.pdf",
+    risks: ["carcinogen"],
     icon: "☠️",
     description:
       "Manipulación de materiales con amianto. Estrictamente regulado.",
@@ -330,6 +356,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Manipulación en Vitrina de Gases",
     keywords: ["laboratorio", "vitrina", "reactivos", "química", "ácido"],
     source: "NTP 672 (Vitrina)",
+    documentUrl: "https://www.insst.es/documents/94886/326775/NTP+672+Vitrinas+de+gases+criterios+de+seleccion+y+uso.pdf",
+    risks: ["carcinogen", "mutagen", "reprotoxic"], // Generic lab
     icon: "⚗️",
     description: "Trasvases o reacciones dentro de vitrina extractora.",
     defaults: {
@@ -354,6 +382,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Uso de Formol (Anatomía Patológica)",
     keywords: ["formol", "formaldehído", "hospital", "biopsia", "cancerígeno"],
     source: "Protocolo Sanitario Formol",
+    documentUrl: "https://www.mscbs.gob.es/ciudadanos/saludAmbLaboral/docs/ProtocoloVigilanciaSanitariaFormaldehido.pdf",
+    risks: ["carcinogen", "sensitizer"],
     icon: "🏥",
     description: "Tallado de muestras en formol. Cancerígeno 1B.",
     defaults: {
@@ -380,6 +410,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Emisiones Motor Diésel (Talleres/ITV)",
     keywords: ["diesel", "motor", "taller", "humo", "tubo escape"],
     source: "RD 1154/2020",
+    documentUrl: "https://www.boe.es/eli/es/rd/2020/12/22/1154/con",
+    risks: ["carcinogen"],
     icon: "🚛",
     description: "Exposición a humos diésel (Carbono Elemental). Cancerígeno.",
     defaults: {
@@ -402,6 +434,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Polvo de Harina (Panadería)",
     keywords: ["harina", "panadería", "obrador", "asma", "polvo"],
     source: "NTP 1060 (Enzimas/Harina)",
+    documentUrl: "https://www.insst.es/documents/94886/329555/NTP+1060+Exposicion+a+polvo+de+harina+y+enzimas+en+panaderia.pdf",
+    risks: ["sensitizer"], // NOT CARCINOGEN - Should be filtered out
     icon: "🥖",
     description: "Sensibilizante (Asma del panadero).",
     defaults: {
@@ -425,6 +459,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Carga de Baterías (Plomo-Ácido)",
     keywords: ["batería", "ácido", "hidrógeno", "elektror"],
     source: "NTP 1074 (H2)",
+    documentUrl: "https://www.insst.es/documents/94886/329555/NTP+1074+Baterias+de+traccion+carga+y+mantenimiento.pdf",
+    risks: ["other"], // Physical risk + Corrosive
     icon: "🔋",
     description: "Emisión de Hidrógeno (Explosivo) y nieblas ácidas.",
     defaults: {
@@ -448,6 +484,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Aplicación Fitosanitarios (Mochila)",
     keywords: ["pesticida", "herbicida", "mochila", "campo", "sulfatar"],
     source: "INSST Guía Fito",
+    documentUrl: "https://www.insst.es/documents/94886/524376/Guia+Fitosanitarios.pdf",
+    risks: ["carcinogen", "reprotoxic"], // Many are suspected
     icon: "🌾",
     description: "Pulverización manual de productos químicos agrícolas.",
     defaults: {
@@ -471,6 +509,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Laminado de Resinas (Poliéster/Fibra)",
     keywords: ["fibra", "vidrio", "poliéster", "estireno", "barco", "piscina"],
     source: "HSE COSHH CN7",
+    documentUrl: "https://www.hse.gov.uk/pubns/guidance/cn7.pdf",
+    risks: ["reprotoxic"], // Styrene is suspected Repro
     icon: "🚤",
     description: "Emisión de Estireno durante curado en molde abierto.",
     defaults: {
@@ -501,7 +541,9 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "hexano",
     ],
     source: "Ficha Sector Calzado",
-    icon: "uD83DuDC5F",
+    documentUrl: "https://www.insst.es",
+    risks: ["reprotoxic"],
+    icon: "👟",
     description:
       "Uso de adhesivos de contacto base disolvente (n-hexano, tolueno).",
     defaults: {
@@ -526,6 +568,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Peluquería (Tintes/Decolorantes)",
     keywords: ["peluquería", "persulfato", "tinte", "amoniaco", "asma"],
     source: "Guía Asma Peluquería",
+    documentUrl: "https://www.insst.es",
+    risks: ["sensitizer"], // NOT CMR
     icon: "💇",
     description: "Preparación de mezclas colorantes. Riesgo asma y dermatitis.",
     defaults: {

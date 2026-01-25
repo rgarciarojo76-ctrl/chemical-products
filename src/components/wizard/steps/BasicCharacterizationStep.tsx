@@ -207,10 +207,12 @@ export const BasicCharacterizationStep: React.FC<
   // Filter Scenarios
   const filteredScenarios = StandardScenarios_DB.filter(
     (s) =>
-      s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.keywords.some((k) =>
-        k.toLowerCase().includes(searchTerm.toLowerCase()),
-      ),
+      (s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.keywords.some((k) =>
+          k.toLowerCase().includes(searchTerm.toLowerCase()),
+        )) &&
+      // Strict Filter: Only show CMR relevant scenarios
+      s.risks.some((r) => ["carcinogen", "mutagen", "reprotoxic"].includes(r)),
   );
 
   if (mode === "selection") {
@@ -640,7 +642,10 @@ export const BasicCharacterizationStep: React.FC<
           <Shield size={24} color="var(--color-primary)" />
           Caracterización Avanzada
           {activeScenario && (
-            <span
+            <a
+              href={activeScenario.documentUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 background: "#eff6ff",
                 color: "var(--color-primary)",
@@ -650,10 +655,14 @@ export const BasicCharacterizationStep: React.FC<
                 display: "flex",
                 alignItems: "center",
                 gap: "4px",
+                textDecoration: "none",
+                transition: "background-color 0.2s",
+                border: "1px solid #dbeafe"
               }}
+              className="hover:bg-blue-100"
             >
               <BookOpen size={12} /> {activeScenario.source}
-            </span>
+            </a>
           )}
         </h3>
         <button
