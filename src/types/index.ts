@@ -177,6 +177,7 @@ export interface BasicCharacterizationInput {
 }
 
 export interface HygienicEvalInput {
+  evaluationMethod?: "simplified" | "advanced";
   basicCharacterization?: BasicCharacterizationInput;
   labResult?: number; // mg/m3
   lod?: number; // Limit of Detection

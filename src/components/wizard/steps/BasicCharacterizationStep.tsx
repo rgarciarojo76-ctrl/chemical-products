@@ -7,6 +7,7 @@ import {
   Search,
   BookOpen,
   AlertOctagon,
+  CheckCircle2,
 } from "lucide-react";
 import type { BasicCharacterizationInput, HazardInput } from "../../../types";
 import { StandardScenarios_DB } from "../../../data/standardScenarios";
@@ -375,62 +376,84 @@ export const BasicCharacterizationStep: React.FC<
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "1rem",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "0.75rem",
+              marginBottom: "1.5rem",
             }}
           >
             <div
               style={{
-                padding: "1rem",
+                padding: "0.75rem",
                 background: "white",
                 borderRadius: "8px",
                 border: "1px solid var(--color-border)",
                 textAlign: "center",
+                transition: "all 0.2s",
               }}
             >
-              <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+              <div style={{ fontSize: "1.25rem", marginBottom: "0.25rem" }}>
                 🏛️
               </div>
-              <div style={{ fontWeight: 700, fontSize: "0.8rem" }}>
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: "0.75rem",
+                  color: "var(--color-text-main)",
+                }}
+              >
                 Fichas BASEQUIM
               </div>
-              <div style={{ fontSize: "0.7rem", color: "#666" }}>INSST</div>
+              <div style={{ fontSize: "0.65rem", color: "#666" }}>INSST</div>
             </div>
             <div
               style={{
-                padding: "1rem",
+                padding: "0.75rem",
                 background: "white",
                 borderRadius: "8px",
                 border: "1px solid var(--color-border)",
                 textAlign: "center",
+                transition: "all 0.2s",
               }}
             >
-              <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+              <div style={{ fontSize: "1.25rem", marginBottom: "0.25rem" }}>
                 ⚖️
               </div>
-              <div style={{ fontWeight: 700, fontSize: "0.8rem" }}>
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: "0.75rem",
+                  color: "var(--color-text-main)",
+                }}
+              >
                 Guía Téc. RD 665
               </div>
-              <div style={{ fontSize: "0.7rem", color: "#666" }}>
+              <div style={{ fontSize: "0.65rem", color: "#666" }}>
                 Priorización Legal
               </div>
             </div>
             <div
               style={{
-                padding: "1rem",
+                padding: "0.75rem",
                 background: "white",
                 borderRadius: "8px",
                 border: "1px solid var(--color-border)",
                 textAlign: "center",
+                transition: "all 0.2s",
               }}
             >
-              <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+              <div style={{ fontSize: "1.25rem", marginBottom: "0.25rem" }}>
                 🌍
               </div>
-              <div style={{ fontWeight: 700, fontSize: "0.8rem" }}>
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: "0.75rem",
+                  color: "var(--color-text-main)",
+                }}
+              >
                 COSHH Essentials
               </div>
-              <div style={{ fontSize: "0.7rem", color: "#666" }}>
+              <div style={{ fontSize: "0.65rem", color: "#666" }}>
                 HSE Methodology
               </div>
             </div>
@@ -595,15 +618,44 @@ export const BasicCharacterizationStep: React.FC<
     );
   }
 
-  // EXPERT MODE FORM (With Gap Alerts)
+  // EXPERT MODE FORM (Premium Visual Overhaul)
   return (
-    <div className="space-y-6 animate-fadeIn">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-          <Shield size={20} /> Caracterización Avanzada{" "}
+    <div className="animate-fadeIn">
+      {/* Header Bar */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <h3
+          style={{
+            fontSize: "1.25rem",
+            fontWeight: 700,
+            color: "var(--color-text-main)",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+          }}
+        >
+          <Shield size={24} color="var(--color-primary)" />
+          Caracterización Avanzada
           {activeScenario && (
-            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center gap-1">
-              <BookOpen size={10} /> {activeScenario.source}
+            <span
+              style={{
+                background: "#eff6ff",
+                color: "var(--color-primary)",
+                fontSize: "0.75rem",
+                padding: "0.25rem 0.75rem",
+                borderRadius: "99px",
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
+            >
+              <BookOpen size={12} /> {activeScenario.source}
             </span>
           )}
         </h3>
@@ -612,272 +664,381 @@ export const BasicCharacterizationStep: React.FC<
             setMode("selection");
             setSelectedScenarioId(undefined);
           }}
-          className="text-sm text-gray-500 hover:text-gray-700"
+          style={{
+            fontSize: "0.9rem",
+            color: "#9ca3af",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
+          }}
         >
-          Cambiar modo
+          ✕ Cambiar modo
         </button>
       </div>
 
       {/* Gap Warning Banner */}
       {showGapWarning && activeScenario && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded mb-4 animate-shake">
-          <div className="flex items-start gap-3">
-            <AlertOctagon className="text-red-600 flex-shrink-0" size={24} />
-            <div>
-              <h5 className="font-bold text-red-900 text-sm">
-                Aviso de Conformidad (Gap Analysis)
-              </h5>
-              <p className="text-sm text-red-800 mt-1">
-                {activeScenario.gapWarning}
-              </p>
-              <p className="text-xs text-red-600 mt-2 font-semibold">
-                ⚠️ Se inyectará una advertencia en el informe final.
-              </p>
-            </div>
+        <div
+          style={{
+            background: "#fef2f2",
+            borderLeft: "4px solid #ef4444",
+            padding: "1rem",
+            borderRadius: "8px",
+            marginBottom: "1.5rem",
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "1rem",
+          }}
+        >
+          <AlertOctagon
+            className="text-red-600 flex-shrink-0"
+            size={24}
+            color="#ef4444"
+          />
+          <div>
+            <h5
+              style={{ fontWeight: 700, color: "#7f1d1d", marginBottom: "4px" }}
+            >
+              Aviso de Conformidad (Gap Analysis)
+            </h5>
+            <p
+              style={{ fontSize: "0.9rem", color: "#991b1b", lineHeight: 1.4 }}
+            >
+              {activeScenario.gapWarning}
+            </p>
+            <p
+              style={{
+                fontSize: "0.8rem",
+                color: "#ef4444",
+                marginTop: "0.5rem",
+                fontWeight: 600,
+              }}
+            >
+              ⚠️ Se inyectará una advertencia en el informe final.
+            </p>
           </div>
         </div>
       )}
 
       {/* A. PROCESO */}
-      <section className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-        <h4 className="font-semibold text-blue-900 border-b pb-2 mb-3 flex items-center gap-2">
-          <Factory size={16} /> A. Proceso (Fuente de Emisión)
-        </h4>
-        <div className="grid gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Descripción del Proceso / Tarea
+      <div className="expert-form-card">
+        <div className="expert-section-header">
+          <Factory size={20} /> A. Proceso (Fuente de Emisión)
+        </div>
+
+        <div className="expert-input-group">
+          <label className="expert-label">
+            Descripción del Proceso / Tarea
+          </label>
+          <input
+            type="text"
+            className="expert-input"
+            placeholder="Ej. Limpieza manual de rodillos con disolvente"
+            value={form.processDescription}
+            onChange={(e) => handleChange("processDescription", e.target.value)}
+          />
+        </div>
+
+        <div className="expert-input-group">
+          <label className="expert-label">Tipo de Proceso</label>
+          <div className="radio-card-group">
+            <label className="radio-card-option">
+              <input
+                type="radio"
+                checked={form.isOpenProcess}
+                onChange={() => handleChange("isOpenProcess", true)}
+              />
+              <div className="radio-card-content">
+                <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+                  👐
+                </div>
+                <span style={{ fontWeight: 600 }}>Proceso Abierto</span>
+                <span style={{ fontSize: "0.8rem", color: "#6b7280" }}>
+                  Exposición directa
+                </span>
+              </div>
             </label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded"
-              placeholder="Ej. Limpieza manual de rodillos con disolvente"
-              value={form.processDescription}
-              onChange={(e) =>
-                handleChange("processDescription", e.target.value)
-              }
-            />
-          </div>
-          <div className="flex items-center gap-4 bg-gray-50 p-3 rounded">
-            <span className="text-sm font-medium">¿Es un proceso abierto?</span>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  checked={form.isOpenProcess}
-                  onChange={() => handleChange("isOpenProcess", true)}
-                />
-                <span>Sí (Abierto)</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  checked={!form.isOpenProcess}
-                  onChange={() => handleChange("isOpenProcess", false)}
-                />
-                <span>No (Cerrado)</span>
-              </label>
-            </div>
+            <label className="radio-card-option">
+              <input
+                type="radio"
+                checked={!form.isOpenProcess}
+                onChange={() => handleChange("isOpenProcess", false)}
+              />
+              <div className="radio-card-content">
+                <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+                  🔒
+                </div>
+                <span style={{ fontWeight: 600 }}>Sistema Cerrado</span>
+                <span style={{ fontSize: "0.8rem", color: "#6b7280" }}>
+                  Sin exposición directa
+                </span>
+              </div>
+            </label>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* B. MEDIDAS TÉCNICAS */}
-      <section className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-        <h4 className="font-semibold text-blue-900 border-b pb-2 mb-3 flex items-center gap-2">
-          <Shield size={16} /> B. Medidas Técnicas (Jerarquía RD 665)
-        </h4>
-        <div className="space-y-3">
-          <label className="block text-sm font-medium text-gray-700">
-            Medida de Control Principal
-          </label>
+      <div className="expert-form-card">
+        <div className="expert-section-header">
+          <Shield size={20} /> B. Medidas Técnicas (Jerarquía RD 665)
+        </div>
+
+        <div className="expert-input-group">
+          <label className="expert-label">Medida de Control Implementada</label>
           <select
-            className={`w-full p-2 border rounded ${showGapWarning || showLegalAlert ? "border-red-300 bg-red-50" : "border-green-300 bg-green-50"}`}
+            className="expert-select"
             value={form.technicalMeasure}
             onChange={(e) =>
               handleChange(
                 "technicalMeasure",
-                e.target
-                  .value as BasicCharacterizationInput["technicalMeasure"],
+                e.target.value as
+                  | "closed_system"
+                  | "local_extraction"
+                  | "general_ventilation"
+                  | "none",
               )
             }
+            style={{
+              borderColor: showGapWarning || showLegalAlert ? "#fca5a5" : "",
+            }}
           >
             <option value="closed_system">
               1. Sistema Cerrado Estanco (Prioritario)
             </option>
-            <option value="local_extraction">2. Extracción Localizada</option>
+            <option value="local_extraction">
+              2. Extracción Localizada (LEV)
+            </option>
             <option value="general_ventilation">3. Ventilación General</option>
             <option value="none">4. Ninguna / Ventilación Natural</option>
           </select>
+        </div>
 
-          {showLegalAlert && (
-            <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded">
-              <div className="flex items-start">
-                <AlertTriangle
-                  className="text-orange-600 mr-2 flex-shrink-0"
-                  size={20}
+        {showLegalAlert && (
+          <div
+            style={{
+              background: "#fff7ed",
+              border: "1px solid #fdba74",
+              padding: "1rem",
+              borderRadius: "8px",
+            }}
+          >
+            <div style={{ display: "flex", gap: "0.75rem" }}>
+              <AlertTriangle size={20} color="#ea580c" />
+              <div>
+                <h6
+                  style={{
+                    fontWeight: 700,
+                    color: "#9a3412",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  Justificación Requerida
+                </h6>
+                <p
+                  style={{
+                    fontSize: "0.85rem",
+                    color: "#c2410c",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  Para cancerígenos se exige Sistema Cerrado. Justifique la
+                  inviabilidad técnica:
+                </p>
+                <textarea
+                  className="expert-textarea"
+                  rows={3}
+                  placeholder="Escriba aquí la justificación técnica..."
+                  value={form.measureJustification || ""}
+                  onChange={(e) =>
+                    handleChange("measureJustification", e.target.value)
+                  }
                 />
-                <div>
-                  <p className="font-bold text-orange-800 text-sm">
-                    ⚠️ Justificación Requerida (Art. 5 RD 665/1997)
-                  </p>
-                  <p className="text-sm text-orange-700 mt-1">
-                    Para agentes cancerígenos, la norma exige{" "}
-                    <strong>Sistema Cerrado</strong>. Debe justificar
-                    técnicamente por qué no es viable.
-                  </p>
-                  <textarea
-                    className="w-full mt-2 p-2 text-sm border border-orange-300 rounded focus:ring-orange-500"
-                    placeholder="Escriba la justificación técnica aquí..."
-                    value={form.measureJustification || ""}
-                    onChange={(e) =>
-                      handleChange("measureJustification", e.target.value)
-                    }
-                  />
-                </div>
               </div>
             </div>
-          )}
-        </div>
-      </section>
+          </div>
+        )}
+      </div>
 
       {/* C & D. ENTORNO Y ORGANIZACIÓN */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <section className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-          <h4 className="font-semibold text-blue-900 border-b pb-2 mb-3">
-            C/D. Entorno y Organización
-          </h4>
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Método de Limpieza
-              </label>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "2rem",
+        }}
+      >
+        <div className="expert-form-card" style={{ marginBottom: 0 }}>
+          <div className="expert-section-header">
+            <Factory size={20} /> Entorno
+          </div>
+
+          <div className="expert-input-group">
+            <label className="expert-label">Limpieza</label>
+            <select
+              className="expert-select"
+              value={form.cleaningMethod}
+              onChange={(e) =>
+                handleChange(
+                  "cleaningMethod",
+                  e.target.value as "hepa_wet" | "sweeping" | "none",
+                )
+              }
+            >
+              <option value="hepa_wet">Aspiración HEPA / Húmeda</option>
+              <option value="sweeping">Barrido (🚫 Prohibido)</option>
+              <option value="none">No aplica</option>
+            </select>
+            {form.cleaningMethod === "sweeping" && (
+              <div
+                style={{
+                  fontSize: "0.75rem",
+                  color: "#dc2626",
+                  marginTop: "0.25rem",
+                  fontWeight: 600,
+                }}
+              >
+                ⚠️ El barrido en seco dispersa el contaminante.
+              </div>
+            )}
+          </div>
+
+          <div className="expert-input-group">
+            <label className="expert-label">Organización</label>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+              }}
+            >
+              <div
+                className={`toggle-checkbox-wrapper ${form.accessRestricted ? "checked" : ""}`}
+                onClick={() =>
+                  handleChange("accessRestricted", !form.accessRestricted)
+                }
+              >
+                <span style={{ fontSize: "0.9rem" }}>Acceso Restringido</span>
+                <input
+                  type="checkbox"
+                  checked={form.accessRestricted}
+                  readOnly
+                  className="toggle-checkbox"
+                />
+              </div>
+              <div
+                className={`toggle-checkbox-wrapper ${form.signageGHS08 ? "checked" : ""}`}
+                onClick={() => handleChange("signageGHS08", !form.signageGHS08)}
+              >
+                <span style={{ fontSize: "0.9rem" }}>Señalización GHS08</span>
+                <input
+                  type="checkbox"
+                  checked={form.signageGHS08}
+                  readOnly
+                  className="toggle-checkbox"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="expert-form-card" style={{ marginBottom: 0 }}>
+          <div className="expert-section-header">
+            <Users size={20} /> Personal
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "1rem",
+            }}
+          >
+            <div className="expert-input-group">
+              <label className="expert-label">Frecuencia</label>
               <select
-                className="w-full p-2 border rounded"
-                value={form.cleaningMethod}
+                className="expert-select"
+                value={form.frequency}
                 onChange={(e) =>
                   handleChange(
-                    "cleaningMethod",
-                    e.target
-                      .value as BasicCharacterizationInput["cleaningMethod"],
+                    "frequency",
+                    e.target.value as "daily" | "weekly" | "sporadic",
                   )
                 }
               >
-                <option value="hepa_wet">Aspiración HEPA / Vía Húmeda</option>
-                <option value="sweeping">
-                  Barrido (Prohibido si hay polvo)
-                </option>
-                <option value="none">No aplica</option>
+                <option value="daily">Diaria</option>
+                <option value="weekly">Semanal</option>
+                <option value="sporadic">Esporádica</option>
               </select>
-              {form.cleaningMethod === "sweeping" && (
-                <p className="text-xs text-red-600 mt-1 font-bold">
-                  ⚠️ El barrido en seco está generalmente prohibido para Agentes
-                  Químicos Peligrosos.
-                </p>
-              )}
             </div>
-
-            <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
-              <span className="text-sm">Acceso Restringido</span>
-              <input
-                type="checkbox"
-                checked={form.accessRestricted}
+            <div className="expert-input-group">
+              <label className="expert-label">Duración</label>
+              <select
+                className="expert-select"
+                value={form.duration}
                 onChange={(e) =>
-                  handleChange("accessRestricted", e.target.checked)
+                  handleChange(
+                    "duration",
+                    e.target.value as "lt_15m" | "15m_2h" | "2h_4h" | "gt_4h",
+                  )
                 }
-              />
-            </div>
-            <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
-              <span className="text-sm">Señalización GHS08</span>
-              <input
-                type="checkbox"
-                checked={form.signageGHS08}
-                onChange={(e) => handleChange("signageGHS08", e.target.checked)}
-              />
+              >
+                <option value="lt_15m">&lt; 15 min</option>
+                <option value="15m_2h">15 min - 2h</option>
+                <option value="2h_4h">2h - 4h</option>
+                <option value="gt_4h">&gt; 4h</option>
+              </select>
             </div>
           </div>
-        </section>
 
-        {/* E & F. PERSONAL Y TIEMPO */}
-        <section className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-          <h4 className="font-semibold text-blue-900 border-b pb-2 mb-3 flex items-center gap-2">
-            <Users size={16} /> Personal y Tiempo
-          </h4>
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase">
-                  Frecuencia
-                </label>
-                <select
-                  className="w-full p-2 text-sm border rounded"
-                  value={form.frequency}
-                  onChange={(e) =>
-                    handleChange(
-                      "frequency",
-                      e.target.value as BasicCharacterizationInput["frequency"],
-                    )
-                  }
-                >
-                  <option value="daily">Diaria</option>
-                  <option value="weekly">Semanal</option>
-                  <option value="sporadic">Esporádica</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase">
-                  Duración
-                </label>
-                <select
-                  className="w-full p-2 text-sm border rounded"
-                  value={form.duration}
-                  onChange={(e) =>
-                    handleChange(
-                      "duration",
-                      e.target.value as BasicCharacterizationInput["duration"],
-                    )
-                  }
-                >
-                  <option value="lt_15m">&lt; 15 min</option>
-                  <option value="15m_2h">15 min - 2h</option>
-                  <option value="2h_4h">2h - 4h</option>
-                  <option value="gt_4h">&gt; 4h</option>
-                </select>
-              </div>
-            </div>
+          <div className="expert-input-group">
+            <label className="expert-label">EPI Respiratorio</label>
+            <input
+              type="text"
+              className="expert-input"
+              placeholder="Ej. Máscara P3"
+              value={form.respiratoryPPE}
+              onChange={(e) => handleChange("respiratoryPPE", e.target.value)}
+            />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                EPI Respiratorio
-              </label>
-              <input
-                type="text"
-                className="w-full p-2 text-sm border rounded"
-                placeholder="Ej. Máscara completa P3"
-                value={form.respiratoryPPE}
-                onChange={(e) => handleChange("respiratoryPPE", e.target.value)}
+          <div
+            className={`toggle-checkbox-wrapper ${form.hygieneRights ? "checked" : ""}`}
+            onClick={() => handleChange("hygieneRights", !form.hygieneRights)}
+            style={{ borderColor: form.hygieneRights ? "#86efac" : "" }}
+          >
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              <CheckCircle2
+                size={16}
+                color={form.hygieneRights ? "#16a34a" : "#9ca3af"}
               />
-            </div>
-
-            <div className="flex items-center gap-2 bg-green-50 p-2 rounded border border-green-200">
-              <input
-                type="checkbox"
-                checked={form.hygieneRights}
-                onChange={(e) =>
-                  handleChange("hygieneRights", e.target.checked)
-                }
-              />
-              <span className="text-xs text-green-800 font-medium">
-                Derecho a 10 min aseo (Tiempo efectivo)
+              <span style={{ fontSize: "0.85rem", fontWeight: 500 }}>
+                10 min Aseo (Tiempo Ef.)
               </span>
             </div>
           </div>
-        </section>
+        </div>
       </div>
 
-      {/* Auto Narrative Preview */}
-      <div className="bg-gray-100 p-3 rounded text-sm text-gray-600 italic">
-        <strong>Narrativa generada:</strong> "{form.autoNarrative}"
+      {/* Narrative Preview */}
+      <div
+        style={{
+          marginTop: "2rem",
+          padding: "1rem",
+          background: "#f3f4f6",
+          borderRadius: "8px",
+          borderLeft: "4px solid #9ca3af",
+          fontStyle: "italic",
+          color: "#4b5563",
+          fontSize: "0.9rem",
+        }}
+      >
+        "{form.autoNarrative}"
       </div>
     </div>
   );

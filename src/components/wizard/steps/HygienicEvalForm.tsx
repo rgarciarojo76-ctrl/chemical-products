@@ -37,11 +37,12 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
   const [result, setResult] = useState<HygienicAssessment | null>(null);
 
-  // 0: Caracterización básica (Simplificada / Avanzada)
-  // 1: Caracterización básica (Avanzada: Stoffenmanager)
-  // 2: Grupos de exposición similares (GES)
-  // 3: Estrategia de Medición
-  // 4: Resultados
+  // 0: Selection Method
+  // 1: Caracterización básica (Simplificada) -> IF selected 'simplified', else SKIP
+  // 2: Caracterización básica (Avanzada: Stoffenmanager) -> IF selected 'advanced', else SKIP
+  // 3: Grupos de exposición similares (GES)
+  // 4: Estrategia de Medición
+  // 5: Resultados
   const [internalStep, setInternalStep] = useState(0);
 
   // Auto-fill Stoffenmanager defaults
@@ -91,184 +92,74 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     }));
   };
 
-  const calculateStoffenmanager = (
-    input: StoffenmanagerInput,
-  ): StoffenmanagerResult => {
-    // === 1. HAZARD CLASS (Banda de Peligro) ===
-    let hazardBand: "A" | "B" | "C" | "D" | "E" = "A";
-    const h = input.hPhrases || [];
-    if (
-      h.some((p) =>
-        [
-          "H340",
-          "H350",
-          "H350i",
-          "H360",
-          "H360FD",
-          "H310",
-          "H330",
-          "H372",
-        ].includes(p),
-      )
-    )
-      hazardBand = "E";
-    else if (
-      h.some((p) =>
-        ["H351", "H341", "H361", "H331", "H311", "H301", "H314"].includes(p),
-      )
-    )
-      hazardBand = "D";
-    else if (
-      h.some((p) =>
-        ["H332", "H312", "H302", "H318", "H373", "H335"].includes(p),
-      )
-    )
-      hazardBand = "C";
-    else if (h.some((p) => ["H315", "H319", "H336", "H317"].includes(p)))
-      hazardBand = "B";
-    else hazardBand = "A";
-
-    // === 2. POTENTIAL EXPOSURE SCORE (Puntuación de Exposición Potencial) ===
-
-    // A. Emission Score (E)
-    let E = 0;
-    if (input.physicalState === "liquid") {
-      const vp = input.vapourPressure || 100;
-      if (input.handlingType === "E") {
-        // Spray / High Energy Dispersal
-        E = 1;
-      } else {
-        if (vp > 10000) E = 0.3;
-        else if (vp > 500) E = 0.1;
-        else if (vp > 10) E = 0.03;
-        else E = 0;
-      }
-    } else {
-      const dustMap: Record<string, number> = {
-        solid_objects: 0,
-        granules_firm: 0.01,
-        granules_friable: 0.03,
-        dust_coarse: 0.1,
-        dust_fine: 0.3,
-        dust_extreme: 1.0,
-      };
-      E = dustMap[input.dustiness || "solid_objects"] || 0;
-    }
-
-    // B. Handling Activity Class (H)
-    const handlingMap: Record<string, number> = {
-      A: 0.1, // Low energy / passive
-      B: 0.3, // Handling objects / manual low energy
-      C: 1.0, // Handling with some energy / mixing / transfer
-      D: 3.0, // High energy handling
-      E: 10.0, // Dispersive / Spraying (Also affects E above usually, here treated as activity factor)
-      F: 10.0,
-      G: 10.0,
-      H: 10.0,
-    };
-    const H = handlingMap[input.handlingType] || 0.1;
-
-    // C. Control Measures (Local) - LC
-    const lcMap: Record<string, number> = {
-      none: 1,
-      suppression: 0.3, // Wet suppression
-      local_extraction: 0.1, // LEV
-      containment_no_extract: 0.1,
-      containment_extraction: 0.01,
-    };
-    const LC = lcMap[input.localControl] || 1;
-
-    // D. General Ventilation & Room (GV)
-    let GV = 1;
-    const vType = input.ventilationType;
-    const rVol = input.roomVolume;
-
-    if (rVol === "lt_100") {
-      if (vType === "none") GV = 10;
-      else if (vType === "natural") GV = 3;
-      else GV = 1; // Mechanical
-    } else if (rVol === "100_1000") {
-      if (vType === "none") GV = 3;
-      else if (vType === "natural") GV = 1;
-      else GV = 0.3;
-    } else if (rVol === "gt_1000" || rVol === "outdoor") {
-      if (vType === "none") GV = 1;
-      else if (vType === "natural") GV = 0.3;
-      else GV = 0.1;
-    }
-
-    // E. Segregation / Worker Position
-    let Seg = 1;
-    if (input.workerSegregation === "cabin") Seg = 0.1;
-
-    // F. Duration & Frequency
-    const durationMap: Record<string, number> = {
-      min_15: 0.1,
-      min_30: 0.25, // approx 0.5hr / 8
-      hour_2: 1.0, // standard task unit
-      hour_4: 2.0,
-      hour_8: 4.0,
-    };
-    const frequencyMap: Record<string, number> = {
-      year_1: 0.1,
-      month_1: 0.2,
-      week_bi: 0.4,
-      week_1: 0.6,
-      week_2_3: 0.8,
-      week_4_5: 1.0, // Daily = 1
-      day_1: 1.0,
-    };
-    const T =
-      (durationMap[input.exposureDuration] || 1) *
-      (frequencyMap[input.exposureFrequency] || 1);
-
-    // Correction for Cleaning/Maintenance
-    let MaintFactor = 1;
-    if (!input.dailyCleaning) MaintFactor *= 1.2; // A bit dirtier
-    if (!input.equipmentMaintenance) MaintFactor *= 1.5; // Leaks probable
-
-    // FINAL ALGORTHM (Conceptual Score)
-    let rawScore = E * H * LC * Seg * MaintFactor + 0.1 * GV;
-    let Bt = Math.round(rawScore * T * 100);
-
-    // Apply PPE Reduction
-    if (input.ppeUsed) Bt = Math.round(Bt * 0.1);
-
-    // === 3. EXPOSURE BAND (Banda de Exposición) ===
-    let exposureBand: 1 | 2 | 3 | 4 = 1;
-    if (Bt > 1000) exposureBand = 4;
-    else if (Bt > 100) exposureBand = 3;
-    else if (Bt > 10) exposureBand = 2;
-    else exposureBand = 1;
-
-    // === 4. RISK PRIORITY ===
-    let riskPriority: "I" | "II" | "III" = "III";
-
-    const matrix: Record<string, Record<number, "I" | "II" | "III">> = {
-      A: { 1: "III", 2: "III", 3: "II", 4: "I" },
-      B: { 1: "III", 2: "II", 3: "I", 4: "I" },
-      C: { 1: "II", 2: "I", 3: "I", 4: "I" },
-      D: { 1: "II", 2: "I", 3: "I", 4: "I" },
-      E: { 1: "II", 2: "I", 3: "I", 4: "I" },
-    };
-    riskPriority = matrix[hazardBand][exposureBand];
-
-    return { hazardBand, exposureScore: Bt, exposureBand, riskPriority };
-  };
-
   const handleAnalyze = () => {
     const assessment = onAnalyze(formData);
     setResult(assessment);
   };
 
-  const handleInternalNext = () => setInternalStep((prev) => prev + 1);
-  const handleInternalBack = () => setInternalStep((prev) => prev - 1);
+  // Branching Navigation Logic
+  const handleInternalNext = () => {
+    // Step 0: Selection -> Route based on method
+    if (internalStep === 0) {
+      if (formData.evaluationMethod === "simplified")
+        setInternalStep(1); // Go to Simplified
+      else if (formData.evaluationMethod === "advanced")
+        setInternalStep(2); // Go to Stoffenmanager
+      else alert("Por favor, seleccione un método de evaluación.");
+      return;
+    }
 
-  const isStep0 = internalStep === 0;
-  const isStep1 = internalStep === 1;
-  const isStep2 = internalStep === 2;
-  const isStep3 = internalStep === 3;
-  const isStep4 = internalStep === 4;
+    // Step 1: Simplified -> Skip Stoffenmanager (2), go to GES (3)
+    if (internalStep === 1) {
+      setInternalStep(3);
+      return;
+    }
+
+    // Step 2: Stoffenmanager -> Go to GES (3)
+    if (internalStep === 2) {
+      setInternalStep(3);
+      return;
+    }
+
+    // Normal flow
+    // Step 3 (GES) -> Step 4
+    // Step 4 (Strategy) -> Step 5
+    if (internalStep < 5) {
+      setInternalStep((prev) => prev + 1);
+    }
+  };
+
+  const handleInternalBack = () => {
+    // Step 3 (GES) -> Go back to whichever was selected
+    if (internalStep === 3) {
+      if (formData.evaluationMethod === "simplified") setInternalStep(1);
+      else setInternalStep(2);
+      return;
+    }
+
+    // Step 1 OR 2 -> Go back to Selection (0)
+    if (internalStep === 1 || internalStep === 2) {
+      setInternalStep(0);
+      return;
+    }
+
+    // Step 0 -> Parent back
+    if (internalStep === 0 && onBack) {
+      onBack();
+      return;
+    }
+
+    if (internalStep > 0) {
+      setInternalStep((prev) => prev - 1);
+    }
+  };
+
+  const isStep0 = internalStep === 0; // Selection
+  const isStep1 = internalStep === 1; // Simplified
+  const isStep2 = internalStep === 2; // Stoffenmanager
+  const isStep3 = internalStep === 3; // GES
+  const isStep4 = internalStep === 4; // Strategy
+  const isStep5 = internalStep === 5; // Results
 
   return (
     <StepCard
@@ -277,24 +168,239 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       icon="🧠"
     >
       <div style={{ display: "flex", gap: "4px", marginBottom: "1.5rem" }}>
-        {[0, 1, 2, 3, 4].map((step) => (
-          <div
-            key={step}
-            style={{
-              flex: 1,
-              height: "4px",
-              borderRadius: "2px",
-              backgroundColor:
-                step <= internalStep ? "var(--color-primary)" : "#e2e8f0",
-              transition: "background-color 0.3s",
-            }}
-          />
-        ))}
+        {[0, 1, 2, 3, 4, 5].map((step) => {
+          // Visual mapping
+          let activeVisualStep = 0;
+          if (internalStep === 0) activeVisualStep = 0;
+          if (internalStep === 1 || internalStep === 2) activeVisualStep = 1;
+          if (internalStep === 3) activeVisualStep = 2;
+          if (internalStep === 4) activeVisualStep = 3;
+          if (internalStep === 5) activeVisualStep = 4;
+
+          if (step > 4) return null; // Only show 5 bars
+
+          return (
+            <div
+              key={step}
+              style={{
+                flex: 1,
+                height: "4px",
+                borderRadius: "2px",
+                backgroundColor:
+                  step <= activeVisualStep ? "var(--color-primary)" : "#e2e8f0",
+                transition: "background-color 0.3s",
+              }}
+            />
+          );
+        })}
       </div>
 
-      {/* STEP 0: 1. Caracterización Básica (Simplificada / Avanzada) */}
+      {/* STEP 0: METHOD SELECTION */}
       {isStep0 && (
-        <div className="form-group mb-4">
+        <div className="animate-fadeIn">
+          <h3 className="text-xl font-bold text-center text-slate-800 mb-6">
+            Seleccione el Tipo de Evaluación
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Option A: Simplified */}
+            <div
+              onClick={() =>
+                setFormData({ ...formData, evaluationMethod: "simplified" })
+              }
+              style={{
+                cursor: "pointer",
+                padding: "2rem",
+                borderRadius: "1rem",
+                border:
+                  formData.evaluationMethod === "simplified"
+                    ? "2px solid #3b82f6"
+                    : "2px solid #e2e8f0",
+                backgroundColor: "white",
+                textAlign: "center",
+                transition: "all 0.2s",
+                boxShadow:
+                  formData.evaluationMethod === "simplified"
+                    ? "0 10px 15px -3px rgba(59, 130, 246, 0.1)"
+                    : "none",
+                transform:
+                  formData.evaluationMethod === "simplified"
+                    ? "scale(1.02)"
+                    : "scale(1)",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "3rem",
+                  marginBottom: "1.5rem",
+                  background: "#eff6ff",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 1.5rem auto",
+                }}
+              >
+                🅰️
+              </div>
+              <h4
+                style={{
+                  fontSize: "1.1rem",
+                  fontWeight: 700,
+                  marginBottom: "0.5rem",
+                  color: "#1e293b",
+                }}
+              >
+                Caracterización Básica (Simplificada)
+              </h4>
+              <p
+                style={{
+                  fontSize: "0.9rem",
+                  color: "#64748b",
+                  marginBottom: "1.5rem",
+                  lineHeight: 1.5,
+                }}
+              >
+                Método cualitativo intuitivo. Ideal para una primera
+                aproximación rápida. Utiliza el Asistente de Escenarios
+                Estándar.
+              </p>
+              <div
+                style={{
+                  marginTop: "auto",
+                  padding: "0.5rem 1.5rem",
+                  borderRadius: "8px",
+                  fontWeight: 600,
+                  fontSize: "0.9rem",
+                  background:
+                    formData.evaluationMethod === "simplified"
+                      ? "#2563eb"
+                      : "#f1f5f9",
+                  color:
+                    formData.evaluationMethod === "simplified"
+                      ? "white"
+                      : "#64748b",
+                }}
+              >
+                Seleccionar Simplificada
+              </div>
+            </div>
+
+            {/* Option B: Advanced */}
+            <div
+              onClick={() =>
+                setFormData({ ...formData, evaluationMethod: "advanced" })
+              }
+              style={{
+                cursor: "pointer",
+                padding: "2rem",
+                borderRadius: "1rem",
+                border:
+                  formData.evaluationMethod === "advanced"
+                    ? "2px solid #a855f7"
+                    : "2px solid #e2e8f0",
+                backgroundColor: "white",
+                textAlign: "center",
+                transition: "all 0.2s",
+                boxShadow:
+                  formData.evaluationMethod === "advanced"
+                    ? "0 10px 15px -3px rgba(168, 85, 247, 0.1)"
+                    : "none",
+                transform:
+                  formData.evaluationMethod === "advanced"
+                    ? "scale(1.02)"
+                    : "scale(1)",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "3rem",
+                  marginBottom: "1.5rem",
+                  background: "#faf5ff",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 1.5rem auto",
+                }}
+              >
+                🅱️
+              </div>
+              <h4
+                style={{
+                  fontSize: "1.1rem",
+                  fontWeight: 700,
+                  marginBottom: "0.5rem",
+                  color: "#1e293b",
+                }}
+              >
+                Avanzada: Stoffenmanager®
+              </h4>
+              <p
+                style={{
+                  fontSize: "0.9rem",
+                  color: "#64748b",
+                  marginBottom: "1.5rem",
+                  lineHeight: 1.5,
+                }}
+              >
+                Estimación cuantitativa (NTP 1183). Calcula bandas de riesgo
+                basándose en variables físico-químicas complejas.
+              </p>
+              <div
+                style={{
+                  marginTop: "auto",
+                  padding: "0.5rem 1.5rem",
+                  borderRadius: "8px",
+                  fontWeight: 600,
+                  fontSize: "0.9rem",
+                  background:
+                    formData.evaluationMethod === "advanced"
+                      ? "#9333ea"
+                      : "#f1f5f9",
+                  color:
+                    formData.evaluationMethod === "advanced"
+                      ? "white"
+                      : "#64748b",
+                }}
+              >
+                Seleccionar Avanzada
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-8">
+            <button
+              onClick={handleInternalNext}
+              disabled={!formData.evaluationMethod}
+              style={{
+                padding: "0.75rem 2rem",
+                borderRadius: "0.75rem",
+                fontWeight: 700,
+                fontSize: "1rem",
+                background: !formData.evaluationMethod
+                  ? "#e2e8f0"
+                  : "var(--color-primary)",
+                color: !formData.evaluationMethod ? "#94a3b8" : "white",
+                cursor: !formData.evaluationMethod ? "not-allowed" : "pointer",
+                border: "none",
+                boxShadow: !formData.evaluationMethod
+                  ? "none"
+                  : "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              Continuar →
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* STEP 1A: Caracterización Básica (Simplificada) */}
+      {isStep1 && (
+        <div className="form-group mb-4 animate-slideIn">
           <div
             style={{
               display: "flex",
@@ -336,9 +442,9 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         </div>
       )}
 
-      {/* STEP 1: 2. Caracterización Básica (Avanzada: Stoffenmanager) */}
-      {isStep1 && formData.stoffenmanager && (
-        <div className="form-group mb-4">
+      {/* STEP 1B: Caracterización Básica (Avanzada: Stoffenmanager) */}
+      {isStep2 && formData.stoffenmanager && (
+        <div className="form-group mb-4 animate-slideIn">
           <h4
             style={{
               fontSize: "1rem",
@@ -696,8 +802,8 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       )}
 
       {/* STEP 2: 3. Grupos de exposición similares (GES) */}
-      {isStep2 && (
-        <div className="form-group mb-4">
+      {isStep3 && (
+        <div className="form-group mb-4 animate-slideIn">
           <h4
             style={{
               fontSize: "1rem",
@@ -742,9 +848,9 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         </div>
       )}
 
-      {/* STEP 4: 4. Estrategia de Medición */}
-      {isStep3 && (
-        <div className="form-group mb-4">
+      {/* STEP 3: 4. Estrategia de Medición */}
+      {isStep4 && (
+        <div className="form-group mb-4 animate-slideIn">
           <h4
             style={{
               fontSize: "1rem",
@@ -796,9 +902,9 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         </div>
       )}
 
-      {/* STEP 5: 5. Resultados de la Medición */}
-      {isStep4 && (
-        <div className="form-group mb-4">
+      {/* STEP 4: 5. Resultados de la Medición */}
+      {isStep5 && (
+        <div className="form-group mb-4 animate-slideIn">
           <h4
             style={{
               fontSize: "1rem",
@@ -815,32 +921,21 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: "1rem",
-              backgroundColor: "#f9f9f9",
-              padding: "1rem",
-              borderRadius: "8px",
             }}
           >
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "0.9rem",
-                  fontWeight: 600,
-                }}
-              >
-                Concentración (I)
+              <label style={{ fontSize: "0.85rem", fontWeight: 600 }}>
+                Resultado Laboratorio (mg/m³)
               </label>
               <input
                 type="number"
-                step="0.001"
-                placeholder="0.000"
-                value={formData.labResult || ""}
                 style={{
                   width: "100%",
                   padding: "0.5rem",
-                  border: "2px solid var(--color-primary)",
+                  border: "1px solid #ccc",
                   borderRadius: "4px",
                 }}
+                value={formData.labResult || ""}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -850,139 +945,122 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               />
             </div>
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "0.9rem",
-                  fontWeight: 600,
-                }}
-              >
-                Límite de Cuantificación (LOQ)
+              <label style={{ fontSize: "0.85rem", fontWeight: 600 }}>
+                Límite de Detección (LOD)
               </label>
               <input
                 type="number"
-                step="0.001"
-                placeholder="0.000"
-                value={formData.lod || ""}
                 style={{
                   width: "100%",
                   padding: "0.5rem",
                   border: "1px solid #ccc",
                   borderRadius: "4px",
                 }}
+                value={formData.lod || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, lod: parseFloat(e.target.value) })
                 }
               />
             </div>
           </div>
+          <button
+            onClick={handleAnalyze}
+            style={{
+              marginTop: "1rem",
+              width: "100%",
+              padding: "0.75rem",
+              backgroundColor: "#28a745",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Analizar Conformidad
+          </button>
+
+          {result && (
+            <div
+              style={{
+                marginTop: "1rem",
+                padding: "1rem",
+                backgroundColor: result.isSafe ? "#d4edda" : "#f8d7da",
+                border: result.isSafe
+                  ? "1px solid #c3e6cb"
+                  : "1px solid #f5c6cb",
+                borderRadius: "4px",
+              }}
+            >
+              <h5
+                style={{
+                  margin: "0 0 0.5rem 0",
+                  color: result.isSafe ? "#155724" : "#721c24",
+                }}
+              >
+                {result.isSafe ? "✅ CONFORME" : "❌ NO CONFORME"}
+              </h5>
+              <p style={{ margin: 0, fontSize: "0.9rem" }}>
+                Razón: {result.justification.technical}
+              </p>
+            </div>
+          )}
         </div>
       )}
 
-      {/* ACTIONS */}
+      {/* Navigation Buttons */}
       <div
-        className="actions"
+        className="nav-buttons"
         style={{
-          marginTop: "var(--spacing-lg)",
-          borderTop: "1px solid #eee",
-          paddingTop: "var(--spacing-md)",
           display: "flex",
-          gap: "1rem",
+          justifyContent: "space-between",
+          marginTop: "1.5rem",
         }}
       >
         <button
-          onClick={isStep0 ? onBack : handleInternalBack}
+          onClick={handleInternalBack}
+          disabled={!onBack && internalStep === 0}
           style={{
-            padding: "0.75rem 1.5rem",
-            borderRadius: "6px",
-            border: "1px solid #ccc",
-            backgroundColor: "white",
-            color: "#666",
-            cursor: "pointer",
-            fontSize: "1rem",
+            padding: "0.5rem 1rem",
+            backgroundColor: "#6c757d",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: !onBack && internalStep === 0 ? "not-allowed" : "pointer",
+            opacity: !onBack && internalStep === 0 ? 0.5 : 1,
           }}
         >
-          &larr; Anterior
+          Anterior
         </button>
 
-        {!isStep4 ? (
+        {isStep5 ? (
           <button
-            onClick={() => {
-              if (isStep1) {
-                const res = calculateStoffenmanager(formData.stoffenmanager!);
-                setFormData((prev) => ({ ...prev, stoffenmanagerResult: res }));
-              }
-              handleInternalNext();
-            }}
+            onClick={onNext}
             style={{
-              flex: 1,
-              backgroundColor: "var(--color-primary)",
+              padding: "0.5rem 1rem",
+              backgroundColor: "#007bff",
               color: "white",
-              padding: "0.75rem",
-              borderRadius: "6px",
               border: "none",
-              fontSize: "1rem",
-              fontWeight: "bold",
+              borderRadius: "4px",
+              cursor: "pointer",
             }}
           >
-            {isStep1 ? "Calcular Riesgo y Continuar" : "Siguiente &rarr;"}
+            Finalizar Módulo
           </button>
         ) : (
-          <>
-            {!result ? (
-              <button
-                onClick={handleAnalyze}
-                style={{
-                  flex: 1,
-                  backgroundColor: "var(--color-primary)",
-                  color: "white",
-                  padding: "0.75rem",
-                  borderRadius: "6px",
-                  border: "none",
-                  fontSize: "1rem",
-                  fontWeight: "bold",
-                }}
-              >
-                6. Verificar Conformidad
-              </button>
-            ) : (
-              <div
-                className={`result-box`}
-                style={{
-                  flex: 1,
-                  padding: "1rem",
-                  backgroundColor: result.isSafe ? "#d4edda" : "#f8d7da",
-                  border: `1px solid ${result.isSafe ? "#c3e6cb" : "#f5c6cb"}`,
-                  borderRadius: "6px",
-                }}
-              >
-                <h4
-                  style={{
-                    color: result.isSafe ? "#155724" : "#721c24",
-                    marginTop: 0,
-                  }}
-                >
-                  {result.isSafe ? "CONFORME" : "NO CONFORME"}
-                </h4>
-                <button
-                  onClick={onNext}
-                  style={{
-                    marginTop: "1rem",
-                    backgroundColor: result.isSafe
-                      ? "var(--color-safe)"
-                      : "var(--color-danger)",
-                    color: "white",
-                    border: "none",
-                    padding: "0.5rem 1rem",
-                    borderRadius: "4px",
-                    float: "right",
-                  }}
-                >
-                  {result.isSafe ? "Finalizar" : "Plan de Medidas"}
-                </button>
-              </div>
-            )}
-          </>
+          <button
+            onClick={handleInternalNext}
+            style={{
+              padding: "0.5rem 1rem",
+              backgroundColor: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            Siguiente
+          </button>
         )}
       </div>
     </StepCard>
