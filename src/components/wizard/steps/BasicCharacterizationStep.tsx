@@ -2,7 +2,6 @@ import React, { useState, useCallback } from "react";
 import {
   AlertTriangle,
   Shield,
-  Clipboard,
   Factory,
   Users,
   Search,
@@ -211,38 +210,79 @@ export const BasicCharacterizationStep: React.FC<
 
   if (mode === "selection") {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-        <div
-          className="card p-6 border-2 border-dashed border-blue-200 hover:border-blue-500 cursor-pointer transition-all hover:bg-blue-50 flex flex-col items-center text-center justify-center"
-          onClick={() => setMode("assistant")}
-        >
-          <div className="bg-blue-100 p-4 rounded-full mb-4">
-            <Clipboard size={32} className="text-blue-600" />
-          </div>
-          <h3 className="text-lg font-bold text-gray-800 mb-2">
-            Asistente de Escenarios Estándar
+      <div className="animate-fadeIn h-full flex flex-col">
+        {/* Trust Header */}
+        <div className="mb-8 text-center">
+          <h3 className="text-xl font-bold text-slate-800 mb-2">
+            Seleccione el Método de Evaluación
           </h3>
-          <p className="text-sm text-gray-600 mb-4">
-            Seleccione una ficha técnica del INSST (e.g., Soldadura, Madera).
+          <p className="text-slate-600 text-sm max-w-2xl mx-auto mb-6">
+            Esta herramienta integra las metodologías oficiales para garantizar
+            la seguridad jurídica y técnica.
           </p>
-          <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded">
-            Recomendado
-          </span>
+
+          <div className="flex flex-wrap justify-center gap-3 opacity-90">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full border border-blue-100">
+              🏛️ Fichas BASEQUIM (INSST)
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-50 text-orange-700 text-xs font-bold rounded-full border border-orange-100">
+              ⚖️ Priorización RD 665/1997
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-100">
+              🌍 Modelo COSHH Essentials
+            </span>
+          </div>
         </div>
 
-        <div
-          className="card p-6 border-2 border-dashed border-purple-200 hover:border-purple-500 cursor-pointer transition-all hover:bg-purple-50 flex flex-col items-center text-center justify-center"
-          onClick={() => setMode("expert")}
-        >
-          <div className="bg-purple-100 p-4 rounded-full mb-4">
-            <Shield size={32} className="text-purple-600" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
+          {/* Card 1: Assistant (Recommended) */}
+          <div
+            className="group relative bg-gradient-to-br from-blue-50 to-white border border-blue-200 rounded-2xl p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-blue-400 transition-all cursor-pointer flex flex-col items-center text-center"
+            onClick={() => setMode("assistant")}
+          >
+            <div className="absolute top-4 right-4 bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide uppercase">
+              Recomendado
+            </div>
+
+            <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform duration-300 ring-4 ring-blue-50">
+              <BookOpen size={32} strokeWidth={2} />
+            </div>
+
+            <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-700 transition-colors">
+              Asistente de Escenarios Estándar
+            </h3>
+            <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+              Utilice situaciones de trabajo pre-validadas por el{" "}
+              <strong>INSST</strong>. Carga automáticamente medidas de control,
+              EPIs y perfiles de exposición conformes a normativa.
+            </p>
+
+            <button className="mt-auto px-6 py-2 bg-white border border-blue-200 text-blue-700 text-sm font-bold rounded-lg group-hover:bg-blue-600 group-hover:text-white group-hover:border-transparent transition-all shadow-sm">
+              Abrir Asistente
+            </button>
           </div>
-          <h3 className="text-lg font-bold text-gray-800 mb-2">
-            Modo Experto / Libre
-          </h3>
-          <p className="text-sm text-gray-600 mb-4">
-            Caracterización manual paso a paso.
-          </p>
+
+          {/* Card 2: Expert Mode */}
+          <div
+            className="group relative bg-white border border-slate-200 rounded-2xl p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-slate-400 transition-all cursor-pointer flex flex-col items-center text-center"
+            onClick={() => setMode("expert")}
+          >
+            <div className="w-16 h-16 bg-slate-50 rounded-2xl shadow-sm flex items-center justify-center text-slate-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+              <Shield size={32} strokeWidth={2} />
+            </div>
+
+            <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-slate-900 transition-colors">
+              Modo Experto / Libre
+            </h3>
+            <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+              Configure manualmente cada parámetro de la evaluación cualitativa.
+              Ideal para procesos atípicos o no estandarizados.
+            </p>
+
+            <button className="mt-auto px-6 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-lg group-hover:bg-slate-800 group-hover:text-white group-hover:border-transparent transition-all shadow-sm">
+              Configuración Manual
+            </button>
+          </div>
         </div>
       </div>
     );
