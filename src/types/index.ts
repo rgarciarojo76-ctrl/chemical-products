@@ -25,6 +25,11 @@ export type HPhrase =
 export interface HazardInput {
   substanceName: string;
   casNumber?: string;
+  ecNumber?: string; // European Community number
+  vapourPressure?: number; // Pa
+  boilingPoint?: number; // Celsius
+  density?: number; // g/cm3 or relative
+  ppeText?: string; // Extracted text about PPE
   hPhrases: HPhrase[];
   isMixture: boolean;
   concentration?: number; // percentage

@@ -57,8 +57,8 @@ export const HazardForm: React.FC<HazardFormProps> = ({
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
     let fullText = "";
 
-    // Extract text from first 5 pages (usually enough for Section 2: Hazards)
-    const maxPages = Math.min(pdf.numPages, 5);
+    // Extract text from first 10 pages (to ensure Section 9: Phys/Chem is covered)
+    const maxPages = Math.min(pdf.numPages, 10);
     for (let i = 1; i <= maxPages; i++) {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
@@ -240,6 +240,61 @@ export const HazardForm: React.FC<HazardFormProps> = ({
 
     setDetectedRoutes(routes);
 
+    // 6. Enhanced Data Extraction (Section 9 & 8 & 3)
+    let extractedVP: number | undefined = undefined;
+    let extractedBP: number | undefined = undefined;
+    let extractedDensity: number | undefined = undefined;
+    let extractedCAS: string | undefined = undefined;
+    let extractedEC: string | undefined = undefined;
+    let extractedPPE: string = "";
+
+    // Vapour Pressure (Pa)
+    // Look for "Presión de vapor" followed by numbers
+    const vpRegex =
+      /(?:presi[oó]n de vapor|vapor pressure).{0,50}?(\d+(?:[.,]\d+)?)\s*(kPa|hPa|Pa|mmHg)/i;
+    const vpMatch = text.match(vpRegex);
+    if (vpMatch) {
+      let val = parseFloat(vpMatch[1].replace(",", "."));
+      const unit = vpMatch[2].toLowerCase();
+      if (unit === "kpa") val = val * 1000;
+      else if (unit === "hpa") val = val * 100;
+      else if (unit === "mmhg") val = val * 133.322;
+      extractedVP = val;
+    }
+
+    // Boiling Point (C)
+    const bpRegex =
+      /(?:punto de ebullici[oó]n|boiling point).{0,50}?(\d+(?:[.,]\d+)?)\s*[º°]?[Cc]/i;
+    const bpMatch = text.match(bpRegex);
+    if (bpMatch) {
+      extractedBP = parseFloat(bpMatch[1].replace(",", "."));
+    }
+
+    // Density
+    const denRegex =
+      /(?:densidad|density|specific gravity).{0,50}?(\d+(?:[.,]\d+)?)\s*(g\/cm3|kg\/m3|relativa)/i;
+    const denMatch = text.match(denRegex);
+    if (denMatch) {
+      extractedDensity = parseFloat(denMatch[1].replace(",", "."));
+    }
+
+    // CAS / EC - Improve this, look for patterns near substance name or header
+    const casRegex = /\b(\d{2,7}-\d{2}-\d)\b/;
+    const casMatch = text.match(casRegex);
+    if (casMatch) extractedCAS = casMatch[1];
+
+    const ecRegex = /\b(\d{3}-\d{3}-\d)\b/;
+    const ecMatch = text.match(ecRegex);
+    if (ecMatch) extractedEC = ecMatch[1];
+
+    // PPE Text (Section 8)
+    const ppeKeywords = [];
+    if (/guantes|gloves/i.test(text)) ppeKeywords.push("Guantes de protección");
+    if (/mascarilla|respirator|fap|ffp/i.test(text))
+      ppeKeywords.push("Protección respiratoria");
+    if (/gafas|goggles/i.test(text)) ppeKeywords.push("Gafas de seguridad");
+    if (ppeKeywords.length > 0) extractedPPE = ppeKeywords.join(", ");
+
     setFormData((prev) => {
       const chemicalData = lookupChemical(
         substanceSummary || prev.substanceName,
@@ -266,6 +321,13 @@ export const HazardForm: React.FC<HazardFormProps> = ({
               sampling: chemicalData.sampling,
             }
           : undefined,
+        // New Fields
+        vapourPressure: extractedVP,
+        boilingPoint: extractedBP,
+        density: extractedDensity,
+        casNumber: extractedCAS,
+        ecNumber: extractedEC,
+        ppeText: extractedPPE,
       };
     });
   };
