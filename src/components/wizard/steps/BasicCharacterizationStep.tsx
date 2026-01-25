@@ -239,12 +239,6 @@ export const BasicCharacterizationStep: React.FC<
             Esta herramienta integra las metodologías oficiales para garantizar
             la seguridad jurídica y técnica.
           </p>
-
-          <div className="trust-badge-container">
-            <span className="trust-badge">🏛️ Fichas BASEQUIM (INSST)</span>
-            <span className="trust-badge">⚖️ Priorización RD 665/1997</span>
-            <span className="trust-badge">🌍 Modelo COSHH Essentials</span>
-          </div>
         </div>
 
         <div
