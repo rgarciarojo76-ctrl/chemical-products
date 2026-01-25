@@ -226,7 +226,7 @@ export const BasicCharacterizationStep: React.FC<
               color: "var(--color-primary-dark)",
             }}
           >
-            Seleccione el Método de Evaluación
+            Seleccione el Método de Caracterización
           </h3>
           <p
             style={{
