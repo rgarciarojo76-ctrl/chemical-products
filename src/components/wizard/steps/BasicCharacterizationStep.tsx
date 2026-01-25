@@ -1,6 +1,19 @@
 import React, { useState, useCallback } from "react";
-import { AlertTriangle, Shield, Clipboard, Factory, Users } from "lucide-react";
+import {
+  AlertTriangle,
+  Shield,
+  Clipboard,
+  Factory,
+  Users,
+  Search,
+  BookOpen,
+  AlertOctagon,
+} from "lucide-react";
 import type { BasicCharacterizationInput, HazardInput } from "../../../types";
+import {
+  StandardScenarios_DB,
+  StandardScenario,
+} from "../../../data/standardScenarios";
 
 interface BasicCharacterizationStepProps {
   data: BasicCharacterizationInput | undefined;
@@ -15,6 +28,10 @@ export const BasicCharacterizationStep: React.FC<
   const [mode, setMode] = useState<"selection" | "assistant" | "expert">(
     data ? "expert" : "selection",
   );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedScenarioId, setSelectedScenarioId] = useState<
+    string | undefined
+  >(undefined);
 
   // Local state for form if not provided
   const [form, setForm] = useState<BasicCharacterizationInput>(
@@ -22,9 +39,9 @@ export const BasicCharacterizationStep: React.FC<
       processDescription: "",
       isOpenProcess: true,
       technicalMeasure: "none",
-      cleaningMethod: "hepa_wet", // Default per prompt
-      accessRestricted: true, // Default per prompt
-      signageGHS08: true, // Default per prompt
+      cleaningMethod: "hepa_wet",
+      accessRestricted: true,
+      signageGHS08: true,
       respiratoryPPE: "",
       dermalPPE: "",
       hygieneRights: false,
@@ -33,39 +50,83 @@ export const BasicCharacterizationStep: React.FC<
     },
   );
 
-  // Derived State: Validate Measures (Prompt Point 2B)
-  // Assumption: Hazard Data needed to know if it's Cancer 1A/1B.
-  // Simplified check: If H350/H360 present.
+  // Derived State: Validate Measures (Prompt Point 2B) & Gap Analysis
+  // 1. Legal Art 5 Check (Carcinogens)
   const isCarcinogen = hazardData?.hPhrases.some((h) =>
     ["H350", "H360", "H350i", "H360D", "H360F", "H360FD"].includes(h),
   );
-  const showMeasureAlert = !!(
+  const showLegalAlert = !!(
     isCarcinogen && form.technicalMeasure !== "closed_system"
   );
 
-  // Backend: Narrative Generator (Prompt Point 3)
+  // 2. Gap Analysis (Scenario Downgrade)
+  const activeScenario = StandardScenarios_DB.find(
+    (s) => s.id === selectedScenarioId,
+  );
+
+  // Determine if current measure is "less safe" than recommended
+  const measureSafetyScore = {
+    closed_system: 4,
+    local_extraction: 3,
+    suppression: 2, // Treated same as local sometimes or slightly lower
+    general_ventilation: 1,
+    none: 0,
+  };
+
+  const currentScore =
+    measureSafetyScore[
+      form.technicalMeasure as keyof typeof measureSafetyScore
+    ] || 0;
+  const recommendedScore = activeScenario
+    ? measureSafetyScore[
+        activeScenario.minTechnicalMeasure as keyof typeof measureSafetyScore
+      ]
+    : 0;
+
+  const showGapWarning = !!(activeScenario && currentScore < recommendedScore);
+
+  // Backend: Narrative Generator
   const generateNarrative = useCallback(
     (
       currentForm: BasicCharacterizationInput,
-      showAlert: boolean,
+      legalWarn: boolean,
+      gapWarn: boolean,
+      scenario?: StandardScenario,
     ): BasicCharacterizationInput => {
-      const measureText = {
-        closed_system: "un sistema cerrado estanco",
-        local_extraction: "extraccion localizada",
-        general_ventilation: "ventilación general",
-        none: "ninguna medida técnica específica",
-      }[currentForm.technicalMeasure];
+      const measureText =
+        {
+          closed_system: "un sistema cerrado estanco",
+          local_extraction: "extraccion localizada",
+          general_ventilation: "ventilación general",
+          none: "ninguna medida técnica específica",
+        }[currentForm.technicalMeasure] || "medidas técnicas";
 
-      const narrative = `Se ha realizado la caracterización básica del puesto. El proceso implica ${currentForm.processDescription || "una actividad no descrita"} con ${currentForm.isOpenProcess ? "procesos abiertos" : "sistemas cerrados"}. Las medidas de control implementadas consisten en ${measureText}, ${showAlert ? "requiriendo justificación según Art. 5 RD 665/1997." : "consideradas adecuadas."}`;
+      let narrative = `Se ha realizado la caracterización básica del puesto. El proceso implica ${currentForm.processDescription || "una actividad no descrita"} con ${currentForm.isOpenProcess ? "procesos abiertos" : "sistemas cerrados"}. Las medidas de control implementadas consisten en ${measureText}.`;
 
-      // Compliance Logic (Simplified)
+      if (scenario) {
+        narrative += ` Este escenario se basa en el estándar "${scenario.source}: ${scenario.title}".`;
+      }
+
+      if (gapWarn && scenario) {
+        narrative += ` ATENCIÓN: La medida seleccionada es inferior a la recomendada por el estándar (${scenario.minTechnicalMeasure}), lo que contraviene el principio de control en origen.`;
+      }
+
+      if (legalWarn) {
+        narrative += ` Se detecta agente cancerígeno sin sistema cerrado, requiriendo justificación explícita según Art. 5 RD 665/1997.`;
+      } else if (!gapWarn) {
+        narrative += ` Las medidas se consideran a priori adecuadas/conformes con las buenas prácticas estándar.`;
+      }
+
+      // Inject Legal Text (Point 2.3)
+      if (scenario && !gapWarn) {
+        narrative += `\n\nOBSERVACIONES: Las medidas propuestas se basan en la Ficha de Control [${scenario.source}] del INSST y el modelo COSHH Essentials, cumpliendo el principio de la mejor técnica disponible.`;
+      }
+
+      // Compliance Logic
       let compliance: "green" | "red" | "unknown" = "unknown";
-      if (
-        currentForm.technicalMeasure === "closed_system" &&
-        !currentForm.isOpenProcess
-      )
-        compliance = "green";
-      else if (currentForm.technicalMeasure === "none") compliance = "red";
+      if (gapWarn || (legalWarn && !currentForm.measureJustification))
+        compliance = "red";
+      else if (!legalWarn && !gapWarn) compliance = "green";
 
       return {
         ...currentForm,
@@ -74,44 +135,85 @@ export const BasicCharacterizationStep: React.FC<
       };
     },
     [],
-  ); // Logic is pure now
+  );
+
+  const handleUpdate = useCallback(
+    (updatedForm: BasicCharacterizationInput, scenarioId?: string) => {
+      // Re-calculate derived checks for narrative generation snapshot
+      const _activeScenario = StandardScenarios_DB.find(
+        (s) => s.id === (scenarioId || selectedScenarioId),
+      );
+      const _isCarcinogen = hazardData?.hPhrases.some((h) =>
+        ["H350", "H360", "H350i", "H360D", "H360F", "H360FD"].includes(h),
+      );
+      const _showLegalAlert = !!(
+        _isCarcinogen && updatedForm.technicalMeasure !== "closed_system"
+      );
+
+      const _currentScore =
+        measureSafetyScore[
+          updatedForm.technicalMeasure as keyof typeof measureSafetyScore
+        ] || 0;
+      const _recommendedScore = _activeScenario
+        ? measureSafetyScore[
+            _activeScenario.minTechnicalMeasure as keyof typeof measureSafetyScore
+          ]
+        : 0;
+      const _showGapWarning = !!(
+        _activeScenario && _currentScore < _recommendedScore
+      );
+
+      onUpdate(
+        generateNarrative(
+          updatedForm,
+          _showLegalAlert,
+          _showGapWarning,
+          _activeScenario,
+        ),
+      );
+    },
+    [selectedScenarioId, hazardData, onUpdate, generateNarrative],
+  );
 
   const handleChange = useCallback(
     (field: keyof BasicCharacterizationInput, value: string | boolean) => {
       setForm((prev) => {
         let updated = { ...prev, [field]: value };
 
-        // Logic Engine: Auto Hygiene Rights (Prompt Point 2E)
-        // If exposure is confirmed (simplified as "open process" or "poor measures")
-        // Check if the change affects this condition
         const isExposureConfirmed =
           updated.isOpenProcess || updated.technicalMeasure === "none";
-
         if (isExposureConfirmed && !updated.hygieneRights) {
           updated = { ...updated, hygieneRights: true };
         }
 
-        // We need to pass the derived 'showMeasureAlert' to narrative... but it depends on state.
-        // We can re-calculate it here or use the closed-over one?
-        // No, we must calculate it based on 'updated' state, not 'prev' or 'form'.
-        const isCarcinogenCheck = hazardData?.hPhrases.some((h) =>
-          ["H350", "H360", "H350i", "H360D", "H360F", "H360FD"].includes(h),
-        );
-        const alertActive = !!(
-          isCarcinogenCheck && updated.technicalMeasure !== "closed_system"
-        );
-
-        onUpdate(generateNarrative(updated, alertActive));
+        handleUpdate(updated);
         return updated;
       });
     },
-    [onUpdate, generateNarrative, hazardData],
+    [handleUpdate],
+  );
+
+  // Select Scenario Handler
+  const selectScenario = (scenario: StandardScenario) => {
+    const mergedForm = { ...form, ...scenario.defaults };
+    setForm(mergedForm);
+    setSelectedScenarioId(scenario.id);
+    setMode("expert");
+    handleUpdate(mergedForm, scenario.id);
+  };
+
+  // Filter Scenarios
+  const filteredScenarios = StandardScenarios_DB.filter(
+    (s) =>
+      s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      s.keywords.some((k) =>
+        k.toLowerCase().includes(searchTerm.toLowerCase()),
+      ),
   );
 
   if (mode === "selection") {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-        {/* OPTION A: Assistant */}
         <div
           className="card p-6 border-2 border-dashed border-blue-200 hover:border-blue-500 cursor-pointer transition-all hover:bg-blue-50 flex flex-col items-center text-center justify-center"
           onClick={() => setMode("assistant")}
@@ -123,14 +225,13 @@ export const BasicCharacterizationStep: React.FC<
             Asistente de Escenarios Estándar
           </h3>
           <p className="text-sm text-gray-600 mb-4">
-            Para usuarios junior o procesos típicos (Soldadura, Limpieza, etc.).
+            Seleccione una ficha técnica del INSST (e.g., Soldadura, Madera).
           </p>
           <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded">
             Recomendado
           </span>
         </div>
 
-        {/* OPTION B: Expert */}
         <div
           className="card p-6 border-2 border-dashed border-purple-200 hover:border-purple-500 cursor-pointer transition-all hover:bg-purple-50 flex flex-col items-center text-center justify-center"
           onClick={() => setMode("expert")}
@@ -142,7 +243,7 @@ export const BasicCharacterizationStep: React.FC<
             Modo Experto / Libre
           </h3>
           <p className="text-sm text-gray-600 mb-4">
-            Caracterización detallada paso a paso con validación normativa.
+            Caracterización manual paso a paso.
           </p>
         </div>
       </div>
@@ -151,35 +252,115 @@ export const BasicCharacterizationStep: React.FC<
 
   if (mode === "assistant") {
     return (
-      <div className="text-center p-8">
-        <h3 className="text-xl font-bold mb-4">🚧 En construcción</h3>
-        <p>
-          El Asistente de Escenarios Estándar estará disponible próximamente.
-        </p>
-        <button
-          onClick={() => setMode("selection")}
-          className="mt-4 text-blue-600 underline"
-        >
-          Volver
-        </button>
+      <div className="space-y-6 animate-fadeIn">
+        <div className="text-center mb-6">
+          <h3 className="text-lg font-bold text-gray-800 flex items-center justify-center gap-2">
+            <BookOpen size={20} className="text-blue-600" /> Buscador de
+            Escenarios Estándar
+          </h3>
+          <p className="text-sm text-gray-500">
+            Basado en Fichas Técnicas del INSST y Guías de Buenas Prácticas
+          </p>
+        </div>
+
+        <div className="relative max-w-lg mx-auto mb-6">
+          <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+          <input
+            type="text"
+            className="w-full pl-10 p-3 border rounded shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
+            placeholder="Buscar tarea... Ej: 'Soldadura', 'Madera', 'Humo'..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            autoFocus
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filteredScenarios.map((scenario) => (
+            <div
+              key={scenario.id}
+              className="p-4 border border-gray-200 rounded-lg hover:shadow-md cursor-pointer hover:border-blue-300 transition-all bg-white"
+              onClick={() => selectScenario(scenario)}
+            >
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">{scenario.icon}</span>
+                <div>
+                  <h4 className="font-bold text-gray-800 text-sm">
+                    {scenario.title}
+                  </h4>
+                  <span className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded inline-block mb-1">
+                    {scenario.source}
+                  </span>
+                  <p className="text-xs text-gray-600 line-clamp-2">
+                    {scenario.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {filteredScenarios.length === 0 && (
+            <p className="col-span-2 text-center text-gray-400 py-8">
+              No se encontraron escenarios. Pruebe otra búsqueda o use el Modo
+              Experto.
+            </p>
+          )}
+        </div>
+
+        <div className="text-center mt-6">
+          <button
+            onClick={() => setMode("selection")}
+            className="text-sm text-gray-500 hover:text-gray-700 underline"
+          >
+            Volver atrás
+          </button>
+        </div>
       </div>
     );
   }
 
-  // EXPERT MODE FORM
+  // EXPERT MODE FORM (With Gap Alerts)
   return (
     <div className="space-y-6 animate-fadeIn">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-          <Shield size={20} /> Caracterización Avanzada
+          <Shield size={20} /> Caracterización Avanzada{" "}
+          {activeScenario && (
+            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+              <BookOpen size={10} /> {activeScenario.source}
+            </span>
+          )}
         </h3>
         <button
-          onClick={() => setMode("selection")}
+          onClick={() => {
+            setMode("selection");
+            setSelectedScenarioId(undefined);
+          }}
           className="text-sm text-gray-500 hover:text-gray-700"
         >
           Cambiar modo
         </button>
       </div>
+
+      {/* Gap Warning Banner */}
+      {showGapWarning && activeScenario && (
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded mb-4 animate-shake">
+          <div className="flex items-start gap-3">
+            <AlertOctagon className="text-red-600 flex-shrink-0" size={24} />
+            <div>
+              <h5 className="font-bold text-red-900 text-sm">
+                Aviso de Conformidad (Gap Analysis)
+              </h5>
+              <p className="text-sm text-red-800 mt-1">
+                {activeScenario.gapWarning}
+              </p>
+              <p className="text-xs text-red-600 mt-2 font-semibold">
+                ⚠️ Se inyectará una advertencia en el informe final.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* A. PROCESO */}
       <section className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
@@ -235,7 +416,7 @@ export const BasicCharacterizationStep: React.FC<
             Medida de Control Principal
           </label>
           <select
-            className={`w-full p-2 border rounded ${form.technicalMeasure === "none" ? "border-red-300 bg-red-50" : "border-green-300 bg-green-50"}`}
+            className={`w-full p-2 border rounded ${showGapWarning || showLegalAlert ? "border-red-300 bg-red-50" : "border-green-300 bg-green-50"}`}
             value={form.technicalMeasure}
             onChange={(e) =>
               handleChange(
@@ -253,7 +434,7 @@ export const BasicCharacterizationStep: React.FC<
             <option value="none">4. Ninguna / Ventilación Natural</option>
           </select>
 
-          {showMeasureAlert && (
+          {showLegalAlert && (
             <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded">
               <div className="flex items-start">
                 <AlertTriangle
