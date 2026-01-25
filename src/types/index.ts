@@ -150,7 +150,9 @@ export interface BasicCharacterizationInput {
   // B. Measures (Hierarchy)
   technicalMeasure:
     | "closed_system"
+    | "containment_extraction"
     | "local_extraction"
+    | "suppression"
     | "general_ventilation"
     | "none";
   measureJustification?: string; // If < Closed System for Cancer 1A/1B

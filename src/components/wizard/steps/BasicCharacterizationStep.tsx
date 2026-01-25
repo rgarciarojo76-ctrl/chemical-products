@@ -66,6 +66,7 @@ export const BasicCharacterizationStep: React.FC<
   // Determine if current measure is "less safe" than recommended
   const measureSafetyScore = {
     closed_system: 4,
+    containment_extraction: 3.5,
     local_extraction: 3,
     suppression: 2, // Treated same as local sometimes or slightly lower
     general_ventilation: 1,
@@ -95,7 +96,9 @@ export const BasicCharacterizationStep: React.FC<
       const measureText =
         {
           closed_system: "un sistema cerrado estanco",
+          containment_extraction: "cerramiento con extracción (vitrina/cabina)",
           local_extraction: "extraccion localizada",
+          suppression: "supresión húmeda",
           general_ventilation: "ventilación general",
           none: "ninguna medida técnica específica",
         }[currentForm.technicalMeasure] || "medidas técnicas";
