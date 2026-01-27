@@ -16,6 +16,8 @@ interface HygienicEvalFormProps {
   vlaReference?: number; // Passed from prev state
   substanceName?: string;
   hazardData?: HazardInput;
+  selectedCnae?: any; // Avoiding strict type import for now to match usage
+  onShowReport?: (data?: any) => void;
 }
 
 export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
@@ -26,6 +28,8 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   vlaReference,
   substanceName,
   hazardData,
+  selectedCnae,
+  onShowReport,
 }) => {
   const [formData, setFormData] = useState<HygienicEvalInput>(
     initialData || {
