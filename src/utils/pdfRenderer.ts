@@ -8,187 +8,204 @@ export const generatePDF = (data: ReportData) => {
   const pageHeight = doc.internal.pageSize.height;
   const margin = 20;
 
-  // Header Logic with Corporate Branding
+  // --- CORPORATE HEADER ---
   const drawHeader = () => {
-    // Corporate Colors: ASPY Blue
+    // ASPY Blue Background
     const aspyBlue = [0, 102, 204]; // #0066CC
 
-    // Title Block
+    // Top Blue Block
     doc.setFillColor(aspyBlue[0], aspyBlue[1], aspyBlue[2]);
-    doc.rect(0, 0, pageWidth, 35, "F");
+    doc.rect(0, 0, pageWidth, 40, "F");
 
-    // Company Name
-    doc.setFontSize(18);
+    // "ASPY - DIRECCIÓN TÉCNICA" (Bold, White, Centered)
+    doc.setFontSize(22);
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
-    doc.text("ASPY - DIRECCIÓN TÉCNICA", pageWidth / 2, 12, {
+    doc.text("ASPY - DIRECCIÓN TÉCNICA", pageWidth / 2, 18, {
       align: "center",
     });
 
-    // Document Title
-    doc.setFontSize(14);
+    // Subheader
+    doc.setFontSize(16);
     doc.setFont("helvetica", "normal");
-    doc.text("Informe de Caracterización Básica", pageWidth / 2, 20, {
+    doc.text("Informe de Caracterización Básica", pageWidth / 2, 28, {
       align: "center",
     });
 
-    // Subtitle
-    doc.setFontSize(9);
-    doc.text("Según UNE-EN 689:2019 y RD 665/1997", pageWidth / 2, 27, {
+    // Regulations
+    doc.setFontSize(10);
+    doc.text("Según UNE-EN 689:2019 y RD 665/1997", pageWidth / 2, 35, {
       align: "center",
     });
 
-    // Bottom line
-    doc.setDrawColor(255, 255, 255);
-    doc.setLineWidth(0.5);
-    doc.line(margin, 32, pageWidth - margin, 32);
+    // doc.setY(55); // Removed to fix TS error, y is set manually below
   };
 
   drawHeader();
 
-  let y = 42;
+  let y = 50;
 
-  // 1. Identificación y Toxicología
+  // --- SECTION 1: IDENTIFICATION ---
   doc.setFontSize(12);
-  doc.setTextColor(0, 0, 0);
+  doc.setTextColor(0, 0, 0); // Black
   doc.setFont("helvetica", "bold");
   doc.text("1. Identificación y Toxicología (Datos Oficiales)", margin, y);
-  y += 5;
 
-  // CMR Alerts Rendering
+  // CMR Label next to title (Red)
   if (data.agent.cmr_alerts.length > 0) {
-    doc.setFontSize(10);
     doc.setTextColor(220, 38, 38); // Red
-    data.agent.cmr_alerts.forEach((alert) => {
-      doc.text(`⚠ ${alert}`, margin, y);
-      y += 5;
-    });
-    y += 2;
+    const cmrText = "& " + data.agent.cmr_alerts.join(" & ");
+    doc.setFontSize(10);
+    doc.text(cmrText, margin, y + 6);
   }
+  y += 12;
 
-  // Build table body conditionally (Issue #5: hide unavailable data)
+  // Table Data
   const tableBody = [
     ["Agente Químico", data.agent.name],
     ["Nº CAS", data.agent.cas],
-    data.agent.vla_ed &&
-      data.agent.vla_ed !== "No est." && [
-        "VLA-ED (Diario)",
-        data.agent.vla_ed + " mg/m³",
-      ],
-    data.agent.vla_ec &&
-      data.agent.vla_ec !== "No est." && [
-        "VLA-EC (Corto Plazo)",
-        data.agent.vla_ec + " mg/m³",
-      ],
-    data.agent.density && ["Densidad", data.agent.density],
-    data.agent.boiling_point && [
-      "Punto de Ebullición",
-      data.agent.boiling_point,
+    [
+      "VLA-ED (Diario)",
+      data.agent.vla_ed !== "No est."
+        ? `${data.agent.vla_ed} mg/m³`
+        : "No establecido",
     ],
-  ].filter(Boolean) as string[][];
+    [
+      "VLA-EC (Corto Plazo)",
+      data.agent.vla_ec !== "No est."
+        ? `${data.agent.vla_ec} mg/m³`
+        : "No establecido",
+    ],
+  ];
+
+  if (data.agent.density) tableBody.push(["Densidad", data.agent.density]);
+  if (data.agent.boiling_point)
+    tableBody.push(["Punto de Ebullición", data.agent.boiling_point]);
 
   autoTable(doc, {
     startY: y,
     head: [],
     body: tableBody,
-    theme: "grid",
-    columnStyles: {
-      0: { fontStyle: "bold", fillColor: [240, 248, 255], cellWidth: 50 },
+    theme: "plain", // We want custom borders
+    styles: {
+      fontSize: 10,
+      cellPadding: 5,
+      lineColor: [200, 200, 200], // Light grey borders
+      lineWidth: 0.1,
     },
-    styles: { fontSize: 10, cellPadding: 3 },
+    columnStyles: {
+      0: {
+        fontStyle: "bold",
+        fillColor: [245, 247, 250],
+        cellWidth: 60,
+        textColor: 50,
+      }, // Light grey bg for labels
+      1: { cellWidth: "auto" },
+    },
   });
 
-  // @ts-expect-error - jspdf-autotable doesn't have proper types for finalY
+  // @ts-expect-error - jspdf-autotable types
   y = doc.lastAutoTable.finalY + 10;
 
-  // Alerts for Notes (Piel, Sen)
+  // Skin/Sensitizer Alerts
   if (data.agent.notes_alerts.length > 0) {
     doc.setFontSize(10);
-    doc.setTextColor(185, 28, 28); // Dark Red
-    doc.setFont("helvetica", "bold");
+    // Loop through alerts. Red for Piel/Sens.
     data.agent.notes_alerts.forEach((alert) => {
+      // Parse alert type for coloring (simple heuristic)
+      if (alert.includes("Piel") || alert.includes("Sensibilizante")) {
+        doc.setTextColor(185, 28, 28); // Red
+      } else {
+        doc.setTextColor(0);
+      }
+
+      doc.setFont("helvetica", "bold");
       const splitText = doc.splitTextToSize(alert, pageWidth - margin * 2);
       doc.text(splitText, margin, y);
-      y += splitText.length * 5 + 2;
+      y += splitText.length * 5 + 3;
     });
     y += 5;
   }
 
-  // 2. Descripción de la Exposición
+  // --- SECTION 2: EXPOSURE ---
   doc.setFontSize(12);
-  doc.setTextColor(0, 0, 0);
+  doc.setTextColor(0, 0, 100); // Dark Blue for headers maybe? Or Black as per template. Let's stick to Black/Dark Grey.
+  doc.setTextColor(0);
   doc.setFont("helvetica", "bold");
   doc.text("2. Descripción de la Exposición", margin, y);
   y += 8;
 
-  // Render exposure description with bullet points (Issue #6)
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  const narrativeLines = data.exposure.description.split("\n");
-  narrativeLines.forEach((line, index) => {
-    const bulletText = index === 0 ? line : `• ${line}`;
-    const splitLine = doc.splitTextToSize(
-      bulletText,
-      pageWidth - margin * 2 - 5,
-    );
-    doc.text(splitLine, margin + (index === 0 ? 0 : 3), y);
+
+  // Clean empty lines in narrative
+  const narrative = data.exposure.description.replace(/\n\n+/g, "\n");
+  const lines = narrative.split("\n");
+
+  lines.forEach((line) => {
+    const splitLine = doc.splitTextToSize("• " + line, pageWidth - margin * 2);
+    doc.text(splitLine, margin, y);
     y += splitLine.length * 5 + 2;
   });
-  y += 8;
 
-  // 3. Valoración Higiénica y Estrategia
+  y += 10;
+
+  // --- SECTION 3: STRATEGY ---
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
   doc.text("3. Valoración Higiénica y Estrategia", margin, y);
   y += 8;
 
-  // Box for conclusion
-  const boxColor =
-    data.conclusion.type === "A" ? [220, 252, 231] : [254, 226, 226]; // Green-100 vs Red-100
-  const borderColor =
-    data.conclusion.type === "A" ? [22, 163, 74] : [220, 38, 38];
+  // Strategy Box
+  const isSafe = data.conclusion.type === "A";
 
-  doc.setFillColor(boxColor[0], boxColor[1], boxColor[2]);
+  // Colors
+  const bgColor = isSafe ? [240, 253, 244] : [254, 242, 242]; // Light Green vs Light Red
+  const borderColor = isSafe ? [22, 163, 74] : [220, 38, 38]; // Green vs Red text
+
+  // Draw Box
   doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-  doc.rect(margin, y, pageWidth - margin * 2, 35, "FD");
+  doc.setFillColor(bgColor[0], bgColor[1], bgColor[2]);
+  doc.rect(margin, y, pageWidth - margin * 2, 45, "FD"); // Increased height
 
-  doc.setFontSize(10);
-  doc.setTextColor(0);
-  // Type Label
+  // Title inside box
+  doc.setTextColor(0); // Black (or could use borderColor)
   doc.setFont("helvetica", "bold");
   doc.text(
-    data.conclusion.type === "A"
-      ? "ESCENARIO A: CONTROLADO"
+    isSafe
+      ? "ESCENARIO A: RIESGO ACEPTABLE"
       : "ESCENARIO B: RIESGO NO DESCARTABLE",
     margin + 5,
-    y + 8,
+    y + 10,
   );
 
-  // Text
+  // Conclusion Text
   doc.setFont("helvetica", "normal");
-  const splitConclusion = doc.splitTextToSize(
+  doc.setFontSize(9);
+  const conclusionLines = doc.splitTextToSize(
     data.conclusion.text,
     pageWidth - margin * 2 - 10,
   );
-  doc.text(splitConclusion, margin + 5, y + 16);
+  doc.text(conclusionLines, margin + 5, y + 20);
 
-  y += 45;
+  y += 55;
 
-  // 4. Obligaciones Legales
+  // --- SECTION 4: LEGAL ---
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
+  doc.setTextColor(0);
   doc.text("4. Medidas y Obligaciones Legales (RD 665/1997)", margin, y);
   y += 8;
 
   doc.setFontSize(9);
   doc.setFont("helvetica", "italic");
   data.conclusion.legal_obligations.forEach((obi) => {
-    const splitObi = doc.splitTextToSize(`• ${obi}`, pageWidth - margin * 2);
+    const splitObi = doc.splitTextToSize("• " + obi, pageWidth - margin * 2);
     doc.text(splitObi, margin, y);
     y += splitObi.length * 5 + 2;
   });
 
-  // Footer
+  // --- FOOTER ---
   const pageCount = (
     doc as unknown as { internal: { getNumberOfPages: () => number } }
   ).internal.getNumberOfPages();

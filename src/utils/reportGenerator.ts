@@ -72,14 +72,44 @@ export const generateReportData = (state: AssessmentState): ReportData => {
   // 2. Narrative Engine
   // Default values to prevent crashes if Basic Characterization is missing (e.g. Stoffenmanager path)
   const taskName = basic?.processDescription || "Tarea genérica";
-  const statePhys = hazard.detectedPhysicalForm || "estado desconocido";
+
+  // Translation Maps
+  const PHYSICAL_FORMS: Record<string, string> = {
+    solid_massive: "Sólido (Masivo)",
+    solid_dust: "Sólido (Polvo)",
+    liquid_high_volatility: "Líquido (Alta Volatilidad)",
+    liquid_low_volatility: "Líquido (Baja Volatilidad)",
+    gas: "Gas",
+    // Fallbacks
+    liquid: "Líquido",
+    solid: "Sólido",
+  };
+
+  const FREQUENCIES: Record<string, string> = {
+    daily: "Diaria",
+    weekly: "Semanal",
+    sporadic: "Esporádica",
+    year_1: "1 vez/año",
+    month_1: "1 vez/mes",
+    week_bi: "Quincenal",
+    week_1: "1 vez/semana",
+    week_2_3: "2-3 veces/semana",
+    week_4_5: "4-5 veces/semana",
+    day_1: "Diaria",
+  };
+
+  const statePhysKey = hazard.detectedPhysicalForm || "unknown";
+  const statePhys = PHYSICAL_FORMS[statePhysKey] || statePhysKey;
+
   const volatility = hazard.vapourPressure
     ? `${hazard.vapourPressure} Pa`
     : "volatilidad no determinada";
   const procType = basic?.isOpenProcess ? "Sistema Abierto" : "Sistema Cerrado";
-  // Determine quantity qualitatively (mock logic based on context or add field later)
   const quantity = "cantidades operativas estándar";
-  const frequency = basic?.frequency || "frecuencia no definida";
+
+  const freqKey = basic?.frequency || "unknown";
+  const frequency = FREQUENCIES[freqKey] || freqKey;
+
   const duration = basic?.duration // Map enum to text
     ? {
         lt_15m: "< 15 min",
