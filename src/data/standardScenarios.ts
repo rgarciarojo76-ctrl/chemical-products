@@ -664,4 +664,415 @@ export const StandardScenarios_DB: StandardScenario[] = [
     gapWarning:
       "Ventilar bien el local (evitar acumulación amoniaco). Usar guantes siempre para evitar dermatitis alérgica.",
   },
+
+  // --- AMPLIACIÓN 2026: CANCERÍGENOS, MUTÁGENOS Y REPROTÓXICOS (CMR) ---
+
+  // 1. DISOLVENTES CANCERÍGENOS (Benceno, Tricloroetileno, etc.)
+  {
+    id: "cmr_solvent_handling",
+    title: "Manipulación de Disolventes CMR (Benceno, Tricloroetileno, etc.)",
+    keywords: [
+      "benceno",
+      "disolvente",
+      "limpieza",
+      "desengrase",
+      "laboratorio",
+      "tricloroetileno",
+      "1,2-dicloroetano",
+      "cloroformo",
+    ],
+    source: "INSST NTP 467 / Guías Técnicas",
+    documentUrl: "https://www.insst.es/",
+    risks: ["carcinogen", "mutagen", "other"], // other = skin
+    relatedSubstances: [
+      "benceno",
+      "tricloroetileno",
+      "tetracloroetileno",
+      "percloroetileno",
+      "1,2-dicloroetano",
+      "dicloruro de etileno",
+      "cloroformo",
+      "1,2-dicloropropano",
+      "nitrobenceno",
+      "dimetilformamida",
+      "dmf",
+      "nmp",
+      "dmac",
+    ],
+    icon: "🧪",
+    description:
+      "Uso de disolventes volátiles clasificados C1A/C1B. Peligro por inhalación y contacto dérmico.",
+    defaults: {
+      processDescription:
+        "Uso manual o semicerrado de disolventes orgánicos peligrosos.",
+      isOpenProcess: true,
+      technicalMeasure: "local_extraction",
+      cleaningMethod: "hepa_wet",
+      accessRestricted: true,
+      signageGHS08: true,
+      respiratoryPPE:
+        "Máscara media cara + Filtro AX (si bajo pto ebullición) o A2",
+      dermalPPE:
+        "Guantes Laminados (PE/EVOH) o Viton (Nitrilo suele ser permeable a estos)",
+      frequency: "daily",
+      duration: "15m_2h",
+    },
+    minTechnicalMeasure: "local_extraction",
+    gapWarning:
+      "Agentes C1A/C1B requieren sustitución prioritaria. Si no es posible, sistema cerrado o extracción localizada estricta y EPIs de alta resistencia química.",
+  },
+
+  // 2. MONÓMEROS Y PLÁSTICOS (Acrilonitrilo, Vinilo, Estireno)
+  {
+    id: "cmr_monomers",
+    title: "Polimerización y Monómeros (Acrilonitrilo, Vinilo, Estireno)",
+    keywords: [
+      "plástico",
+      "resina",
+      "monómero",
+      "reactor",
+      "fuga",
+      "acrilonitrilo",
+      "vinilo",
+      "estireno",
+    ],
+    source: "Industria Química / Plásticos",
+    documentUrl: "https://www.insst.es/",
+    risks: ["carcinogen", "other"], // other = flammable
+    relatedSubstances: [
+      "acrilonitrilo",
+      "cloruro de vinilo",
+      "estireno",
+      "1,3-butadieno",
+      "acrilamida",
+      "metil metacrilato",
+      "óxido de propileno",
+      "epiclorohidrina",
+      "bromoetileno",
+    ],
+    icon: "🏭",
+    description:
+      "Procesos de síntesis o manipulación de monómeros reactivos y volátiles.",
+    defaults: {
+      processDescription:
+        "Control de reactores, toma de muestras o carga de aditivos.",
+      isOpenProcess: false,
+      technicalMeasure: "closed_system", // Corrected
+      cleaningMethod: "hepa_wet", // Corrected
+      accessRestricted: true,
+      signageGHS08: true,
+      respiratoryPPE: "Máscara Compelta A2P3 o Semimáscara",
+      frequency: "daily",
+      duration: "gt_4h",
+      dermalPPE: "Traje Tipo 3/4 + Guantes Químicos",
+    },
+    minTechnicalMeasure: "local_extraction",
+    gapWarning:
+      "El Cloruro de Vinilo y otros monómeros son C1A. Se recomienda monitorización ambiental continua y sistemas cerrados.",
+  },
+
+  // 3. METALES TOXICOS (Níquel, Cadmio, Arsénico, Berilio)
+  {
+    id: "cmr_toxic_metals",
+    title: "Manipulación de Polvos Metálicos Tócicos (Ni, Cd, As, Be)",
+    keywords: [
+      "polvo",
+      "metal",
+      "níquel",
+      "cadmio",
+      "arsénico",
+      "berilio",
+      "fusión",
+      "lija",
+    ],
+    source: "UNE-EN 689 / Guía Metales",
+    documentUrl: "https://www.insst.es/",
+    risks: ["carcinogen", "reprotoxic", "sensitizer"],
+    relatedSubstances: [
+      "níquel",
+      "compuestos de níquel",
+      "cadmio",
+      "arsénico",
+      "ácido arsénico",
+      "berilio",
+      "cobalto",
+      "plomo",
+      "trióxido de antimonio",
+    ],
+    icon: "🔩",
+    description:
+      "Generación de polvo respirable conteniendo metales pesados cancerígenos.",
+    defaults: {
+      processDescription:
+        "Pesada, mezcla, lijado o procesado de sales metálicas.",
+      isOpenProcess: true,
+      technicalMeasure: "local_extraction",
+      cleaningMethod: "hepa_wet",
+      accessRestricted: true,
+      signageGHS08: true,
+      respiratoryPPE: "Máscara FFP3 o P3 (Partículas tóxicas)",
+      dermalPPE: "Guantes Nitrilo + Ropa protección partículas",
+      frequency: "daily",
+      duration: "15m_2h",
+    },
+    minTechnicalMeasure: "local_extraction",
+    gapWarning:
+      "Limpieza con aspirador HEPA H estricta. Prohibido barrer. VLA muy bajos (microgramos).",
+  },
+
+  // 4. CROMO VI (Tratamientos Superficiales)
+  {
+    id: "chrome_vi_plating",
+    title: "Baños de Cromado / Tratamiento Superficial (Cr VI)",
+    keywords: [
+      "cromo",
+      "hexavalente",
+      "baño",
+      "galvanotecnia",
+      "electrolisis",
+      "niebla",
+    ],
+    source: "R.D. 374/2001 / Guía Técnica",
+    documentUrl: "https://www.insst.es/",
+    risks: ["carcinogen", "sensitizer", "other"], // other=corrosine
+    relatedSubstances: [
+      "cromo vi",
+      "trióxido de cromo",
+      "cromatos",
+      "dicromatos",
+      "ácido crómico",
+    ],
+    icon: "🚿",
+    description: "Emisión de nieblas ácidas con Cromo VI durante electrolisis.",
+    defaults: {
+      processDescription: "Operación en cubas de cromado electrolítico.",
+      isOpenProcess: true,
+      technicalMeasure: "local_extraction",
+      cleaningMethod: "hepa_wet",
+      accessRestricted: true,
+      signageGHS08: true,
+      respiratoryPPE: "Máscara FFP3 (Nieblas) + Pantalla Facial",
+      dermalPPE: "Guantes Alta Resist. (Butilo/Viton) + Delantal",
+      frequency: "daily",
+      duration: "gt_4h",
+    },
+    minTechnicalMeasure: "local_extraction",
+    gapWarning:
+      "Uso obligatorio de supresores de niebla y extracción localizada. Control estricto del VLA-EC.",
+  },
+
+  // 5. MADERA DURA
+  {
+    id: "hardwood_dust",
+    title: "Procesado de Madera Dura (Polvo)",
+    keywords: [
+      "madera",
+      "polvo",
+      "lija",
+      "corte",
+      "aserradero",
+      "carpintería",
+      "roble",
+      "haya",
+    ],
+    source: "UNE-EN 50632 / Guía Madera",
+    documentUrl: "https://www.insst.es/",
+    risks: ["carcinogen", "sensitizer"],
+    relatedSubstances: [
+      "polvo de maderas duras",
+      "madera",
+      "roble",
+      "haya",
+      "caoba",
+    ],
+    icon: "🪚",
+    description:
+      "Corte y lijado de maderas duras carcinógenas (Roble, Haya, etc.).",
+    defaults: {
+      processDescription: "Lijado o corte de madera.",
+      isOpenProcess: true,
+      technicalMeasure: "local_extraction", // Aspiración herramienta + Banco
+      cleaningMethod: "hepa_wet", // closest
+      accessRestricted: false,
+      signageGHS08: true,
+      respiratoryPPE: "Mascarilla FFP2 / FFP3",
+      frequency: "daily",
+      duration: "2h_4h",
+      dermalPPE: "Ropa trabajo (evitar acumulación polvo)",
+    },
+    minTechnicalMeasure: "local_extraction",
+    gapWarning:
+      "Maquinaria debe tener extracción integrada. Limpieza HEPA obligatoria.",
+  },
+
+  // 6. FORMALDEHÍDO (Anatomía Patológica / Formol)
+  {
+    id: "formaldehyde_lab",
+    title: "Uso de Formaldehído (Sanidad / Laboratorio)",
+    keywords: [
+      "formaldehído",
+      "formol",
+      "hospital",
+      "anatomía",
+      "biopsia",
+      "muestras",
+    ],
+    source: "Guía Práctica Formaldehído",
+    documentUrl: "https://www.insst.es/",
+    risks: ["carcinogen", "sensitizer"],
+    relatedSubstances: ["formaldehído", "formol", "paraformaldehído"],
+    icon: "🏥",
+    description: "Tallado de muestras, conservación en formol.",
+    defaults: {
+      processDescription: "Manipulación de muestras biológicas en formol.",
+      isOpenProcess: true,
+      technicalMeasure: "local_extraction", // Mesa de tallado con extracción
+      cleaningMethod: "hepa_wet",
+      accessRestricted: true,
+      signageGHS08: true,
+      respiratoryPPE: "Media máscara A2P2 (o B+P2)",
+      dermalPPE: "Guantes Nitrilo (Doble guante rec.)",
+      frequency: "daily",
+      duration: "2h_4h",
+    },
+    minTechnicalMeasure: "local_extraction",
+    gapWarning:
+      "El formaldehído es sensibilizante y C1B. Mesas con extracción inferior/trasera obligatorias.",
+  },
+
+  // 7. ÓXIDO DE ETILENO (Esterilización)
+  {
+    id: "eto_sterilization",
+    title: "Esterilización con Óxido de Etileno",
+    keywords: [
+      "eto",
+      "oxido",
+      "etileno",
+      "esterilizacion",
+      "hospital",
+      "equipos",
+    ],
+    source: "NTP 1157",
+    documentUrl: "https://www.insst.es/",
+    risks: ["carcinogen", "mutagen", "reprotoxic"],
+    relatedSubstances: ["óxido de etileno"],
+    icon: "🧼",
+    description: "Ciclos de esterilización de material médico.",
+    defaults: {
+      processDescription: "Carga/Descarga de esterilizador y aireación.",
+      isOpenProcess: false, // Ciclo cerrado
+      technicalMeasure: "containment_extraction", // Cabina para descarga
+      cleaningMethod: "none",
+      accessRestricted: true,
+      signageGHS08: true,
+      respiratoryPPE:
+        "Máscara AX (Gases bajo pto ebullición) o Suministro Aire",
+      dermalPPE: "Guantes específicos",
+      frequency: "weekly",
+      duration: "15m_2h",
+    },
+    minTechnicalMeasure: "general_ventilation",
+    gapWarning:
+      "Riesgo muy alto en apertura de puerta. Se requiere sistema de aireación forzada previa.",
+  },
+
+  // 8. FIBRAS CERÁMICAS REFRACTARIAS (FCR)
+  {
+    id: "rcf_furnace",
+    title: "Manipulación de Fibras Cerámicas Refractarias",
+    keywords: [
+      "fcr",
+      "fibra",
+      "ceramica",
+      "horno",
+      "aislamiento",
+      "refractario",
+    ],
+    source: "Directiva Cancerígenos",
+    documentUrl: "https://www.insst.es/",
+    risks: ["carcinogen", "other"], // other=irritant
+    relatedSubstances: ["fibras cerámicas", "fcr", "lana aislante"],
+    icon: "🧱",
+    description:
+      "Instalación o retirada de aislamiento en hornos industriales.",
+    defaults: {
+      processDescription: "Retirada de aislamiento degradado (fibras).",
+      isOpenProcess: true,
+      technicalMeasure: "suppression", // Humectación
+      cleaningMethod: "hepa_wet",
+      accessRestricted: true,
+      signageGHS08: true,
+      respiratoryPPE: "Máscara Completa P3 / Motorizada TH3",
+      dermalPPE: "Mono Tipo 5/6 (Desechable) con capucha",
+      frequency: "sporadic",
+      duration: "gt_4h",
+    },
+    minTechnicalMeasure: "suppression",
+    gapWarning:
+      "Material Friable. Prohibido barrer. Usar técnicas húmedas y aspiración H.",
+  },
+
+  // 9. PLOMO (Baterías / Fundición)
+  {
+    id: "lead_handling",
+    title: "Trabajos con Plomo (Baterías/Fundición)",
+    keywords: ["plomo", "bateria", "fundicion", "reciclaje", "soldadura"],
+    source: "Guía Técnica Plomo (Nueva Directiva)",
+    documentUrl: "https://www.insst.es/",
+    risks: ["reprotoxic", "other"], // other=acumulativo
+    relatedSubstances: ["plomo", "compuestos de plomo", "oxido de plomo"],
+    icon: "🔋",
+    description: "Exposición a polvo o humos de plomo. Riesgo bioacumulativo.",
+    defaults: {
+      processDescription: "Manipulación de pasta de plomo o fundición.",
+      isOpenProcess: true,
+      technicalMeasure: "local_extraction",
+      cleaningMethod: "hepa_wet",
+      accessRestricted: true,
+      signageGHS08: true,
+      respiratoryPPE: "FFP3 / P3",
+      dermalPPE: "Guantes impermeables + Ropa cambio diario",
+      frequency: "daily",
+      duration: "gt_4h",
+    },
+    minTechnicalMeasure: "local_extraction",
+    gapWarning:
+      "Control biológico (Plomo en sangre) obligatorio. Higiene personal estricta (no comer/fumar).",
+  },
+
+  // 10. REPROTÓXICOS VARIOS (Disolventes esp.)
+  {
+    id: "repro_solvents",
+    title: "Disolventes Reprotóxicos (DMF, DMAc, 2-ME)",
+    keywords: ["reprotoxico", "disolvente", "dmf", "dmac", "metoxietanol"],
+    source: "Guía Reprotóxicos",
+    documentUrl: "https://www.insst.es/",
+    risks: ["reprotoxic", "other"],
+    relatedSubstances: [
+      "n,n-dimetilformamida",
+      "dmf",
+      "n,n-dimetilacetamida",
+      "dmac",
+      "2-metoxietanol",
+      "2-etoxietanol",
+    ],
+    icon: "🤰",
+    description: "Disolventes industriales con toxicidad para la reproducción.",
+    defaults: {
+      processDescription:
+        "Uso de disolvente en proceso industrial (textil/químico).",
+      isOpenProcess: false,
+      technicalMeasure: "local_extraction",
+      cleaningMethod: "hepa_wet",
+      accessRestricted: false,
+      signageGHS08: true,
+      respiratoryPPE: "Máscara A2",
+      dermalPPE: "Guantes Butilo/Teflón (Permeabilidad crítica)",
+      frequency: "daily",
+      duration: "2h_4h",
+    },
+    minTechnicalMeasure: "local_extraction",
+    gapWarning:
+      "Especial protección a trabajadoras gestantes/lactantes. Absorción vía dérmica muy relevante.",
+  },
 ];
