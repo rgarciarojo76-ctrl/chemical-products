@@ -104,8 +104,9 @@ export const StandardScenarios_DB: StandardScenario[] = [
     id: "wood_sanding_hard",
     title: "Lijado/Mecanizado de Maderas Duras",
     keywords: ["madera", "lijado", "polvo", "carpintería", "roble", "haya"],
-    source: "BASEQUIM 017 / Guía RD 665",
-    documentUrl: "https://www.insst.es/basequim",
+    source: "Guía Técnica Cancerígenos (Madera)",
+    documentUrl:
+      "https://www.insst.es/documents/94886/327446/Gu%C3%ADa+Cancer%C3%ADgenos+2022.pdf",
     risks: ["carcinogen"], // Wood dust
     icon: "🪚",
     description: "Polvo de madera dura (Cancerígeno) por abrasión mecánica.",
@@ -224,9 +225,9 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "acetona",
       "mek",
     ],
-    source: "INSST NTP 768",
+    source: "NTP 768 (Trasvase A.Q.)",
     documentUrl:
-      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
+      "https://www.insst.es/documents/94886/327064/NTP+768+Trasvase+de+agentes+qu%C3%ADmicos.pdf",
     risks: ["reprotoxic"], // Many solvents are repro (Toluene)
     icon: "🧽",
     description: "Limpieza de piezas con trapos impregnados en disolvente.",
@@ -278,9 +279,9 @@ export const StandardScenarios_DB: StandardScenario[] = [
     id: "silica_cutting",
     title: "Corte/Perforación (Sílice Cristalina)",
     keywords: ["sílice", "corte", "hormigón", "ladrillo", "cantera", "rcs"],
-    source: "Guía Técnica Sílice (INSST)",
+    source: "Guía Técnica Cancerígenos (Sílice)",
     documentUrl:
-      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/guias-tecnicas",
+      "https://www.insst.es/documents/94886/327446/Gu%C3%ADa+Cancer%C3%ADgenos+2022.pdf",
     risks: ["carcinogen"],
     icon: "🧱",
     description:
@@ -389,9 +390,9 @@ export const StandardScenarios_DB: StandardScenario[] = [
     id: "formaldehyde_pathology",
     title: "Uso de Formol (Anatomía Patológica)",
     keywords: ["formol", "formaldehído", "hospital", "biopsia", "cancerígeno"],
-    source: "Protocolo Sanitario Formol",
+    source: "Guía Actuación Formaldehído",
     documentUrl:
-      "https://www.mscbs.gob.es/ciudadanos/saludAmbLaboral/docs/ProtocoloVigilanciaSanitariaFormaldehido.pdf",
+      "https://sanidad.castillalamancha.es/sites/sescam.castillalamancha.es/files/documentos/pdf/20190205/guia_actuacion_frente_al_riesgo_de_exposicion_al_formaldehido.pdf",
     risks: ["carcinogen", "sensitizer"],
     relatedSubstances: ["formaldehído", "formol"],
     relatedCNAEs: ["86", "8610", "7500"], // Sanidad y Veterinaria
@@ -532,9 +533,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     id: "battery_charging",
     title: "Carga de Baterías (Plomo-Ácido)",
     keywords: ["batería", "ácido", "hidrógeno", "elektror"],
-    source: "NTP 1074 (H2)",
-    documentUrl:
-      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
+    source: "NTP 617 (Locales Carga Baterías)",
+    documentUrl: "https://www.insst.es/documents/94886/326853/ntp_617.pdf",
     risks: ["other"], // Physical risk + Corrosive
     icon: "🔋",
     description: "Emisión de Hidrógeno (Explosivo) y nieblas ácidas.",
@@ -681,8 +681,9 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "1,2-dicloroetano",
       "cloroformo",
     ],
-    source: "INSST NTP 467 / Guías Técnicas",
-    documentUrl: "https://www.insst.es/",
+    source: "Guía Técnica Cancerígenos (Disolventes)",
+    documentUrl:
+      "https://www.insst.es/documents/94886/327446/Gu%C3%ADa+Cancer%C3%ADgenos+2022.pdf",
     risks: ["carcinogen", "mutagen", "other"], // other = skin
     relatedSubstances: [
       "benceno",
@@ -736,8 +737,9 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "vinilo",
       "estireno",
     ],
-    source: "Industria Química / Plásticos",
-    documentUrl: "https://www.insst.es/",
+    source: "Guía Técnica Cancerígenos (Monómeros)",
+    documentUrl:
+      "https://www.insst.es/documents/94886/327446/Gu%C3%ADa+Cancer%C3%ADgenos+2022.pdf",
     risks: ["carcinogen", "other"], // other = flammable
     relatedSubstances: [
       "acrilonitrilo",
@@ -774,7 +776,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
   // 3. METALES TOXICOS (Níquel, Cadmio, Arsénico, Berilio)
   {
     id: "cmr_toxic_metals",
-    title: "Manipulación de Polvos Metálicos Tócicos (Ni, Cd, As, Be)",
+    title: "Manipulación de Polvos Metálicos Tóxicos (Ni, Cd, As, Be)",
     keywords: [
       "polvo",
       "metal",
@@ -785,8 +787,9 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "fusión",
       "lija",
     ],
-    source: "UNE-EN 689 / Guía Metales",
-    documentUrl: "https://www.insst.es/",
+    source: "Guía Técnica Cancerígenos (Metales)",
+    documentUrl:
+      "https://www.insst.es/documents/94886/327446/Gu%C3%ADa+Cancer%C3%ADgenos+2022.pdf",
     risks: ["carcinogen", "reprotoxic", "sensitizer"],
     relatedSubstances: [
       "níquel",
@@ -875,8 +878,9 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "roble",
       "haya",
     ],
-    source: "UNE-EN 50632 / Guía Madera",
-    documentUrl: "https://www.insst.es/",
+    source: "Guía Técnica Cancerígenos (Madera)",
+    documentUrl:
+      "https://www.insst.es/documents/94886/327446/Gu%C3%ADa+Cancer%C3%ADgenos+2022.pdf",
     risks: ["carcinogen", "sensitizer"],
     relatedSubstances: [
       "polvo de maderas duras",
@@ -918,7 +922,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "muestras",
     ],
     source: "Guía Práctica Formaldehído",
-    documentUrl: "https://www.insst.es/",
+    documentUrl:
+      "https://sanidad.castillalamancha.es/sites/sescam.castillalamancha.es/files/documentos/pdf/20190205/guia_actuacion_frente_al_riesgo_de_exposicion_al_formaldehido.pdf",
     risks: ["carcinogen", "sensitizer"],
     relatedSubstances: ["formaldehído", "formol", "paraformaldehído"],
     icon: "🏥",
@@ -1017,8 +1022,9 @@ export const StandardScenarios_DB: StandardScenario[] = [
     id: "lead_handling",
     title: "Trabajos con Plomo (Baterías/Fundición)",
     keywords: ["plomo", "bateria", "fundicion", "reciclaje", "soldadura"],
-    source: "Guía Técnica Plomo (Nueva Directiva)",
-    documentUrl: "https://www.insst.es/",
+    source: "Guía Técnica Agentes Químicos (Plomo)",
+    documentUrl:
+      "https://www.insst.es/documents/94886/326827/GT+Agentes+Qu%C3%ADmicos.pdf",
     risks: ["reprotoxic", "other"], // other=acumulativo
     relatedSubstances: ["plomo", "compuestos de plomo", "oxido de plomo"],
     icon: "🔋",
