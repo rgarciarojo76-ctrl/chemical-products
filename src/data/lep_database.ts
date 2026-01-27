@@ -4,7 +4,17 @@ export interface LEPData {
   vla_ed?: number; // mg/m3
   vla_ed_ppm?: number;
   vla_ec?: number; // mg/m3
-  notes: ("piel" | "sen" | "C1A" | "C1B" | "M1A" | "M1B" | "R1A" | "R1B")[];
+  notes: (
+    | "piel"
+    | "sen"
+    | "C1A"
+    | "C1B"
+    | "M1A"
+    | "M1B"
+    | "R1A"
+    | "R1B"
+    | "R2"
+  )[];
   year: number;
 }
 

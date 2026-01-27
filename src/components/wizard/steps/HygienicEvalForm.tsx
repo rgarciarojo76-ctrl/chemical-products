@@ -28,8 +28,8 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   vlaReference,
   substanceName,
   hazardData,
-  selectedCnae,
-  onShowReport,
+  // selectedCnae, // Kept in interface but unused
+  // onShowReport, // Kept in interface but unused
 }) => {
   const [formData, setFormData] = useState<HygienicEvalInput>(
     initialData || {
