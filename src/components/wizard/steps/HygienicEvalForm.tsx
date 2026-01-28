@@ -331,7 +331,13 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           }}
         >
           <button
-            onClick={() => setInternalStep(1)}
+            onClick={() => {
+              if (evaluationMethod === "advanced") {
+                setInternalStep(3); // Back to Stoffenmanager
+              } else {
+                setInternalStep(1); // Back to Simplified
+              }
+            }}
             style={{
               color: "#666",
               background: "none",
@@ -347,15 +353,8 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           </button>
           <button
             onClick={() => {
-              if (evaluationMethod === "advanced") {
-                setInternalStep(3);
-              } else {
-                // Determine result locally without waiting for state update if possible,
-                // but calling calculateResults() triggers the internal logic.
-                // We'll trust onNext() to handle the transition.
-                calculateResults();
-                onNext();
-              }
+              // Proceed to Strategy (Step 4) regardless of method
+              setInternalStep(4);
             }}
             style={{
               backgroundColor: "#0056b3",
@@ -364,7 +363,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               borderRadius: "6px",
             }}
           >
-            Continuar →
+            Siguiente: Estrategia de Medición →
           </button>
         </div>
 
@@ -722,11 +721,11 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           <button
             onClick={() => {
               calculateResults();
-              setInternalStep(4);
+              setInternalStep(2); // Next is GES (Step 2)
             }}
             className="step4-btn-confirm"
           >
-            Siguiente: Plan de Medición →
+            Siguiente: GES →
           </button>
         </div>
       </StepCard>
@@ -751,7 +750,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
     return (
       <StepCard
-        title="4. Estrategia de Medición (UNE-EN 689)"
+        title="3. Estrategia de Medición (UNE-EN 689)"
         description="Requisitos Técnicos de Muestreo y Análisis"
         icon={<FlaskConical className="w-6 h-6" />}
       >
@@ -990,7 +989,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
         {/* FOOTER ACTIONS */}
         <div className="step4-actions">
-          <button onClick={() => setInternalStep(3)} className="step4-btn-back">
+          <button onClick={() => setInternalStep(2)} className="step4-btn-back">
             ← Volver
           </button>
           <button
@@ -998,15 +997,138 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             className="step4-btn-confirm"
           >
             <ShieldCheck className="w-4 h-4" />
-            Confirmar Estrategia
+            Siguiente: Tipo de Exposición →
           </button>
         </div>
       </StepCard>
     );
   }
 
-  // --- RENDER: STEP 5 - RESULTADOS DE MEDICIÓN (Measurement Results) ---
+  // --- RENDER: STEP 5 - TIPO DE EXPOSICIÓN (Recuperado) ---
   if (internalStep === 5) {
+    return (
+      <StepCard
+        title="4. Tipo de Exposición"
+        description="Caracterización temporal de la exposición"
+        icon={<Wind className="w-6 h-6" />}
+      >
+        <div className="step4-layout">
+          <div className="step4-card animate-fadeIn">
+            <div className="step4-card-header">
+              <h4 className="step4-title">
+                Seleccione el patrón de exposición
+              </h4>
+            </div>
+            <div className="step4-card-body">
+              <div className="grid gap-4">
+                <label
+                  className={`block p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.strategyType === "continuous" ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-gray-300"}`}
+                >
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="radio"
+                      className="w-5 h-5 text-blue-600"
+                      name="strategyType"
+                      checked={
+                        formData.strategyType === "continuous" ||
+                        !formData.strategyType
+                      }
+                      onChange={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          strategyType: "continuous",
+                        }))
+                      }
+                    />
+                    <div>
+                      <h5 className="font-bold text-gray-900">
+                        Exposición Continua (ED)
+                      </h5>
+                      <p className="text-sm text-gray-500">
+                        La exposición se mantiene relativamente constante
+                        durante toda la jornada laboral.
+                      </p>
+                    </div>
+                  </div>
+                </label>
+
+                <label
+                  className={`block p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.strategyType === "variable" ? "border-purple-500 bg-purple-50" : "border-gray-200 hover:border-gray-300"}`}
+                >
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="radio"
+                      className="w-5 h-5 text-purple-600"
+                      name="strategyType"
+                      checked={formData.strategyType === "variable"}
+                      onChange={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          strategyType: "variable",
+                        }))
+                      }
+                    />
+                    <div>
+                      <h5 className="font-bold text-gray-900">
+                        Exposición Variable (ED + EC)
+                      </h5>
+                      <p className="text-sm text-gray-500">
+                        Existen picos, tareas intermitentes o variaciones
+                        significativas en la concentración.
+                      </p>
+                    </div>
+                  </div>
+                </label>
+
+                <label
+                  className={`block p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.strategyType === "peaks" ? "border-orange-500 bg-orange-50" : "border-gray-200 hover:border-gray-300"}`}
+                >
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="radio"
+                      className="w-5 h-5 text-orange-600"
+                      name="strategyType"
+                      checked={formData.strategyType === "peaks"}
+                      onChange={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          strategyType: "peaks",
+                        }))
+                      }
+                    />
+                    <div>
+                      <h5 className="font-bold text-gray-900">
+                        Tarea Puntual / Picos
+                      </h5>
+                      <p className="text-sm text-gray-500">
+                        Exposición de muy corta duración donde lo crítico es el
+                        valor techo (VLA-EC).
+                      </p>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="step4-actions">
+          <button onClick={() => setInternalStep(4)} className="step4-btn-back">
+            ← Volver
+          </button>
+          <button
+            onClick={() => setInternalStep(6)}
+            className="step4-btn-confirm"
+          >
+            Siguiente: Resultados →
+          </button>
+        </div>
+      </StepCard>
+    );
+  }
+
+  // --- RENDER: STEP 6 - RESULTADOS DE MEDICIÓN ---
+  if (internalStep === 6) {
     const strategy = formData.stoffenmanager?.measurementStrategy;
     const vla = strategy?.vlaValue || 1;
     const conc = formData.stoffenmanager?.measurementResult?.concentration || 0;
@@ -1092,7 +1214,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
         <div className="flex justify-between mt-8">
           <button
-            onClick={() => setInternalStep(4)}
+            onClick={() => setInternalStep(5)}
             className="text-gray-600 border border-gray-300 px-4 py-2 rounded"
           >
             ← Atrás
