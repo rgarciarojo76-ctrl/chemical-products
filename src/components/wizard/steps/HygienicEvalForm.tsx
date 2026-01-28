@@ -713,104 +713,118 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         description="Requisitos Técnicos de Muestreo y Análisis"
         icon={<FlaskConical className="w-6 h-6" />}
       >
-        {/* --- MAIN CONTENT GRID --- */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-8">
-          {/* LEFT COL: TECHNICAL DATA CARD */}
+        <div className="step4-layout">
+          {/* LEFT COL: TECHNICAL DATA & CONFIG */}
           <div className="space-y-6">
+            {/* TECHNICAL DATA CARD */}
             {richData ? (
-              <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-                <div className="p-5 border-b border-gray-50 bg-gray-50/50 flex items-center justify-between">
+              <div className="step4-card animate-fadeIn">
+                <div className="step4-card-header">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                    <div className="step4-icon-circle">
                       <Info className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-gray-900 text-lg">
-                        {richData.name}
-                      </h4>
-                      <div className="flex items-center gap-2 text-xs text-gray-500 font-medium mt-0.5">
-                        <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 border border-gray-200">
-                          CAS: {richData.cas}
+                      <h4 className="step4-title">{richData.name}</h4>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="step4-pill">CAS: {richData.cas}</span>
+                        <span
+                          className="step4-subtitle"
+                          style={{ margin: 0, fontWeight: 400 }}
+                        >
+                          {richData.notes}
                         </span>
-                        <span>{richData.notes}</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-5 grid grid-cols-2 gap-4">
-                  {/* VLA-ED CARD */}
-                  <div className="bg-blue-50/30 rounded-lg p-4 border border-blue-100 relative group hover:border-blue-300 transition-colors">
-                    <span className="absolute top-3 right-3 w-2 h-2 rounded-full bg-blue-400"></span>
-                    <span className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                      VLA-ED (Diario)
-                    </span>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-bold text-gray-900">
-                        {richData.vla.ed_mg}
+                <div className="step4-card-body">
+                  <div className="step4-metric-grid">
+                    {/* VLA-ED CARD */}
+                    <div className="step4-metric-card blue">
+                      <span className="step4-metric-dot blue"></span>
+                      <span className="step4-metric-label">
+                        VLA-ED (Diario)
                       </span>
-                      <span className="text-xs font-semibold text-gray-500">
-                        mg/m³
-                      </span>
+                      <div>
+                        <span className="step4-metric-value">
+                          {richData.vla.ed_mg}
+                        </span>
+                        <span className="step4-metric-unit">mg/m³</span>
+                      </div>
+                      {richData.vla.ed_ppm && (
+                        <span className="text-xs text-gray-400 block mt-1">
+                          ({richData.vla.ed_ppm} ppm)
+                        </span>
+                      )}
                     </div>
-                    {richData.vla.ed_ppm && (
-                      <span className="text-xs text-gray-400 font-mono mt-1 block">
-                        ({richData.vla.ed_ppm} ppm)
-                      </span>
+
+                    {/* VLA-EC CARD */}
+                    {richData.vla.ec_mg && (
+                      <div className="step4-metric-card orange">
+                        <span className="step4-metric-dot orange"></span>
+                        <span className="step4-metric-label">
+                          VLA-EC (Corto)
+                        </span>
+                        <div>
+                          <span className="step4-metric-value">
+                            {richData.vla.ec_mg}
+                          </span>
+                          <span className="step4-metric-unit">mg/m³</span>
+                        </div>
+                      </div>
                     )}
                   </div>
-
-                  {/* VLA-EC CARD */}
-                  {richData.vla.ec_mg && (
-                    <div className="bg-orange-50/30 rounded-lg p-4 border border-orange-100 relative group hover:border-orange-300 transition-colors">
-                      <span className="absolute top-3 right-3 w-2 h-2 rounded-full bg-orange-400"></span>
-                      <span className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                        VLA-EC (Corto)
-                      </span>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-2xl font-bold text-gray-900">
-                          {richData.vla.ec_mg}
-                        </span>
-                        <span className="text-xs font-semibold text-gray-500">
-                          mg/m³
-                        </span>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             ) : (
-              <div className="bg-amber-50 rounded-xl border border-amber-200 p-6 text-center">
-                <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Info className="w-6 h-6" />
+              <div
+                className="step4-card"
+                style={{ backgroundColor: "#fffbeb", borderColor: "#fcd34d" }}
+              >
+                <div className="step4-card-body text-center">
+                  <div
+                    className="step4-icon-circle"
+                    style={{
+                      backgroundColor: "#fef3c7",
+                      color: "#d97706",
+                      margin: "0 auto 1rem",
+                    }}
+                  >
+                    <Info className="w-6 h-6" />
+                  </div>
+                  <h4
+                    className="step4-title"
+                    style={{ justifyContent: "center", color: "#92400e" }}
+                  >
+                    Sin Datos Específicos
+                  </h4>
+                  <p className="text-sm text-amber-800 mt-2">
+                    No se ha encontrado ficha técnica para "{substanceName}".
+                  </p>
                 </div>
-                <h4 className="font-bold text-amber-900 mb-1">
-                  Sin Datos Específicos
-                </h4>
-                <p className="text-sm text-amber-800">
-                  No se ha encontrado ficha técnica para "{substanceName}".
-                </p>
               </div>
             )}
 
             {/* SAMPLING CONFIG FORM */}
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-              <h4 className="font-bold text-gray-800 mb-5 flex items-center gap-2 border-b border-gray-100 pb-3">
-                <FlaskConical className="w-5 h-5 text-gray-400" />
-                Configuración de Muestreo
-              </h4>
+            <div className="step4-card">
+              <div className="step4-card-body">
+                <h4 className="step4-title mb-4 border-b border-gray-100 pb-2">
+                  <FlaskConical className="w-5 h-5 text-gray-400" />
+                  Configuración de Muestreo
+                </h4>
 
-              <div className="space-y-5">
-                <div className="form-group">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                <div className="step4-input-group">
+                  <label className="step4-label">
                     Método de Referencia (MTA)
                   </label>
                   <div className="flex gap-3">
-                    <div className="relative flex-1 group">
-                      <FileText className="absolute left-3 top-2.5 w-4 h-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                    <div className="flex-1 step4-input-wrapper">
+                      <FileText className="step4-input-icon" />
                       <input
                         type="text"
-                        className="w-full pl-10 p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all font-medium text-gray-700"
+                        className="step4-input"
                         placeholder="Ej: MTA/MA-062/A16"
                         value={
                           formData.stoffenmanager?.measurementStrategy
@@ -831,7 +845,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                         href={richData.sampling.methodUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-4 py-2 bg-white border border-gray-200 text-blue-600 hover:text-blue-700 rounded-lg hover:bg-blue-50 hover:border-blue-200 flex items-center gap-2 text-sm font-semibold transition-all shadow-sm"
+                        className="step4-btn-pdf"
                       >
                         <ExternalLink className="w-4 h-4" /> PDF
                       </a>
@@ -839,13 +853,12 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Soporte de Captación
-                  </label>
+                <div className="step4-input-group">
+                  <label className="step4-label">Soporte de Captación</label>
                   <input
                     type="text"
-                    className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600"
+                    className="step4-input"
+                    style={{ paddingLeft: "0.75rem" }}
                     value={
                       formData.stoffenmanager?.measurementStrategy
                         ?.samplingSupport ||
@@ -861,55 +874,69 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
           {/* RIGHT COL: VIDEO & EXTRAS */}
           <div className="space-y-6">
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full">
-              <div className="p-5 border-b border-gray-50 flex items-center justify-between">
-                <h4 className="font-bold text-gray-800 flex items-center gap-2">
+            <div className="step4-card h-full flex flex-col">
+              <div className="step4-card-header">
+                <h4 className="step4-title">
                   <Play className="w-5 h-5 text-red-500" />
                   Recurso Formativo
                 </h4>
-                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                <span
+                  className="step4-pill"
+                  style={{
+                    backgroundColor: "#eff6ff",
+                    color: "#2563eb",
+                    borderColor: "#dbeafe",
+                  }}
+                >
                   INSST / APA
                 </span>
               </div>
 
-              <div className="flex-1 bg-gray-50 flex flex-col justify-center">
+              <div
+                className="flex-1 bg-gray-50 flex flex-col justify-center"
+                style={{ minHeight: "200px" }}
+              >
                 {richData?.sampling.videoUrl ? (
-                  <div className="aspect-video w-full bg-black relative group">
+                  <div className="step4-video-container group">
                     <iframe
-                      className="w-full h-full"
+                      className="step4-video-frame"
                       src={richData.sampling.videoUrl.replace(
                         "youtu.be/",
                         "www.youtube.com/embed/",
                       )}
                       title="Video Técnica de Muestreo"
-                      frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     ></iframe>
                   </div>
                 ) : (
-                  <div className="p-8 text-center text-gray-400">
-                    <Play className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                    <p className="text-sm">No hay vídeo disponible</p>
+                  <div className="step4-video-placeholder">
+                    <div
+                      className="step4-icon-circle"
+                      style={{ backgroundColor: "#f3f4f6", color: "#9ca3af" }}
+                    >
+                      <Play className="w-6 h-6" />
+                    </div>
+                    <p className="text-sm font-medium">Video no disponible</p>
                   </div>
                 )}
               </div>
 
               <div className="p-4 bg-white border-t border-gray-100">
-                <div className="flex gap-3 text-xs">
-                  <div className="flex-1 bg-blue-50 rounded-lg p-3 text-center border border-blue-100">
-                    <span className="block font-bold text-gray-500 mb-1 flex justify-center gap-1">
-                      <Wind className="w-3 h-3" /> Caudal
+                <div className="step4-footer-stats">
+                  <div className="step4-stat-box blue">
+                    <span className="step4-subtitle flex-center mb-1">
+                      <Wind className="w-3 h-3 mr-1" /> Caudal
                     </span>
-                    <span className="text-lg font-bold text-blue-700">
+                    <span className="step4-title text-blue-700 justify-center">
                       {richData?.sampling.flowRate || "-"}
                     </span>
                   </div>
-                  <div className="flex-1 bg-purple-50 rounded-lg p-3 text-center border border-purple-100">
-                    <span className="block font-bold text-gray-500 mb-1 flex justify-center gap-1">
-                      <Clock className="w-3 h-3" /> Tiempo
+                  <div className="step4-stat-box purple">
+                    <span className="step4-subtitle flex-center mb-1">
+                      <Clock className="w-3 h-3 mr-1" /> Tiempo
                     </span>
-                    <span className="text-lg font-bold text-purple-700">
+                    <span className="step4-title text-purple-700 justify-center">
                       {richData?.sampling.minTime || "-"}
                     </span>
                   </div>
@@ -920,16 +947,13 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         </div>
 
         {/* FOOTER ACTIONS */}
-        <div className="flex justify-between pt-6 border-t border-gray-100 mt-auto">
-          <button
-            onClick={() => setInternalStep(3)}
-            className="flex items-center gap-2 px-6 py-2.5 text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-all rounded-lg font-medium shadow-sm"
-          >
+        <div className="step4-actions">
+          <button onClick={() => setInternalStep(3)} className="step4-btn-back">
             ← Volver
           </button>
           <button
             onClick={() => setInternalStep(5)}
-            className="bg-[#009bdb] hover:bg-[#0077a8] text-white px-8 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2 font-bold tracking-wide"
+            className="step4-btn-confirm"
           >
             <ShieldCheck className="w-4 h-4" />
             Confirmar Estrategia

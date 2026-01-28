@@ -1,0 +1,323 @@
+/* CSS for Hygienic Evaluation Step 4 - Professional Design */
+
+/* --- LAYOUT GRID --- */
+.step4-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .step4-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* --- CARDS --- */
+.step4-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-radius: 12px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.step4-card-header {
+  padding: 1.25rem;
+  background-color: #f9fafb; /* gray-50 */
+  border-bottom: 1px solid #f3f4f6; /* gray-100 */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.step4-card-body {
+  padding: 1.5rem;
+}
+
+/* --- TYPOGRAPHY --- */
+.step4-title {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 700;
+  color: #111827; /* gray-900 */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.step4-subtitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4b5563; /* gray-600 */
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* --- BADGES & ICONS --- */
+.step4-icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  background-color: #eff6ff; /* blue-50 */
+  color: #2563eb; /* blue-600 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step4-pill {
+  background-color: #f3f4f6;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  color: #4b5563;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* --- METRIC CARDS (VLA) --- */
+.step4-metric-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.step4-metric-card {
+  padding: 1rem;
+  border-radius: 8px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.step4-metric-card.blue {
+  background-color: #eff6ff; /* blue-50 */
+  border: 1px solid #dbeafe; /* blue-100 */
+}
+.step4-metric-card.blue:hover {
+  border-color: #93c5fd; /* blue-300 */
+}
+
+.step4-metric-card.orange {
+  background-color: #fff7ed; /* orange-50 */
+  border: 1px solid #ffedd5; /* orange-100 */
+}
+.step4-metric-card.orange:hover {
+  border-color: #fdba74; /* orange-300 */
+}
+
+.step4-metric-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+}
+.step4-metric-dot.blue {
+  background-color: #60a5fa;
+}
+.step4-metric-dot.orange {
+  background-color: #fb923c;
+}
+
+.step4-metric-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.step4-metric-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1;
+}
+
+.step4-metric-unit {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin-left: 0.25rem;
+}
+
+/* --- FORMS --- */
+.step4-input-group {
+  margin-bottom: 1rem;
+}
+
+.step4-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151; /* gray-700 */
+  margin-bottom: 0.5rem;
+}
+
+.step4-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.step4-input-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #9ca3af; /* gray-400 */
+  width: 16px;
+  height: 16px;
+}
+
+.step4-input {
+  width: 100%;
+  padding: 0.625rem 0.75rem 0.625rem 2.25rem; /* Left padding for icon */
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.step4-input:focus {
+  background-color: #ffffff;
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.step4-btn-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  color: #2563eb;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.step4-btn-pdf:hover {
+  background-color: #f3f4f6;
+  border-color: #2563eb;
+}
+
+/* --- VIDEO --- */
+.step4-video-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #000;
+  position: relative;
+}
+
+.step4-video-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.step4-video-placeholder {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+  border: 2px dashed #e5e7eb;
+  border-radius: 0.75rem;
+  color: #9ca3af;
+  gap: 1rem;
+}
+
+.step4-footer-stats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.step4-stat-box {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.step4-stat-box.blue {
+  background-color: #eff6ff;
+  border: 1px solid #dbeafe;
+}
+.step4-stat-box.purple {
+  background-color: #faf5ff;
+  border: 1px solid #f3e8ff;
+}
+
+/* --- FOOTER BUTTONS --- */
+.step4-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+.step4-btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.step4-btn-back:hover {
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+.step4-btn-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 2rem;
+  background-color: #009bdb; /* Corporate Blue */
+  border: 1px solid transparent;
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+.step4-btn-confirm:hover {
+  background-color: #0077a8; /* Darker Blue */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* --- ANIMATION --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out forwards;
+}
