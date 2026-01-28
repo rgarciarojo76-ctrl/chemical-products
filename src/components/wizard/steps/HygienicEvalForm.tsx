@@ -139,6 +139,9 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     }
   };
 
+  // DEBUG LOG
+  console.log("HygienicEvalForm Render: internalStep =", internalStep);
+
   // --- RENDER: METHOD SELECTION (Step 0) ---
   if (internalStep === 0) {
     return (
@@ -1283,5 +1286,16 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     );
   }
 
-  return <div>Error State</div>;
+  return (
+    <div className="p-8 text-center text-red-600 bg-red-50 rounded border border-red-200">
+      <h3 className="text-xl font-bold">Error de Estado</h3>
+      <p>Se ha alcanzado un paso no controlado: {internalStep}</p>
+      <button
+        onClick={() => setInternalStep(0)}
+        className="mt-4 btn btn-secondary"
+      >
+        Volver al Inicio
+      </button>
+    </div>
+  );
 };
