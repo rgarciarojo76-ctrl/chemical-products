@@ -713,35 +713,43 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         description="Requisitos Técnicos de Muestreo y Análisis"
         icon={<FlaskConical className="w-6 h-6" />}
       >
-        {richData ? (
-          <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-5 mb-8 animate-fadeIn">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-blue-50 rounded-lg">
-                <Info className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="flex-1">
-                <h4 className="text-xl font-bold text-gray-900 mb-1">
-                  Ficha Técnica Oficial:{" "}
-                  <span className="text-blue-600">{richData.name}</span>
-                </h4>
-                <div className="flex items-center gap-3 text-sm text-gray-500 mb-4">
-                  <span className="bg-gray-100 px-2 py-1 rounded">
-                    CAS: {richData.cas}
-                  </span>
-                  <span>|</span>
-                  <span>{richData.notes}</span>
+        {/* --- MAIN CONTENT GRID --- */}
+        <div className="grid lg:grid-cols-2 gap-8 mb-8">
+          {/* LEFT COL: TECHNICAL DATA CARD */}
+          <div className="space-y-6">
+            {richData ? (
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+                <div className="p-5 border-b border-gray-50 bg-gray-50/50 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                      <Info className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-900 text-lg">
+                        {richData.name}
+                      </h4>
+                      <div className="flex items-center gap-2 text-xs text-gray-500 font-medium mt-0.5">
+                        <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 border border-gray-200">
+                          CAS: {richData.cas}
+                        </span>
+                        <span>{richData.notes}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
-                    <span className="block text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">
+                <div className="p-5 grid grid-cols-2 gap-4">
+                  {/* VLA-ED CARD */}
+                  <div className="bg-blue-50/30 rounded-lg p-4 border border-blue-100 relative group hover:border-blue-300 transition-colors">
+                    <span className="absolute top-3 right-3 w-2 h-2 rounded-full bg-blue-400"></span>
+                    <span className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                       VLA-ED (Diario)
                     </span>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold text-gray-800">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-bold text-gray-900">
                         {richData.vla.ed_mg}
                       </span>
-                      <span className="text-sm font-medium text-gray-500">
+                      <span className="text-xs font-semibold text-gray-500">
                         mg/m³
                       </span>
                     </div>
@@ -751,16 +759,19 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                       </span>
                     )}
                   </div>
+
+                  {/* VLA-EC CARD */}
                   {richData.vla.ec_mg && (
-                    <div className="bg-orange-50/50 p-4 rounded-xl border border-orange-100">
-                      <span className="block text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">
+                    <div className="bg-orange-50/30 rounded-lg p-4 border border-orange-100 relative group hover:border-orange-300 transition-colors">
+                      <span className="absolute top-3 right-3 w-2 h-2 rounded-full bg-orange-400"></span>
+                      <span className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                         VLA-EC (Corto)
                       </span>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-bold text-gray-800">
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-2xl font-bold text-gray-900">
                           {richData.vla.ec_mg}
                         </span>
-                        <span className="text-sm font-medium text-gray-500">
+                        <span className="text-xs font-semibold text-gray-500">
                           mg/m³
                         </span>
                       </div>
@@ -768,37 +779,39 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                   )}
                 </div>
               </div>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-6 flex items-start gap-3">
-            <Info className="w-5 h-5 text-yellow-600 mt-1" />
-            <p className="text-yellow-800 text-sm">
-              ⚠️ No se ha encontrado ficha técnica específica en la base de
-              datos para "{substanceName}".
-            </p>
-          </div>
-        )}
+            ) : (
+              <div className="bg-amber-50 rounded-xl border border-amber-200 p-6 text-center">
+                <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Info className="w-6 h-6" />
+                </div>
+                <h4 className="font-bold text-amber-900 mb-1">
+                  Sin Datos Específicos
+                </h4>
+                <p className="text-sm text-amber-800">
+                  No se ha encontrado ficha técnica para "{substanceName}".
+                </p>
+              </div>
+            )}
 
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="order-2 md:order-1 space-y-6">
-            <div>
-              <h4 className="flex items-center gap-2 font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">
-                <FlaskConical className="w-5 h-5 text-gray-500" />
+            {/* SAMPLING CONFIG FORM */}
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+              <h4 className="font-bold text-gray-800 mb-5 flex items-center gap-2 border-b border-gray-100 pb-3">
+                <FlaskConical className="w-5 h-5 text-gray-400" />
                 Configuración de Muestreo
               </h4>
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <div className="form-group">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                     Método de Referencia (MTA)
                   </label>
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <FileText className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+                  <div className="flex gap-3">
+                    <div className="relative flex-1 group">
+                      <FileText className="absolute left-3 top-2.5 w-4 h-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type="text"
-                        className="w-full pl-9 p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                        className="w-full pl-10 p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all font-medium text-gray-700"
+                        placeholder="Ej: MTA/MA-062/A16"
                         value={
                           formData.stoffenmanager?.measurementStrategy
                             ?.technique ||
@@ -818,22 +831,21 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                         href={richData.sampling.methodUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-3 py-2 bg-white border border-gray-200 text-blue-600 rounded-lg hover:bg-blue-50 hover:border-blue-200 flex items-center gap-2 text-sm font-medium transition-colors"
+                        className="px-4 py-2 bg-white border border-gray-200 text-blue-600 hover:text-blue-700 rounded-lg hover:bg-blue-50 hover:border-blue-200 flex items-center gap-2 text-sm font-semibold transition-all shadow-sm"
                       >
-                        <ExternalLink className="w-4 h-4" />{" "}
-                        <span className="hidden sm:inline">PDF</span>
+                        <ExternalLink className="w-4 h-4" /> PDF
                       </a>
                     )}
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                     Soporte de Captación
                   </label>
                   <input
                     type="text"
-                    className="w-full p-2 border border-gray-300 rounded-lg text-sm bg-gray-50"
+                    className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600"
                     value={
                       formData.stoffenmanager?.measurementStrategy
                         ?.samplingSupport ||
@@ -843,85 +855,81 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                     readOnly
                   />
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="flex items-center gap-1 text-xs font-bold text-gray-500 mb-1">
-                      <Wind className="w-3 h-3" /> Caudal
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full p-2 border border-gray-300 rounded-lg text-sm bg-gray-50"
-                      defaultValue={richData?.sampling.flowRate}
-                      readOnly
-                    />
+          {/* RIGHT COL: VIDEO & EXTRAS */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full">
+              <div className="p-5 border-b border-gray-50 flex items-center justify-between">
+                <h4 className="font-bold text-gray-800 flex items-center gap-2">
+                  <Play className="w-5 h-5 text-red-500" />
+                  Recurso Formativo
+                </h4>
+                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                  INSST / APA
+                </span>
+              </div>
+
+              <div className="flex-1 bg-gray-50 flex flex-col justify-center">
+                {richData?.sampling.videoUrl ? (
+                  <div className="aspect-video w-full bg-black relative group">
+                    <iframe
+                      className="w-full h-full"
+                      src={richData.sampling.videoUrl.replace(
+                        "youtu.be/",
+                        "www.youtube.com/embed/",
+                      )}
+                      title="Video Técnica de Muestreo"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
                   </div>
-                  <div>
-                    <label className="flex items-center gap-1 text-xs font-bold text-gray-500 mb-1">
-                      <Clock className="w-3 h-3" /> Tiempo Mín.
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full p-2 border border-gray-300 rounded-lg text-sm bg-gray-50"
-                      defaultValue={richData?.sampling.minTime}
-                      readOnly
-                    />
+                ) : (
+                  <div className="p-8 text-center text-gray-400">
+                    <Play className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                    <p className="text-sm">No hay vídeo disponible</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-4 bg-white border-t border-gray-100">
+                <div className="flex gap-3 text-xs">
+                  <div className="flex-1 bg-blue-50 rounded-lg p-3 text-center border border-blue-100">
+                    <span className="block font-bold text-gray-500 mb-1 flex justify-center gap-1">
+                      <Wind className="w-3 h-3" /> Caudal
+                    </span>
+                    <span className="text-lg font-bold text-blue-700">
+                      {richData?.sampling.flowRate || "-"}
+                    </span>
+                  </div>
+                  <div className="flex-1 bg-purple-50 rounded-lg p-3 text-center border border-purple-100">
+                    <span className="block font-bold text-gray-500 mb-1 flex justify-center gap-1">
+                      <Clock className="w-3 h-3" /> Tiempo
+                    </span>
+                    <span className="text-lg font-bold text-purple-700">
+                      {richData?.sampling.minTime || "-"}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* VIDEO COLUMN */}
-          <div className="order-1 md:order-2">
-            <h4 className="flex items-center gap-2 font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">
-              <Play className="w-5 h-5 text-gray-500" />
-              Recurso Formativo
-            </h4>
-
-            {richData?.sampling.videoUrl ? (
-              <div className="group relative rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-black aspect-video">
-                <iframe
-                  className="w-full h-full"
-                  src={richData.sampling.videoUrl.replace(
-                    "youtu.be/",
-                    "www.youtube.com/embed/",
-                  )}
-                  title="Video Técnica de Muestreo"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-                <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  <p className="text-xs font-bold uppercase tracking-wider text-blue-400">
-                    Video Oficial APA
-                  </p>
-                  <p className="font-medium text-sm truncate">
-                    {richData.name} - Técnica de Muestreo
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="h-[200px] flex flex-col items-center justify-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 text-gray-400 gap-3">
-                <div className="p-3 bg-white rounded-full shadow-sm">
-                  <Play className="w-6 h-6 text-gray-300" />
-                </div>
-                <p className="text-sm font-medium">Video no disponible</p>
-              </div>
-            )}
-          </div>
         </div>
 
-        <div className="flex justify-between mt-10 pt-6 border-t border-gray-100">
+        {/* FOOTER ACTIONS */}
+        <div className="flex justify-between pt-6 border-t border-gray-100 mt-auto">
           <button
             onClick={() => setInternalStep(3)}
-            className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+            className="flex items-center gap-2 px-6 py-2.5 text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-all rounded-lg font-medium shadow-sm"
           >
-            ← Volver a Stoffenmanager
+            ← Volver
           </button>
           <button
             onClick={() => setInternalStep(5)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2 font-medium"
+            className="bg-[#009bdb] hover:bg-[#0077a8] text-white px-8 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2 font-bold tracking-wide"
           >
             <ShieldCheck className="w-4 h-4" />
             Confirmar Estrategia
