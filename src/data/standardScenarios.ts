@@ -106,7 +106,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["madera", "lijado", "polvo", "carpintería", "roble", "haya"],
     source: "Guía Técnica Cancerígenos (Madera)",
     documentUrl:
-      "https://www.insst.es/documents/94886/327446/Gu%C3%ADa+Cancer%C3%ADgenos+2022.pdf",
+      "https://www.insst.es/documentacion/catalogo-de-publicaciones/guia-tecnica-para-la-evaluacion-y-prevencion-de-los-riesgos-relacionados-con-la-exposicion-a-agentes-cancerigenos-o-mutagenos-durante-el-trabajo-ano-2022",
     risks: ["carcinogen"], // Wood dust
     icon: "🪚",
     description: "Polvo de madera dura (Cancerígeno) por abrasión mecánica.",
@@ -427,7 +427,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     ],
     source: "Guía Bioseguridad Funeraria",
     documentUrl:
-      "https://www.sanidad.gob.es/ciudadanos/saludAmbLaboral/docs/guiaFunerarias.pdf",
+      "https://www.insst.es/documents/94886/326853/ntp_873_w.pdf/7016d1c9-5561-4147-8a6a-72322a362758",
     risks: ["carcinogen", "sensitizer"],
     relatedSubstances: ["formaldehído", "formol", "metanal"],
     relatedCNAEs: ["9603"],
