@@ -171,11 +171,13 @@
   color: #9ca3af; /* gray-400 */
   width: 16px;
   height: 16px;
+  pointer-events: none;
 }
 
-.step4-input {
+.step4-input,
+.step4-select {
   width: 100%;
-  padding: 0.625rem 0.75rem 0.625rem 2.25rem; /* Left padding for icon */
+  padding: 0.625rem 0.75rem 0.625rem 0.75rem;
   background-color: #f9fafb;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
@@ -183,13 +185,27 @@
   color: #374151;
   transition: all 0.2s;
   font-family: inherit;
+  appearance: none;
 }
 
-.step4-input:focus {
+.step4-input.has-icon {
+  padding-left: 2.25rem;
+}
+
+.step4-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+.step4-input:focus,
+.step4-select:focus {
   background-color: #ffffff;
-  border-color: #3b82f6;
+  border-color: #009bdb;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 155, 219, 0.1);
 }
 
 .step4-btn-pdf {

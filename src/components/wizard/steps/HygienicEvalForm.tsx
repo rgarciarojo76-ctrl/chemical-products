@@ -416,273 +416,315 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       <StepCard
         title="3. Algoritmo Stoffenmanager®"
         description="Parámetros del modelo (NTP 937)"
-        icon="🧪"
+        icon={<FlaskConical className="w-6 h-6" />}
       >
-        {/* 1. EMISSION POTENTIAL (Source) */}
-        <div className="p-4 bg-gray-50 rounded mb-4 border border-gray-200">
-          <h4 className="font-bold text-gray-700 mb-2 border-b pb-1">
-            1. Fuente e Intrínseca
-          </h4>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Estado Físico
-              </label>
-              <select
-                className="w-full p-2 border rounded"
-                value={formData.stoffenmanager?.physicalState}
-                onChange={(e) =>
-                  updateStoffenmanager("physicalState", e.target.value)
-                }
-              >
-                <option value="liquid">Líquido</option>
-                <option value="solid">Sólido</option>
-              </select>
+        <div className="space-y-6">
+          {/* 1. EMISSION POTENTIAL */}
+          <div className="step4-card animate-fadeIn">
+            <div className="step4-card-header">
+              <h4 className="step4-title">
+                <div
+                  className="step4-icon-circle"
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    backgroundColor: "#eff6ff",
+                  }}
+                >
+                  <FlaskConical className="w-4 h-4" />
+                </div>
+                1. Fuente e Intrínseca
+              </h4>
             </div>
-            {formData.stoffenmanager?.physicalState === "liquid" ? (
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Presión de Vapor (Pa)
-                </label>
-                <input
-                  type="number"
-                  className="w-full p-2 border rounded"
-                  value={formData.stoffenmanager?.vapourPressure}
-                  onChange={(e) =>
-                    updateStoffenmanager(
-                      "vapourPressure",
-                      Number(e.target.value),
-                    )
-                  }
-                />
+            <div className="step4-card-body">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="step4-input-group">
+                  <label className="step4-label">Estado Físico</label>
+                  <select
+                    className="step4-select"
+                    value={formData.stoffenmanager?.physicalState}
+                    onChange={(e) =>
+                      updateStoffenmanager("physicalState", e.target.value)
+                    }
+                  >
+                    <option value="liquid">Líquido</option>
+                    <option value="solid">Sólido</option>
+                  </select>
+                </div>
+
+                {formData.stoffenmanager?.physicalState === "liquid" ? (
+                  <div className="step4-input-group">
+                    <label className="step4-label">Presión de Vapor (Pa)</label>
+                    <input
+                      type="number"
+                      className="step4-input"
+                      value={formData.stoffenmanager?.vapourPressure}
+                      onChange={(e) =>
+                        updateStoffenmanager(
+                          "vapourPressure",
+                          Number(e.target.value),
+                        )
+                      }
+                    />
+                  </div>
+                ) : (
+                  <div className="step4-input-group">
+                    <label className="step4-label">
+                      Pulverulencia (Dustiness)
+                    </label>
+                    <select
+                      className="step4-select"
+                      value={formData.stoffenmanager?.dustiness}
+                      onChange={(e) =>
+                        updateStoffenmanager("dustiness", e.target.value)
+                      }
+                    >
+                      <option value="solid_objects">
+                        Objetos Sólidos (No polvo)
+                      </option>
+                      <option value="granules_firm">Gránulos Firmes</option>
+                      <option value="granules_friable">
+                        Gránulos Friables
+                      </option>
+                      <option value="dust_coarse">Polvo Grueso</option>
+                      <option value="dust_fine">Polvo Fino</option>
+                      <option value="dust_extreme">
+                        Polvo Extremadamente Fino
+                      </option>
+                    </select>
+                  </div>
+                )}
+
+                <div className="step4-input-group">
+                  <label className="step4-label">Dilución (%)</label>
+                  <div className="step4-input-wrapper">
+                    <input
+                      type="number"
+                      className="step4-input"
+                      placeholder="100% si puro"
+                      value={formData.stoffenmanager?.dilutionPercent || 100}
+                      onChange={(e) =>
+                        updateStoffenmanager(
+                          "dilutionPercent",
+                          Number(e.target.value),
+                        )
+                      }
+                    />
+                    <span className="absolute right-3 text-gray-400 text-sm font-medium">
+                      %
+                    </span>
+                  </div>
+                </div>
               </div>
-            ) : (
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Pulverulencia (Dustiness)
-                </label>
+            </div>
+          </div>
+
+          {/* 2. HANDLING */}
+          <div
+            className="step4-card animate-fadeIn"
+            style={{ animationDelay: "0.1s" }}
+          >
+            <div className="step4-card-header">
+              <h4 className="step4-title">
+                <div
+                  className="step4-icon-circle"
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    backgroundColor: "#f3e8ff",
+                    color: "#7e22ce",
+                  }}
+                >
+                  <Info className="w-4 h-4" />
+                </div>
+                2. Manipulación (Clase de Actividad)
+              </h4>
+            </div>
+            <div className="step4-card-body">
+              <div className="step4-input-group" style={{ marginBottom: 0 }}>
+                <label className="step4-label">Tipo de Tarea</label>
                 <select
-                  className="w-full p-2 border rounded"
-                  value={formData.stoffenmanager?.dustiness}
+                  className="step4-select"
+                  value={formData.stoffenmanager?.handlingType}
                   onChange={(e) =>
-                    updateStoffenmanager("dustiness", e.target.value)
+                    updateStoffenmanager("handlingType", e.target.value)
                   }
                 >
-                  <option value="solid_objects">
-                    Objetos Sólidos (No polvo)
+                  <option value="A">
+                    Clase A: Tareas de muy baja energía (inspección)
                   </option>
-                  <option value="granules_firm">Gránulos Firmes</option>
-                  <option value="granules_friable">Gránulos Friables</option>
-                  <option value="dust_coarse">Polvo Grueso</option>
-                  <option value="dust_fine">Polvo Fino</option>
-                  <option value="dust_extreme">
-                    Polvo Extremadamente Fino
+                  <option value="B">
+                    Clase B: Tareas de baja energía (manipulación cuidadosa)
                   </option>
+                  <option value="C">
+                    Clase C: Tareas de energía media (vertido manual)
+                  </option>
+                  <option value="D">
+                    Clase D: Tareas de alta energía (dispersión)
+                  </option>
+                  <option value="E">Clase E: Alta difusión / Spray</option>
                 </select>
               </div>
-            )}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Dilución (%)
-              </label>
-              <input
-                type="number"
-                className="w-full p-2 border rounded"
-                placeholder="100% si puro"
-                value={formData.stoffenmanager?.dilutionPercent || 100}
-                onChange={(e) =>
-                  updateStoffenmanager(
-                    "dilutionPercent",
-                    Number(e.target.value),
-                  )
-                }
-              />
             </div>
           </div>
-        </div>
 
-        {/* 2. ACTIVITY & HANDLING */}
-        <div className="p-4 bg-gray-50 rounded mb-4 border border-gray-200">
-          <h4 className="font-bold text-gray-700 mb-2 border-b pb-1">
-            2. Manipulación (Clase de Actividad)
-          </h4>
-          <label className="block text-sm font-medium mb-1">
-            Tipo de Tarea
-          </label>
-          <select
-            className="w-full p-2 border rounded"
-            value={formData.stoffenmanager?.handlingType}
-            onChange={(e) =>
-              updateStoffenmanager("handlingType", e.target.value)
-            }
+          {/* 3. CONTROLS */}
+          <div
+            className="step4-card animate-fadeIn"
+            style={{ animationDelay: "0.2s" }}
           >
-            <option value="A">
-              Clase A: Tareas de muy baja energía (inspección)
-            </option>
-            <option value="B">
-              Clase B: Tareas de baja energía (manipulación cuidadosa)
-            </option>
-            <option value="C">
-              Clase C: Tareas de energía media (vertido manual)
-            </option>
-            <option value="D">
-              Clase D: Tareas de alta energía (dispersión)
-            </option>
-            <option value="E">Clase E: Alta difusión / Spray</option>
-          </select>
-        </div>
-
-        {/* 3. CONTROL MEASURES */}
-        <div className="p-4 bg-gray-50 rounded mb-4 border border-gray-200">
-          <h4 className="font-bold text-gray-700 mb-2 border-b pb-1">
-            3. Medidas de Control
-          </h4>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Control Local
-              </label>
-              <select
-                className="w-full p-2 border rounded"
-                value={formData.stoffenmanager?.localControl}
-                onChange={(e) =>
-                  updateStoffenmanager("localControl", e.target.value)
-                }
-              >
-                <option value="none">Ninguno</option>
-                <option value="suppression">
-                  Supresión (Agua/Nebulización)
-                </option>
-                <option value="local_extraction">
-                  Extracción Localizada (LEV)
-                </option>
-                <option value="containment_no_extract">
-                  Cerramiento sin extracción
-                </option>
-                <option value="containment_extraction">
-                  Cabina/Cerramiento con extracción
-                </option>
-              </select>
+            <div className="step4-card-header">
+              <h4 className="step4-title">
+                <div
+                  className="step4-icon-circle"
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    backgroundColor: "#dcfce7",
+                    color: "#15803d",
+                  }}
+                >
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                3. Medidas de Control
+              </h4>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Ventilación General
-              </label>
-              <select
-                className="w-full p-2 border rounded"
-                value={formData.stoffenmanager?.ventilationType}
-                onChange={(e) =>
-                  updateStoffenmanager("ventilationType", e.target.value)
-                }
-              >
-                <option value="none">Sin ventilación específica</option>
-                <option value="natural">
-                  Ventilación Natural (Puertas/Ventanas)
-                </option>
-                <option value="mechanical">Ventilación Mecánica General</option>
-                <option value="booth">Cabina de Pulverización</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Volumen Sala (m³)
-              </label>
-              <select
-                className="w-full p-2 border rounded"
-                value={formData.stoffenmanager?.roomVolume}
-                onChange={(e) =>
-                  updateStoffenmanager("roomVolume", e.target.value)
-                }
-              >
-                <option value="lt_100">&lt; 100 m³</option>
-                <option value="100_1000">100 - 1000 m³</option>
-                <option value="gt_1000">&gt; 1000 m³</option>
-                <option value="outdoor">Exterior</option>
-              </select>
+            <div className="step4-card-body">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="step4-input-group">
+                  <label className="step4-label">Control Local</label>
+                  <select
+                    className="step4-select"
+                    value={formData.stoffenmanager?.localControl}
+                    onChange={(e) =>
+                      updateStoffenmanager("localControl", e.target.value)
+                    }
+                  >
+                    <option value="none">Ninguno</option>
+                    <option value="suppression">
+                      Supresión (Agua/Nebulización)
+                    </option>
+                    <option value="local_extraction">
+                      Extracción Localizada (LEV)
+                    </option>
+                    <option value="containment_no_extract">
+                      Cerramiento sin extracción
+                    </option>
+                    <option value="containment_extraction">
+                      Cabina/Cerramiento con extracción
+                    </option>
+                  </select>
+                </div>
+                <div className="step4-input-group">
+                  <label className="step4-label">Ventilación General</label>
+                  <select
+                    className="step4-select"
+                    value={formData.stoffenmanager?.ventilationType}
+                    onChange={(e) =>
+                      updateStoffenmanager("ventilationType", e.target.value)
+                    }
+                  >
+                    <option value="none">Sin ventilación específica</option>
+                    <option value="natural">
+                      Ventilación Natural (Puertas/Ventanas)
+                    </option>
+                    <option value="mechanical">
+                      Ventilación Mecánica General
+                    </option>
+                    <option value="booth">Cabina de Pulverización</option>
+                  </select>
+                </div>
+                <div className="step4-input-group">
+                  <label className="step4-label">Volumen Sala (m³)</label>
+                  <select
+                    className="step4-select"
+                    value={formData.stoffenmanager?.roomVolume}
+                    onChange={(e) =>
+                      updateStoffenmanager("roomVolume", e.target.value)
+                    }
+                  >
+                    <option value="lt_100">&lt; 100 m³</option>
+                    <option value="100_1000">100 - 1000 m³</option>
+                    <option value="gt_1000">&gt; 1000 m³</option>
+                    <option value="outdoor">Exterior</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* 4. DURATION & FREQUENCY */}
-        <div className="p-4 bg-gray-50 rounded mb-4 border border-gray-200">
-          <h4 className="font-bold text-gray-700 mb-2 border-b pb-1">
-            4. Tiempo de Exposición
-          </h4>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Frecuencia
-              </label>
-              <select
-                className="w-full p-2 border rounded"
-                value={formData.stoffenmanager?.exposureFrequency}
-                onChange={(e) =>
-                  updateStoffenmanager("exposureFrequency", e.target.value)
-                }
-              >
-                <option value="day_1">Diario</option>
-                <option value="week_4_5">4-5 días/semana</option>
-                <option value="week_2_3">2-3 días/semana</option>
-                <option value="week_1">1 día/semana</option>
-                <option value="month_1">1 día/mes</option>
-                <option value="year_1">1 día/año</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Duración (por turno)
-              </label>
-              <select
-                className="w-full p-2 border rounded"
-                value={formData.stoffenmanager?.exposureDuration}
-                onChange={(e) =>
-                  updateStoffenmanager("exposureDuration", e.target.value)
-                }
-              >
-                <option value="min_15">&lt; 15 min</option>
-                <option value="min_30">15 - 30 min</option>
-                <option value="hour_2">30 min - 2 h</option>
-                <option value="hour_4">2 - 4 h</option>
-                <option value="hour_8">&gt; 4 h</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div
-          style={{
-            marginTop: "2rem",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <button
-            onClick={() => setInternalStep(0)}
-            style={{
-              color: "#666",
-              background: "none",
-              border: "1px solid #ccc",
-              padding: "0.5rem 1rem",
-              borderRadius: "6px",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
+          {/* 4. DURATION & FREQUENCY */}
+          <div
+            className="step4-card animate-fadeIn"
+            style={{ animationDelay: "0.3s" }}
           >
-            ← Atrás
+            <div className="step4-card-header">
+              <h4 className="step4-title">
+                <div
+                  className="step4-icon-circle"
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    backgroundColor: "#ffedd5",
+                    color: "#c2410c",
+                  }}
+                >
+                  <Clock className="w-4 h-4" />
+                </div>
+                4. Tiempo de Exposición
+              </h4>
+            </div>
+            <div className="step4-card-body">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="step4-input-group">
+                  <label className="step4-label">Frecuencia</label>
+                  <select
+                    className="step4-select"
+                    value={formData.stoffenmanager?.exposureFrequency}
+                    onChange={(e) =>
+                      updateStoffenmanager("exposureFrequency", e.target.value)
+                    }
+                  >
+                    <option value="day_1">Diario</option>
+                    <option value="week_4_5">4-5 días/semana</option>
+                    <option value="week_2_3">2-3 días/semana</option>
+                    <option value="week_1">1 día/semana</option>
+                    <option value="month_1">1 día/mes</option>
+                    <option value="year_1">1 día/año</option>
+                  </select>
+                </div>
+                <div className="step4-input-group">
+                  <label className="step4-label">Duración (por turno)</label>
+                  <select
+                    className="step4-select"
+                    value={formData.stoffenmanager?.exposureDuration}
+                    onChange={(e) =>
+                      updateStoffenmanager("exposureDuration", e.target.value)
+                    }
+                  >
+                    <option value="min_15">&lt; 15 min</option>
+                    <option value="min_30">15 - 30 min</option>
+                    <option value="hour_2">30 min - 2 h</option>
+                    <option value="hour_4">2 - 4 h</option>
+                    <option value="hour_8">&gt; 4 h</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* FOOTER ACTIONS */}
+        <div className="step4-actions">
+          <button onClick={() => setInternalStep(0)} className="step4-btn-back">
+            ← Volver
           </button>
           <button
             onClick={() => {
-              // Calculate logic needed for state, but navigation goes to Step 4
               calculateResults();
               setInternalStep(4);
             }}
-            style={{
-              backgroundColor: "#0056b3",
-              color: "white",
-              padding: "0.5rem 1.5rem",
-              borderRadius: "6px",
-            }}
+            className="step4-btn-confirm"
           >
             Siguiente: Plan de Medición →
           </button>
