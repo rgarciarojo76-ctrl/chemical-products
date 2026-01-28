@@ -338,10 +338,12 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             onClick={() => {
               if (evaluationMethod === "advanced") {
                 setInternalStep(3);
-              } else if (result) {
-                onNext();
               } else {
+                // Determine result locally without waiting for state update if possible,
+                // but calling calculateResults() triggers the internal logic.
+                // We'll trust onNext() to handle the transition.
                 calculateResults();
+                onNext();
               }
             }}
             style={{
@@ -351,11 +353,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               borderRadius: "6px",
             }}
           >
-            {evaluationMethod === "advanced"
-              ? "Siguiente: Stoffenmanager →"
-              : result
-                ? "Continuar →"
-                : "Calcular Resultados"}
+            Continuar →
           </button>
         </div>
 
