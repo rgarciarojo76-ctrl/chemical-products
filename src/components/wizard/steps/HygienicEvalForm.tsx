@@ -9,6 +9,7 @@ import type {
   HazardInput,
   StoffenmanagerInput,
 } from "../../../types";
+import { INSST_DATABASE } from "../../../data/insstDatabase";
 
 interface HygienicEvalFormProps {
   onAnalyze: (input: HygienicEvalInput) => HygienicAssessment;
@@ -680,102 +681,221 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     );
   }
 
-  // --- RENDER: STEP 4 - ESTRATEGIA DE MEDICIÓN (Measurement Strategy) ---
+  // --- RENDER: STEP 4 - ESTRATEGIA DE MEDICIÓN (MTA / UNE-EN 689) ---
   if (internalStep === 4) {
+    const substanceName =
+      formData.stoffenmanager?.productName || "Agente Desconocido";
+
+    // Lookup logic for INSST Database (capitalization agnostic)
+    let richData: any = null;
+    const dbKeys = Object.keys(INSST_DATABASE);
+    const matchKey = dbKeys.find((k) =>
+      substanceName.toLowerCase().includes(k.toLowerCase()),
+    );
+
+    if (matchKey) {
+      richData = INSST_DATABASE[matchKey];
+    }
+
     return (
       <StepCard
         title="4. Estrategia de Medición (UNE-EN 689)"
-        description="Definición de requisitos de muestreo y análisis"
-        icon="📏"
+        description="Requisitos Técnicos de Muestreo y Análisis"
+        icon="🔬"
       >
-        <div className="p-4 bg-gray-50 rounded mb-4 border border-gray-200">
-          <h4 className="font-bold text-gray-700 mb-2 border-b pb-1">
-            Referencia Legal (VLA)
-          </h4>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Tipo VLA</label>
-              <select
-                className="w-full p-2 border rounded"
-                value={
-                  formData.stoffenmanager?.measurementStrategy?.vlaType || "ED"
-                }
-                onChange={(e) =>
-                  updateStoffenmanager("measurementStrategy", {
-                    ...formData.stoffenmanager?.measurementStrategy,
-                    vlaType: e.target.value,
-                  })
-                }
-              >
-                <option value="ED">VLA-ED (Exposición Diaria)</option>
-                <option value="EC">VLA-EC (Corta Exposición)</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Valor VLA (mg/m³)
-              </label>
-              <input
-                type="number"
-                className="w-full p-2 border rounded"
-                value={
-                  formData.stoffenmanager?.measurementStrategy?.vlaValue ||
-                  formData.vla ||
-                  0
-                }
-                onChange={(e) =>
-                  updateStoffenmanager("measurementStrategy", {
-                    ...formData.stoffenmanager?.measurementStrategy,
-                    vlaValue: Number(e.target.value),
-                  })
-                }
-              />
-            </div>
-          </div>
-        </div>
+        {richData ? (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 animate-fadeIn">
+            <div className="flex items-start gap-4">
+              <div className="text-3xl">ℹ️</div>
+              <div>
+                <h4 className="text-lg font-bold text-blue-900 mb-1">
+                  Ficha Técnica Oficial: {richData.name}
+                </h4>
+                <p className="text-sm text-blue-700 mb-2">
+                  CAS: {richData.cas} | Notas: {richData.notes}
+                </p>
 
-        <div className="p-4 bg-gray-50 rounded mb-4 border border-gray-200">
-          <h4 className="font-bold text-gray-700 mb-2 border-b pb-1">
-            Metodología de Captación
-          </h4>
-          <div className="form-group mb-2">
-            <label className="block text-sm font-medium mb-1">
-              Soporte de Captación
-            </label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded"
-              placeholder="Ej: Filtro de fibra de vidrio + Captador IOM"
-              value={
-                formData.stoffenmanager?.measurementStrategy?.samplingSupport ||
-                ""
-              }
-              onChange={(e) =>
-                updateStoffenmanager("measurementStrategy", {
-                  ...formData.stoffenmanager?.measurementStrategy,
-                  samplingSupport: e.target.value,
-                })
-              }
-            />
+                <div className="grid grid-cols-2 gap-4 mt-3">
+                  <div className="bg-white p-2 rounded border border-blue-100 shadow-sm">
+                    <span className="block text-xs font-bold text-gray-500 uppercase">
+                      VLA-ED (Diario)
+                    </span>
+                    <span className="text-xl font-bold text-gray-800">
+                      {richData.vla.ed_mg} mg/m³
+                    </span>
+                    {richData.vla.ed_ppm && (
+                      <span className="text-xs text-gray-500 ml-1">
+                        ({richData.vla.ed_ppm} ppm)
+                      </span>
+                    )}
+                  </div>
+                  {richData.vla.ec_mg && (
+                    <div className="bg-white p-2 rounded border border-blue-100 shadow-sm">
+                      <span className="block text-xs font-bold text-gray-500 uppercase">
+                        VLA-EC (Corto)
+                      </span>
+                      <span className="text-xl font-bold text-gray-800">
+                        {richData.vla.ec_mg} mg/m³
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="form-group mb-2">
-            <label className="block text-sm font-medium mb-1">
-              Técnica Analítica
-            </label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded"
-              placeholder="Ej: Cromatografía de Gases (GC-FID)"
-              value={
-                formData.stoffenmanager?.measurementStrategy?.labAnalysis || ""
-              }
-              onChange={(e) =>
-                updateStoffenmanager("measurementStrategy", {
-                  ...formData.stoffenmanager?.measurementStrategy,
-                  labAnalysis: e.target.value,
-                })
-              }
-            />
+        ) : (
+          <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-6">
+            <p className="text-yellow-800 text-sm">
+              ⚠️ No se ha encontrado ficha técnica específica en la base de
+              datos interna para "{substanceName}". Por favor, configure los
+              parámetros manualmente según la FDS o la web del INSST.
+            </p>
+          </div>
+        )}
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="order-2 md:order-1">
+            <div className="p-4 bg-gray-50 rounded mb-4 border border-gray-200">
+              <h4 className="font-bold text-gray-700 mb-2 border-b pb-1">
+                Configuración de Muestreo
+              </h4>
+              <div className="form-group mb-3">
+                <label className="block text-sm font-medium mb-1">
+                  Método de Referencia (MTA)
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    className="w-full p-2 border rounded bg-gray-50"
+                    placeholder="Ej: MTA/MA-062/A16"
+                    value={
+                      formData.stoffenmanager?.measurementStrategy?.technique ||
+                      richData?.sampling.method ||
+                      ""
+                    }
+                    onChange={(e) =>
+                      updateStoffenmanager("measurementStrategy", {
+                        ...formData.stoffenmanager?.measurementStrategy,
+                        technique: e.target.value,
+                      })
+                    }
+                  />
+                  {richData?.sampling.methodUrl && (
+                    <a
+                      href={richData.sampling.methodUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-white border text-blue-600 px-3 py-2 rounded hover:bg-blue-50 flex items-center gap-1 text-sm font-bold whitespace-nowrap"
+                      title="Ver PDF Oficial"
+                    >
+                      📄 PDF
+                    </a>
+                  )}
+                </div>
+              </div>
+              <div className="form-group mb-3">
+                <label className="block text-sm font-medium mb-1">
+                  Soporte de Captación
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-2 border rounded"
+                  value={
+                    formData.stoffenmanager?.measurementStrategy
+                      ?.samplingSupport ||
+                    richData?.sampling.support ||
+                    ""
+                  }
+                  onChange={(e) =>
+                    updateStoffenmanager("measurementStrategy", {
+                      ...formData.stoffenmanager?.measurementStrategy,
+                      samplingSupport: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="form-group mb-3">
+                <label className="block text-sm font-medium mb-1">
+                  Técnica Analítica
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-2 border rounded"
+                  value={
+                    formData.stoffenmanager?.measurementStrategy?.labAnalysis ||
+                    richData?.sampling.technique ||
+                    ""
+                  }
+                  onChange={(e) =>
+                    updateStoffenmanager("measurementStrategy", {
+                      ...formData.stoffenmanager?.measurementStrategy,
+                      labAnalysis: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">
+                    Caudal (L/min)
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full p-2 border rounded text-sm"
+                    placeholder="Ej: 0.2"
+                    defaultValue={richData?.sampling.flowRate}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">
+                    Volumen Mín.
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full p-2 border rounded text-sm"
+                    placeholder="Ej: 120 min"
+                    defaultValue={richData?.sampling.minTime}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* VIDEO COLUMN */}
+          <div className="order-1 md:order-2">
+            {richData?.sampling.videoUrl ? (
+              <div className="rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-black">
+                <div className="aspect-w-16 aspect-h-9">
+                  <iframe
+                    width="100%"
+                    height="250"
+                    src={richData.sampling.videoUrl.replace(
+                      "youtu.be/",
+                      "www.youtube.com/embed/",
+                    )}
+                    title="Video Técnica de Muestreo"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+                <div className="p-3 bg-gray-900 text-white">
+                  <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                    Video Formativo APA
+                  </p>
+                  <p className="font-medium text-sm">
+                    Técnica de Muestreo: {richData.name}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="h-full min-h-[200px] flex items-center justify-center bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 text-gray-400 flex-col gap-2 p-6 text-center">
+                <span className="text-4xl">🎬</span>
+                <p className="text-sm">
+                  Video de técnica de muestreo no disponible para este agente.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -788,9 +908,9 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           </button>
           <button
             onClick={() => setInternalStep(5)}
-            className="bg-blue-600 text-white px-6 py-2 rounded"
+            className="bg-blue-600 text-white px-6 py-2 rounded shadow-lg hover:bg-blue-700 transition-colors"
           >
-            Siguiente: Resultados →
+            Confirmar Estrategia y Continuar →
           </button>
         </div>
       </StepCard>
