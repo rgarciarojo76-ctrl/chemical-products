@@ -25,6 +25,7 @@ interface HygienicEvalFormProps {
 export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   onAnalyze,
   onNext,
+  onBack,
   initialData,
   vlaReference,
   hazardData,
@@ -202,6 +203,32 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             </p>
           </div>
         </div>
+
+        {onBack && (
+          <div
+            style={{
+              marginTop: "2rem",
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+          >
+            <button
+              onClick={onBack}
+              style={{
+                color: "#666",
+                background: "none",
+                border: "1px solid #ccc",
+                padding: "0.5rem 1rem",
+                borderRadius: "6px",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              ← Atrás
+            </button>
+          </div>
+        )}
       </StepCard>
     );
   }
@@ -233,9 +260,12 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               border: "1px solid #ccc",
               padding: "0.5rem 1rem",
               borderRadius: "6px",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
             }}
           >
-            Back
+            ← Atrás
           </button>
           <button
             onClick={() => setInternalStep(2)}
@@ -297,9 +327,12 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               border: "1px solid #ccc",
               padding: "0.5rem 1rem",
               borderRadius: "6px",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
             }}
           >
-            Back
+            ← Atrás
           </button>
           <button
             onClick={() =>
@@ -616,9 +649,12 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               border: "1px solid #ccc",
               padding: "0.5rem 1rem",
               borderRadius: "6px",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
             }}
           >
-            Back
+            ← Atrás
           </button>
           <button
             onClick={calculateResults}
