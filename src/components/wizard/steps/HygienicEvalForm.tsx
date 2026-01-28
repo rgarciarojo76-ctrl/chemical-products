@@ -335,11 +335,15 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             ← Atrás
           </button>
           <button
-            onClick={() =>
-              evaluationMethod === "advanced"
-                ? setInternalStep(3)
-                : calculateResults()
-            }
+            onClick={() => {
+              if (evaluationMethod === "advanced") {
+                setInternalStep(3);
+              } else if (result) {
+                onNext();
+              } else {
+                calculateResults();
+              }
+            }}
             style={{
               backgroundColor: "#0056b3",
               color: "white",
@@ -349,7 +353,9 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           >
             {evaluationMethod === "advanced"
               ? "Siguiente: Stoffenmanager →"
-              : "Calcular Resultados"}
+              : result
+                ? "Continuar →"
+                : "Calcular Resultados"}
           </button>
         </div>
 
