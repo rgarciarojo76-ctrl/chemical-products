@@ -337,3 +337,95 @@
 .animate-fadeIn {
   animation: fadeIn 0.4s ease-out forwards;
 }
+
+/* --- STOFFENMANAGER "CLASSIC" RESTORED LAYOUT --- */
+.stoff-header-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0088cc; /* Approx provided blue */
+  border-bottom: 2px solid #009bdb;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stoff-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #4b5563;
+  margin-bottom: 0.75rem;
+}
+
+/* Section Backgrounds */
+.stoff-gray-box {
+  background-color: #f9fafb; /* Gray-50 */
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stoff-blue-box {
+  background-color: #f0f9ff; /* Sky-50 */
+  border: 1px solid #e0f2fe;
+  border-radius: 6px;
+  padding: 1rem;
+  height: 100%;
+}
+
+.stoff-yellow-box {
+  background-color: #fffbeb; /* Amber-50 */
+  border: 1px solid #fef3c7;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.stoff-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .stoff-grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.stoff-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .stoff-grid-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.stoff-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.375rem;
+}
+
+.stoff-control {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.stoff-check-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.stoff-check-input {
+  margin-top: 0.25rem;
+}
