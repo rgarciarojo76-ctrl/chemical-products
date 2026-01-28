@@ -972,6 +972,154 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       </StepCard>
     );
   }
+  // --- RENDER: STEP 4 - ESTRATEGIA DE MEDICIÓN (MTA / UNE-EN 689) ---
+  if (internalStep === 4) {
+    const substanceName =
+      formData.stoffenmanager?.productName || "Agente Desconocido";
+
+    // Lookup logic for INSST Database (capitalization agnostic)
+    let richData: any = null;
+    const dbKeys = Object.keys(INSST_DATABASE);
+    const matchKey = dbKeys.find((k) =>
+      substanceName.toLowerCase().includes(k.toLowerCase()),
+    );
+
+    if (matchKey) {
+      richData = INSST_DATABASE[matchKey];
+    }
+
+    return (
+      <StepCard
+        title="3. Estrategia de Medición (UNE-EN 689)"
+        description="Requisitos Técnicos de Muestreo y Análisis"
+        icon={<FlaskConical className="w-6 h-6" />}
+      >
+        <div className="step4-layout">
+          {/* LEFT COL: TECHNICAL DATA & CONFIG */}
+          <div className="space-y-6">
+            <div className="step4-card animate-fadeIn">
+              <div className="step4-card-header">
+                <div className="flex items-center gap-3">
+                  <div className="step4-icon-circle">
+                    <Info className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="step4-title">
+                      {richData?.name || substanceName}
+                    </h4>
+                    {richData && (
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="step4-pill">CAS: {richData.cas}</span>
+                        <span className="step4-pill">
+                          VLA: {richData.vla} mg/m³
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="step4-card-body">
+                <div className="step4-input-group">
+                  <label className="step4-label">Soporte de Captación</label>
+                  <input
+                    type="text"
+                    className="step4-input"
+                    readOnly
+                    value={
+                      formData.stoffenmanager?.measurementStrategy
+                        ?.samplingSupport ||
+                      richData?.sampling.support ||
+                      "Filtro de Membrana"
+                    }
+                  />
+                </div>
+                {richData?.sampling.method && (
+                  <div className="step4-input-group">
+                    <label className="step4-label">Método Recomendado</label>
+                    <div className="p-3 bg-gray-50 border rounded text-sm text-gray-700 font-medium">
+                      {richData.sampling.method}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT COL: VIDEO & EXTRAS */}
+          <div className="space-y-6">
+            <div className="step4-card h-full flex flex-col">
+              <div className="step4-card-header">
+                <h4 className="step4-title">
+                  <Play className="w-5 h-5 text-red-500" />
+                  Recurso Formativo
+                </h4>
+                <span className="step4-pill bg-blue-50 text-blue-600 border-blue-100">
+                  INSST / APA
+                </span>
+              </div>
+
+              <div className="flex-1 bg-gray-50 flex flex-col justify-center min-h-[200px]">
+                {richData?.sampling.videoUrl ? (
+                  <div className="step4-video-container group">
+                    <iframe
+                      className="step4-video-frame"
+                      src={richData.sampling.videoUrl.replace(
+                        "youtu.be/",
+                        "www.youtube.com/embed/",
+                      )}
+                      title="Video Técnica de Muestreo"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                ) : (
+                  <div className="step4-video-placeholder">
+                    <div className="step4-icon-circle bg-gray-100 text-gray-400">
+                      <Play className="w-6 h-6" />
+                    </div>
+                    <p className="text-sm font-medium">Video no disponible</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-4 bg-white border-t border-gray-100">
+                <div className="step4-footer-stats">
+                  <div className="step4-stat-box blue">
+                    <span className="step4-subtitle flex justify-center mb-1">
+                      <Wind className="w-3 h-3 mr-1" /> Caudal
+                    </span>
+                    <span className="step4-title text-blue-700 justify-center">
+                      {richData?.sampling.flowRate || "-"}
+                    </span>
+                  </div>
+                  <div className="step4-stat-box purple">
+                    <span className="step4-subtitle flex justify-center mb-1">
+                      <Clock className="w-3 h-3 mr-1" /> Tiempo
+                    </span>
+                    <span className="step4-title text-purple-700 justify-center">
+                      {richData?.sampling.minTime || "-"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="step4-actions">
+          <button onClick={() => setInternalStep(2)} className="step4-btn-back">
+            ← Volver
+          </button>
+          <button
+            onClick={() => setInternalStep(5)}
+            className="step4-btn-confirm"
+          >
+            Siguiente: Tipo de Exposición →
+          </button>
+        </div>
+      </StepCard>
+    );
+  }
 
   // --- RENDER: STEP 5 - TIPO DE EXPOSICIÓN (Recuperado) ---
   if (internalStep === 5) {
