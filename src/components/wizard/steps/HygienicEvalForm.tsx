@@ -1,5 +1,15 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
+import {
+  Info,
+  FileText,
+  FlaskConical,
+  Wind,
+  Clock,
+  Play,
+  ExternalLink,
+  ShieldCheck,
+} from "lucide-react";
 import { StepCard } from "../../ui/StepCard";
 import { BasicCharacterizationStep } from "./BasicCharacterizationStep";
 import { calculateStoffenmanager } from "../../../utils/stoffenmanagerLogic";
@@ -701,42 +711,59 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       <StepCard
         title="4. Estrategia de Medición (UNE-EN 689)"
         description="Requisitos Técnicos de Muestreo y Análisis"
-        icon="🔬"
+        icon={<FlaskConical className="w-6 h-6" />}
       >
         {richData ? (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 animate-fadeIn">
+          <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-5 mb-8 animate-fadeIn">
             <div className="flex items-start gap-4">
-              <div className="text-3xl">ℹ️</div>
-              <div>
-                <h4 className="text-lg font-bold text-blue-900 mb-1">
-                  Ficha Técnica Oficial: {richData.name}
+              <div className="p-3 bg-blue-50 rounded-lg">
+                <Info className="w-6 h-6 text-blue-600" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-xl font-bold text-gray-900 mb-1">
+                  Ficha Técnica Oficial:{" "}
+                  <span className="text-blue-600">{richData.name}</span>
                 </h4>
-                <p className="text-sm text-blue-700 mb-2">
-                  CAS: {richData.cas} | Notas: {richData.notes}
-                </p>
+                <div className="flex items-center gap-3 text-sm text-gray-500 mb-4">
+                  <span className="bg-gray-100 px-2 py-1 rounded">
+                    CAS: {richData.cas}
+                  </span>
+                  <span>|</span>
+                  <span>{richData.notes}</span>
+                </div>
 
-                <div className="grid grid-cols-2 gap-4 mt-3">
-                  <div className="bg-white p-2 rounded border border-blue-100 shadow-sm">
-                    <span className="block text-xs font-bold text-gray-500 uppercase">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                    <span className="block text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">
                       VLA-ED (Diario)
                     </span>
-                    <span className="text-xl font-bold text-gray-800">
-                      {richData.vla.ed_mg} mg/m³
-                    </span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-bold text-gray-800">
+                        {richData.vla.ed_mg}
+                      </span>
+                      <span className="text-sm font-medium text-gray-500">
+                        mg/m³
+                      </span>
+                    </div>
                     {richData.vla.ed_ppm && (
-                      <span className="text-xs text-gray-500 ml-1">
+                      <span className="text-xs text-gray-400 font-mono mt-1 block">
                         ({richData.vla.ed_ppm} ppm)
                       </span>
                     )}
                   </div>
                   {richData.vla.ec_mg && (
-                    <div className="bg-white p-2 rounded border border-blue-100 shadow-sm">
-                      <span className="block text-xs font-bold text-gray-500 uppercase">
+                    <div className="bg-orange-50/50 p-4 rounded-xl border border-orange-100">
+                      <span className="block text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">
                         VLA-EC (Corto)
                       </span>
-                      <span className="text-xl font-bold text-gray-800">
-                        {richData.vla.ec_mg} mg/m³
-                      </span>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-3xl font-bold text-gray-800">
+                          {richData.vla.ec_mg}
+                        </span>
+                        <span className="text-sm font-medium text-gray-500">
+                          mg/m³
+                        </span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -744,118 +771,102 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             </div>
           </div>
         ) : (
-          <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-6">
+          <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-6 flex items-start gap-3">
+            <Info className="w-5 h-5 text-yellow-600 mt-1" />
             <p className="text-yellow-800 text-sm">
               ⚠️ No se ha encontrado ficha técnica específica en la base de
-              datos interna para "{substanceName}". Por favor, configure los
-              parámetros manualmente según la FDS o la web del INSST.
+              datos para "{substanceName}".
             </p>
           </div>
         )}
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="order-2 md:order-1">
-            <div className="p-4 bg-gray-50 rounded mb-4 border border-gray-200">
-              <h4 className="font-bold text-gray-700 mb-2 border-b pb-1">
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="order-2 md:order-1 space-y-6">
+            <div>
+              <h4 className="flex items-center gap-2 font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">
+                <FlaskConical className="w-5 h-5 text-gray-500" />
                 Configuración de Muestreo
               </h4>
-              <div className="form-group mb-3">
-                <label className="block text-sm font-medium mb-1">
-                  Método de Referencia (MTA)
-                </label>
-                <div className="flex gap-2">
+
+              <div className="space-y-4">
+                <div className="form-group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">
+                    Método de Referencia (MTA)
+                  </label>
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <FileText className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+                      <input
+                        type="text"
+                        className="w-full pl-9 p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                        value={
+                          formData.stoffenmanager?.measurementStrategy
+                            ?.technique ||
+                          richData?.sampling.method ||
+                          ""
+                        }
+                        onChange={(e) =>
+                          updateStoffenmanager("measurementStrategy", {
+                            ...formData.stoffenmanager?.measurementStrategy,
+                            technique: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    {richData?.sampling.methodUrl && (
+                      <a
+                        href={richData.sampling.methodUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-3 py-2 bg-white border border-gray-200 text-blue-600 rounded-lg hover:bg-blue-50 hover:border-blue-200 flex items-center gap-2 text-sm font-medium transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4" />{" "}
+                        <span className="hidden sm:inline">PDF</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">
+                    Soporte de Captación
+                  </label>
                   <input
                     type="text"
-                    className="w-full p-2 border rounded bg-gray-50"
-                    placeholder="Ej: MTA/MA-062/A16"
+                    className="w-full p-2 border border-gray-300 rounded-lg text-sm bg-gray-50"
                     value={
-                      formData.stoffenmanager?.measurementStrategy?.technique ||
-                      richData?.sampling.method ||
+                      formData.stoffenmanager?.measurementStrategy
+                        ?.samplingSupport ||
+                      richData?.sampling.support ||
                       ""
                     }
-                    onChange={(e) =>
-                      updateStoffenmanager("measurementStrategy", {
-                        ...formData.stoffenmanager?.measurementStrategy,
-                        technique: e.target.value,
-                      })
-                    }
-                  />
-                  {richData?.sampling.methodUrl && (
-                    <a
-                      href={richData.sampling.methodUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="bg-white border text-blue-600 px-3 py-2 rounded hover:bg-blue-50 flex items-center gap-1 text-sm font-bold whitespace-nowrap"
-                      title="Ver PDF Oficial"
-                    >
-                      📄 PDF
-                    </a>
-                  )}
-                </div>
-              </div>
-              <div className="form-group mb-3">
-                <label className="block text-sm font-medium mb-1">
-                  Soporte de Captación
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded"
-                  value={
-                    formData.stoffenmanager?.measurementStrategy
-                      ?.samplingSupport ||
-                    richData?.sampling.support ||
-                    ""
-                  }
-                  onChange={(e) =>
-                    updateStoffenmanager("measurementStrategy", {
-                      ...formData.stoffenmanager?.measurementStrategy,
-                      samplingSupport: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group mb-3">
-                <label className="block text-sm font-medium mb-1">
-                  Técnica Analítica
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded"
-                  value={
-                    formData.stoffenmanager?.measurementStrategy?.labAnalysis ||
-                    richData?.sampling.technique ||
-                    ""
-                  }
-                  onChange={(e) =>
-                    updateStoffenmanager("measurementStrategy", {
-                      ...formData.stoffenmanager?.measurementStrategy,
-                      labAnalysis: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1">
-                    Caudal (L/min)
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded text-sm"
-                    placeholder="Ej: 0.2"
-                    defaultValue={richData?.sampling.flowRate}
+                    readOnly
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1">
-                    Volumen Mín.
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded text-sm"
-                    placeholder="Ej: 120 min"
-                    defaultValue={richData?.sampling.minTime}
-                  />
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="flex items-center gap-1 text-xs font-bold text-gray-500 mb-1">
+                      <Wind className="w-3 h-3" /> Caudal
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 rounded-lg text-sm bg-gray-50"
+                      defaultValue={richData?.sampling.flowRate}
+                      readOnly
+                    />
+                  </div>
+                  <div>
+                    <label className="flex items-center gap-1 text-xs font-bold text-gray-500 mb-1">
+                      <Clock className="w-3 h-3" /> Tiempo Mín.
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 rounded-lg text-sm bg-gray-50"
+                      defaultValue={richData?.sampling.minTime}
+                      readOnly
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -863,54 +874,57 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
           {/* VIDEO COLUMN */}
           <div className="order-1 md:order-2">
+            <h4 className="flex items-center gap-2 font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">
+              <Play className="w-5 h-5 text-gray-500" />
+              Recurso Formativo
+            </h4>
+
             {richData?.sampling.videoUrl ? (
-              <div className="rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-black">
-                <div className="aspect-w-16 aspect-h-9">
-                  <iframe
-                    width="100%"
-                    height="250"
-                    src={richData.sampling.videoUrl.replace(
-                      "youtu.be/",
-                      "www.youtube.com/embed/",
-                    )}
-                    title="Video Técnica de Muestreo"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-                <div className="p-3 bg-gray-900 text-white">
-                  <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                    Video Formativo APA
+              <div className="group relative rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-black aspect-video">
+                <iframe
+                  className="w-full h-full"
+                  src={richData.sampling.videoUrl.replace(
+                    "youtu.be/",
+                    "www.youtube.com/embed/",
+                  )}
+                  title="Video Técnica de Muestreo"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+                <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <p className="text-xs font-bold uppercase tracking-wider text-blue-400">
+                    Video Oficial APA
                   </p>
-                  <p className="font-medium text-sm">
-                    Técnica de Muestreo: {richData.name}
+                  <p className="font-medium text-sm truncate">
+                    {richData.name} - Técnica de Muestreo
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="h-full min-h-[200px] flex items-center justify-center bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 text-gray-400 flex-col gap-2 p-6 text-center">
-                <span className="text-4xl">🎬</span>
-                <p className="text-sm">
-                  Video de técnica de muestreo no disponible para este agente.
-                </p>
+              <div className="h-[200px] flex flex-col items-center justify-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 text-gray-400 gap-3">
+                <div className="p-3 bg-white rounded-full shadow-sm">
+                  <Play className="w-6 h-6 text-gray-300" />
+                </div>
+                <p className="text-sm font-medium">Video no disponible</p>
               </div>
             )}
           </div>
         </div>
 
-        <div className="flex justify-between mt-8">
+        <div className="flex justify-between mt-10 pt-6 border-t border-gray-100">
           <button
             onClick={() => setInternalStep(3)}
-            className="text-gray-600 border border-gray-300 px-4 py-2 rounded"
+            className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
           >
-            ← Atrás
+            ← Volver a Stoffenmanager
           </button>
           <button
             onClick={() => setInternalStep(5)}
-            className="bg-blue-600 text-white px-6 py-2 rounded shadow-lg hover:bg-blue-700 transition-colors"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2 font-medium"
           >
-            Confirmar Estrategia y Continuar →
+            <ShieldCheck className="w-4 h-4" />
+            Confirmar Estrategia
           </button>
         </div>
       </StepCard>
