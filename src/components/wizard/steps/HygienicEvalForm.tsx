@@ -20,6 +20,7 @@ import type {
   StoffenmanagerInput,
 } from "../../../types";
 import { INSST_DATABASE } from "../../../data/insstDatabase";
+import "./HygienicStep4.css";
 
 interface HygienicEvalFormProps {
   onAnalyze: (input: HygienicEvalInput) => HygienicAssessment;
