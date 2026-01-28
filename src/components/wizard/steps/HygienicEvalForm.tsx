@@ -1079,35 +1079,52 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     );
   }
 
-  // --- RENDER: STEP 5 - TIPO DE EXPOSICIÓN (Recuperado) ---
+  // --- RENDER: STEP 5 - ASISTENTE ESTRATEGIA (Diseño Recuperado) ---
   if (internalStep === 5) {
     return (
-      <div className="p-4 bg-white border rounded shadow">
-        <h2 className="text-xl font-bold mb-4">
-          4. Tipo de Exposición (Debug Raw)
-        </h2>
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h4 className="text-lg font-bold text-gray-800 mb-4">
-            Seleccione el patrón de exposición:
-          </h4>
-
-          <div className="space-y-4">
-            <div
-              onClick={() =>
-                setFormData((prev) => ({ ...prev, strategyType: "continuous" }))
-              }
-              className={`p-4 border-2 rounded-lg cursor-pointer ${
-                formData.strategyType === "continuous"
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-200"
-              }`}
-            >
-              Continuous
-            </div>
+      <StepCard
+        title="4. Tipo de Exposición"
+        description="Definición del perfil temporal para el muestreo"
+        icon="📉"
+      >
+        <div className="bg-[#fffbeb] border border-[#fcd34d] rounded-lg p-6 mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-2xl">✏️</span>
+            <h3 className="text-[#92400e] font-bold text-lg">
+              Asistente de Estrategia de Muestreo
+            </h3>
           </div>
+
+          <label className="block text-[#92400e] font-semibold mb-2">
+            ¿Cómo es el perfil de exposición temporal?
+          </label>
+
+          <select
+            className="w-full p-3 border border-gray-300 rounded bg-white text-gray-700"
+            value={formData.strategyType || ""}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                strategyType: e.target.value as any,
+              }))
+            }
+          >
+            <option value="" disabled>
+              Seleccione tipo de proceso...
+            </option>
+            <option value="continuous">
+              Exposición Continua (Constante en jornada)
+            </option>
+            <option value="variable">
+              Exposición Variable (Picos o cambios)
+            </option>
+            <option value="peaks">
+              Tarea Puntual / Picos (Muy corta duración)
+            </option>
+          </select>
         </div>
 
-        <div className="step4-actions mt-4">
+        <div className="step4-actions">
           <button onClick={() => setInternalStep(4)} className="step4-btn-back">
             ← Volver
           </button>
@@ -1118,7 +1135,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             Siguiente: Resultados →
           </button>
         </div>
-      </div>
+      </StepCard>
     );
   }
 
