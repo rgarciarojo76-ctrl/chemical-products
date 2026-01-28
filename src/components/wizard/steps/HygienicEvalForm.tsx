@@ -1081,104 +1081,85 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     return (
       <StepCard
         title="4. Tipo de Exposición"
-        description="Caracterización temporal de la exposición"
-        icon={<Wind className="w-6 h-6" />}
+        description="Caracterización temporal (Continua, Variable o Picos)"
+        icon="🌬️"
       >
-        <div className="step4-layout">
-          <div className="step4-card animate-fadeIn">
-            <div className="step4-card-header">
-              <h4 className="step4-title">
-                Seleccione el patrón de exposición
-              </h4>
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <h4 className="text-lg font-bold text-gray-800 mb-4">
+            Seleccione el patrón de exposición:
+          </h4>
+
+          <div className="space-y-4">
+            {/* Option 1: Continuous */}
+            <div
+              onClick={() =>
+                setFormData((prev) => ({ ...prev, strategyType: "continuous" }))
+              }
+              className={`p-4 border-2 rounded-lg cursor-pointer flex items-center gap-4 transition-colors ${formData.strategyType === "continuous" || !formData.strategyType ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-gray-300"}`}
+            >
+              <div
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.strategyType === "continuous" || !formData.strategyType ? "border-blue-600" : "border-gray-400"}`}
+              >
+                {(formData.strategyType === "continuous" ||
+                  !formData.strategyType) && (
+                  <div className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+                )}
+              </div>
+              <div>
+                <h5 className="font-bold text-gray-900">
+                  Exposición Continua (ED)
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Constante durante toda la jornada.
+                </p>
+              </div>
             </div>
-            <div className="step4-card-body">
-              <div className="grid gap-4">
-                <label
-                  className={`block p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.strategyType === "continuous" ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-gray-300"}`}
-                >
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="radio"
-                      className="w-5 h-5 text-blue-600"
-                      name="strategyType"
-                      checked={
-                        formData.strategyType === "continuous" ||
-                        !formData.strategyType
-                      }
-                      onChange={() =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          strategyType: "continuous",
-                        }))
-                      }
-                    />
-                    <div>
-                      <h5 className="font-bold text-gray-900">
-                        Exposición Continua (ED)
-                      </h5>
-                      <p className="text-sm text-gray-500">
-                        La exposición se mantiene relativamente constante
-                        durante toda la jornada laboral.
-                      </p>
-                    </div>
-                  </div>
-                </label>
 
-                <label
-                  className={`block p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.strategyType === "variable" ? "border-purple-500 bg-purple-50" : "border-gray-200 hover:border-gray-300"}`}
-                >
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="radio"
-                      className="w-5 h-5 text-purple-600"
-                      name="strategyType"
-                      checked={formData.strategyType === "variable"}
-                      onChange={() =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          strategyType: "variable",
-                        }))
-                      }
-                    />
-                    <div>
-                      <h5 className="font-bold text-gray-900">
-                        Exposición Variable (ED + EC)
-                      </h5>
-                      <p className="text-sm text-gray-500">
-                        Existen picos, tareas intermitentes o variaciones
-                        significativas en la concentración.
-                      </p>
-                    </div>
-                  </div>
-                </label>
+            {/* Option 2: Variable */}
+            <div
+              onClick={() =>
+                setFormData((prev) => ({ ...prev, strategyType: "variable" }))
+              }
+              className={`p-4 border-2 rounded-lg cursor-pointer flex items-center gap-4 transition-colors ${formData.strategyType === "variable" ? "border-purple-500 bg-purple-50" : "border-gray-200 hover:border-gray-300"}`}
+            >
+              <div
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.strategyType === "variable" ? "border-purple-600" : "border-gray-400"}`}
+              >
+                {formData.strategyType === "variable" && (
+                  <div className="w-2.5 h-2.5 rounded-full bg-purple-600" />
+                )}
+              </div>
+              <div>
+                <h5 className="font-bold text-gray-900">
+                  Exposición Variable (ED + EC)
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Picos o variaciones significativas.
+                </p>
+              </div>
+            </div>
 
-                <label
-                  className={`block p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.strategyType === "peaks" ? "border-orange-500 bg-orange-50" : "border-gray-200 hover:border-gray-300"}`}
-                >
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="radio"
-                      className="w-5 h-5 text-orange-600"
-                      name="strategyType"
-                      checked={formData.strategyType === "peaks"}
-                      onChange={() =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          strategyType: "peaks",
-                        }))
-                      }
-                    />
-                    <div>
-                      <h5 className="font-bold text-gray-900">
-                        Tarea Puntual / Picos
-                      </h5>
-                      <p className="text-sm text-gray-500">
-                        Exposición de muy corta duración donde lo crítico es el
-                        valor techo (VLA-EC).
-                      </p>
-                    </div>
-                  </div>
-                </label>
+            {/* Option 3: Peaks */}
+            <div
+              onClick={() =>
+                setFormData((prev) => ({ ...prev, strategyType: "peaks" }))
+              }
+              className={`p-4 border-2 rounded-lg cursor-pointer flex items-center gap-4 transition-colors ${formData.strategyType === "peaks" ? "border-orange-500 bg-orange-50" : "border-gray-200 hover:border-gray-300"}`}
+            >
+              <div
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.strategyType === "peaks" ? "border-orange-600" : "border-gray-400"}`}
+              >
+                {formData.strategyType === "peaks" && (
+                  <div className="w-2.5 h-2.5 rounded-full bg-orange-600" />
+                )}
+              </div>
+              <div>
+                <h5 className="font-bold text-gray-900">
+                  Tarea Puntual / Picos
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Muy corta duración (VLA-EC).
+                </p>
               </div>
             </div>
           </div>
