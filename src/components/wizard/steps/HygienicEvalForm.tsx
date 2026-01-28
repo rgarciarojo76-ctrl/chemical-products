@@ -1082,93 +1082,32 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   // --- RENDER: STEP 5 - TIPO DE EXPOSICIÓN (Recuperado) ---
   if (internalStep === 5) {
     return (
-      <StepCard
-        title="4. Tipo de Exposición"
-        description="Caracterización temporal (Continua, Variable o Picos)"
-        icon="🌬️"
-      >
+      <div className="p-4 bg-white border rounded shadow">
+        <h2 className="text-xl font-bold mb-4">
+          4. Tipo de Exposición (Debug Raw)
+        </h2>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <h4 className="text-lg font-bold text-gray-800 mb-4">
             Seleccione el patrón de exposición:
           </h4>
 
           <div className="space-y-4">
-            {/* Option 1: Continuous */}
             <div
               onClick={() =>
                 setFormData((prev) => ({ ...prev, strategyType: "continuous" }))
               }
-              className={`p-4 border-2 rounded-lg cursor-pointer flex items-center gap-4 transition-colors ${formData.strategyType === "continuous" || !formData.strategyType ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-gray-300"}`}
+              className={`p-4 border-2 rounded-lg cursor-pointer ${
+                formData.strategyType === "continuous"
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200"
+              }`}
             >
-              <div
-                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.strategyType === "continuous" || !formData.strategyType ? "border-blue-600" : "border-gray-400"}`}
-              >
-                {(formData.strategyType === "continuous" ||
-                  !formData.strategyType) && (
-                  <div className="w-2.5 h-2.5 rounded-full bg-blue-600" />
-                )}
-              </div>
-              <div>
-                <h5 className="font-bold text-gray-900">
-                  Exposición Continua (ED)
-                </h5>
-                <p className="text-sm text-gray-600">
-                  Constante durante toda la jornada.
-                </p>
-              </div>
-            </div>
-
-            {/* Option 2: Variable */}
-            <div
-              onClick={() =>
-                setFormData((prev) => ({ ...prev, strategyType: "variable" }))
-              }
-              className={`p-4 border-2 rounded-lg cursor-pointer flex items-center gap-4 transition-colors ${formData.strategyType === "variable" ? "border-purple-500 bg-purple-50" : "border-gray-200 hover:border-gray-300"}`}
-            >
-              <div
-                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.strategyType === "variable" ? "border-purple-600" : "border-gray-400"}`}
-              >
-                {formData.strategyType === "variable" && (
-                  <div className="w-2.5 h-2.5 rounded-full bg-purple-600" />
-                )}
-              </div>
-              <div>
-                <h5 className="font-bold text-gray-900">
-                  Exposición Variable (ED + EC)
-                </h5>
-                <p className="text-sm text-gray-600">
-                  Picos o variaciones significativas.
-                </p>
-              </div>
-            </div>
-
-            {/* Option 3: Peaks */}
-            <div
-              onClick={() =>
-                setFormData((prev) => ({ ...prev, strategyType: "peaks" }))
-              }
-              className={`p-4 border-2 rounded-lg cursor-pointer flex items-center gap-4 transition-colors ${formData.strategyType === "peaks" ? "border-orange-500 bg-orange-50" : "border-gray-200 hover:border-gray-300"}`}
-            >
-              <div
-                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.strategyType === "peaks" ? "border-orange-600" : "border-gray-400"}`}
-              >
-                {formData.strategyType === "peaks" && (
-                  <div className="w-2.5 h-2.5 rounded-full bg-orange-600" />
-                )}
-              </div>
-              <div>
-                <h5 className="font-bold text-gray-900">
-                  Tarea Puntual / Picos
-                </h5>
-                <p className="text-sm text-gray-600">
-                  Muy corta duración (VLA-EC).
-                </p>
-              </div>
+              Continuous
             </div>
           </div>
         </div>
 
-        <div className="step4-actions">
+        <div className="step4-actions mt-4">
           <button onClick={() => setInternalStep(4)} className="step4-btn-back">
             ← Volver
           </button>
@@ -1179,7 +1118,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             Siguiente: Resultados →
           </button>
         </div>
-      </StepCard>
+      </div>
     );
   }
 
