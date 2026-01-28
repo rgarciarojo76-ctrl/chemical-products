@@ -661,7 +661,11 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             ← Atrás
           </button>
           <button
-            onClick={calculateResults}
+            onClick={() => {
+              // Calculate logic needed for state, but navigation goes to Step 4
+              calculateResults();
+              setInternalStep(4);
+            }}
             style={{
               backgroundColor: "#0056b3",
               color: "white",
@@ -669,65 +673,229 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               borderRadius: "6px",
             }}
           >
-            Calcular Nivel de Riesgo
+            Siguiente: Plan de Medición →
           </button>
         </div>
+      </StepCard>
+    );
+  }
 
-        {result && result.stoffenmanagerResult && (
+  // --- RENDER: STEP 4 - ESTRATEGIA DE MEDICIÓN (Measurement Strategy) ---
+  if (internalStep === 4) {
+    return (
+      <StepCard
+        title="4. Estrategia de Medición (UNE-EN 689)"
+        description="Definición de requisitos de muestreo y análisis"
+        icon="📏"
+      >
+        <div className="p-4 bg-gray-50 rounded mb-4 border border-gray-200">
+          <h4 className="font-bold text-gray-700 mb-2 border-b pb-1">
+            Referencia Legal (VLA)
+          </h4>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Tipo VLA</label>
+              <select
+                className="w-full p-2 border rounded"
+                value={
+                  formData.stoffenmanager?.measurementStrategy?.vlaType || "ED"
+                }
+                onChange={(e) =>
+                  updateStoffenmanager("measurementStrategy", {
+                    ...formData.stoffenmanager?.measurementStrategy,
+                    vlaType: e.target.value,
+                  })
+                }
+              >
+                <option value="ED">VLA-ED (Exposición Diaria)</option>
+                <option value="EC">VLA-EC (Corta Exposición)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Valor VLA (mg/m³)
+              </label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded"
+                value={
+                  formData.stoffenmanager?.measurementStrategy?.vlaValue ||
+                  formData.vla ||
+                  0
+                }
+                onChange={(e) =>
+                  updateStoffenmanager("measurementStrategy", {
+                    ...formData.stoffenmanager?.measurementStrategy,
+                    vlaValue: Number(e.target.value),
+                  })
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="p-4 bg-gray-50 rounded mb-4 border border-gray-200">
+          <h4 className="font-bold text-gray-700 mb-2 border-b pb-1">
+            Metodología de Captación
+          </h4>
+          <div className="form-group mb-2">
+            <label className="block text-sm font-medium mb-1">
+              Soporte de Captación
+            </label>
+            <input
+              type="text"
+              className="w-full p-2 border rounded"
+              placeholder="Ej: Filtro de fibra de vidrio + Captador IOM"
+              value={
+                formData.stoffenmanager?.measurementStrategy?.samplingSupport ||
+                ""
+              }
+              onChange={(e) =>
+                updateStoffenmanager("measurementStrategy", {
+                  ...formData.stoffenmanager?.measurementStrategy,
+                  samplingSupport: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="form-group mb-2">
+            <label className="block text-sm font-medium mb-1">
+              Técnica Analítica
+            </label>
+            <input
+              type="text"
+              className="w-full p-2 border rounded"
+              placeholder="Ej: Cromatografía de Gases (GC-FID)"
+              value={
+                formData.stoffenmanager?.measurementStrategy?.labAnalysis || ""
+              }
+              onChange={(e) =>
+                updateStoffenmanager("measurementStrategy", {
+                  ...formData.stoffenmanager?.measurementStrategy,
+                  labAnalysis: e.target.value,
+                })
+              }
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-between mt-8">
+          <button
+            onClick={() => setInternalStep(3)}
+            className="text-gray-600 border border-gray-300 px-4 py-2 rounded"
+          >
+            ← Atrás
+          </button>
+          <button
+            onClick={() => setInternalStep(5)}
+            className="bg-blue-600 text-white px-6 py-2 rounded"
+          >
+            Siguiente: Resultados →
+          </button>
+        </div>
+      </StepCard>
+    );
+  }
+
+  // --- RENDER: STEP 5 - RESULTADOS DE MEDICIÓN (Measurement Results) ---
+  if (internalStep === 5) {
+    const strategy = formData.stoffenmanager?.measurementStrategy;
+    const vla = strategy?.vlaValue || 1;
+    const conc = formData.stoffenmanager?.measurementResult?.concentration || 0;
+    const index = conc / vla;
+
+    let trafficLightColor = "#ef4444"; // Red
+    if (index <= 0.1)
+      trafficLightColor = "#22c55e"; // Green
+    else if (index <= 1) trafficLightColor = "#eab308"; // Yellow
+
+    return (
+      <StepCard
+        title="5. Resultados de la Medición"
+        description="Evaluación de la conformidad (Índice I)"
+        icon="📊"
+      >
+        <div className="p-4 bg-blue-50 rounded mb-4 border border-blue-200">
+          <div className="flex justify-between items-center">
+            <span>VLA de Referencia:</span>
+            <span className="font-bold">{vla} mg/m³</span>
+          </div>
+        </div>
+
+        <div className="form-group mb-4">
+          <label className="block text-sm font-bold mb-1">
+            Concentración Ambiental (C) [mg/m³]
+          </label>
+          <input
+            type="number"
+            className="w-full p-3 border rounded text-lg"
+            placeholder="Introducir valor del laboratorio..."
+            value={
+              formData.stoffenmanager?.measurementResult?.concentration || ""
+            }
+            onChange={(e) => {
+              const val = Number(e.target.value);
+              const idx = val / vla;
+              updateStoffenmanager("measurementResult", {
+                concentration: val,
+                complianceIndex: idx,
+                isCompliant: idx <= 1,
+                nextCheckDate:
+                  idx <= 0.1
+                    ? "3 años"
+                    : idx <= 0.5
+                      ? "1 año"
+                      : "Inmediato (Corrección)",
+              });
+            }}
+          />
+        </div>
+
+        {formData.stoffenmanager?.measurementResult && (
           <div
+            className="p-6 rounded-lg border text-center mt-6"
             style={{
-              marginTop: "2rem",
-              padding: "1.5rem",
-              borderRadius: "8px",
-              backgroundColor: result.isSafe ? "#f0fdf4" : "#fef2f2",
-              border: `2px solid ${result.isSafe ? "#22c55e" : "#ef4444"}`,
+              backgroundColor: trafficLightColor + "20",
+              borderColor: trafficLightColor,
             }}
           >
-            <h3
-              style={{
-                fontWeight: "bold",
-                color: result.isSafe ? "#15803d" : "#b91c1c",
-              }}
+            <h2
+              className="text-2xl font-bold"
+              style={{ color: trafficLightColor }}
             >
-              {result.isSafe
-                ? `PRIORIDAD BAJA (${result.stoffenmanagerResult.riskPriority})`
-                : `PRIORIDAD ALTA (${result.stoffenmanagerResult.riskPriority})`}
-            </h3>
-            <div
-              style={{
-                marginTop: "1rem",
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
-                fontSize: "0.9rem",
-              }}
-            >
-              <div className="bg-white p-2 rounded border">
-                <strong>Puntuación Exposición:</strong>{" "}
-                {result.stoffenmanagerResult.exposureScore}
-              </div>
-              <div className="bg-white p-2 rounded border">
-                <strong>Banda de Exposición:</strong>{" "}
-                {result.stoffenmanagerResult.exposureBand}
-              </div>
-            </div>
-            <p style={{ marginTop: "1rem" }}>
-              {result.justification.technical}
+              Índice I = {index.toFixed(3)}
+            </h2>
+            <p className="text-lg font-semibold mt-2">
+              {index <= 1
+                ? "✅ CONFORME (Exposición Aceptable)"
+                : "❌ NO CONFORME (Exposición Inaceptable)"}
             </p>
-            <button
-              onClick={onNext}
-              style={{
-                marginTop: "1rem",
-                background: "#2563eb",
-                color: "white",
-                padding: "0.5rem 1rem",
-                borderRadius: "4px",
-              }}
-            >
-              Ver Informe
-            </button>
+            <div className="mt-4 text-sm text-gray-700 bg-white p-3 rounded">
+              <strong>Acción Requerida:</strong>
+              <br />
+              {index <= 0.1
+                ? "Mantener condiciones. Reevaluar en 3 años."
+                : index <= 1
+                  ? "Mejorar medidas preventivas. Reevaluar periódicamente."
+                  : "🛑 PARADA / CORRECCIÓN INMEDIATA. Implementar medidas urgentes."}
+            </div>
           </div>
         )}
+
+        <div className="flex justify-between mt-8">
+          <button
+            onClick={() => setInternalStep(4)}
+            className="text-gray-600 border border-gray-300 px-4 py-2 rounded"
+          >
+            ← Atrás
+          </button>
+          <button
+            onClick={onNext}
+            className="bg-green-600 text-white px-6 py-2 rounded flex items-center gap-2"
+          >
+            Ver Informe Final de Higiene ✨
+          </button>
+        </div>
       </StepCard>
     );
   }

@@ -133,6 +133,27 @@ export interface StoffenmanagerInput {
     | "week_2_3"
     | "week_4_5"
     | "day_1";
+
+  // Optional: for Quantitative flow
+  measurementStrategy?: MeasurementStrategy;
+  measurementResult?: MeasurementResult;
+}
+
+export interface MeasurementStrategy {
+  vlaType: "ED" | "EC";
+  vlaValue: number; // mg/m3 or ppm
+  samplingSupport: "personal" | "static";
+  technique: string; // e.g. "UNE-EN 689"
+  labAnalysis: string;
+  flowRate?: number;
+  minVolume?: number;
+}
+
+export interface MeasurementResult {
+  concentration: number;
+  complianceIndex: number; // I = C/VLA
+  isCompliant: boolean;
+  nextCheckDate: string;
 }
 
 export interface StoffenmanagerResult {
@@ -140,6 +161,10 @@ export interface StoffenmanagerResult {
   exposureScore: number; // Bt
   exposureBand: 1 | 2 | 3 | 4;
   riskPriority: "I" | "II" | "III";
+
+  // New Fields for Quantitative Flow
+  measurementStrategy?: MeasurementStrategy;
+  measurementResult?: MeasurementResult;
 }
 
 export interface BasicCharacterizationInput {
