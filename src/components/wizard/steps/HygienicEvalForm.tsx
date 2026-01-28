@@ -157,7 +157,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           <div
             onClick={() => {
               setEvaluationMethod("advanced");
-              setInternalStep(1);
+              setInternalStep(3);
             }}
             style={{
               padding: "2rem",
