@@ -224,19 +224,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               justifyContent: "flex-start",
             }}
           >
-            <button
-              onClick={onBack}
-              style={{
-                color: "#666",
-                background: "none",
-                border: "1px solid #ccc",
-                padding: "0.5rem 1rem",
-                borderRadius: "6px",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-            >
+            <button onClick={onBack} className="step4-btn-back">
               ← Atrás
             </button>
           </div>
@@ -264,29 +252,12 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             justifyContent: "space-between",
           }}
         >
-          <button
-            onClick={() => setInternalStep(0)}
-            style={{
-              color: "#666",
-              background: "none",
-              border: "1px solid #ccc",
-              padding: "0.5rem 1rem",
-              borderRadius: "6px",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
+          <button onClick={() => setInternalStep(0)} className="step4-btn-back">
             ← Atrás
           </button>
           <button
             onClick={() => setInternalStep(2)}
-            style={{
-              backgroundColor: "#0056b3",
-              color: "white",
-              padding: "0.5rem 1.5rem",
-              borderRadius: "6px",
-            }}
+            className="step4-btn-confirm"
           >
             Siguiente: GES →
           </button>
@@ -339,16 +310,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 setInternalStep(1); // Back to Simplified
               }
             }}
-            style={{
-              color: "#666",
-              background: "none",
-              border: "1px solid #ccc",
-              padding: "0.5rem 1rem",
-              borderRadius: "6px",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
+            className="step4-btn-back"
           >
             ← Atrás
           </button>
@@ -357,12 +319,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               // Proceed to Strategy (Step 4) regardless of method
               setInternalStep(4);
             }}
-            style={{
-              backgroundColor: "#0056b3",
-              color: "white",
-              padding: "0.5rem 1.5rem",
-              borderRadius: "6px",
-            }}
+            className="step4-btn-confirm"
           >
             Siguiente: Estrategia de Medición →
           </button>
@@ -681,11 +638,8 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         </div>
 
         {/* FOOTER ACTIONS */}
-        <div className="flex justify-between mt-8 border-t border-gray-200 pt-6">
-          <button
-            onClick={() => setInternalStep(0)}
-            className="px-6 py-2 border border-gray-300 rounded text-gray-600 hover:bg-gray-50 flex items-center gap-2"
-          >
+        <div className="step4-actions">
+          <button onClick={() => setInternalStep(0)} className="step4-btn-back">
             ← Anterior
           </button>
           <button
@@ -693,7 +647,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               calculateResults();
               setInternalStep(2); // Goes to GES
             }}
-            className="flex-1 ml-4 bg-[#009bdb] text-white font-bold py-3 rounded-lg hover:bg-[#0077a8] transition-colors shadow-sm text-center"
+            className="step4-btn-confirm"
           >
             Calcular Riesgo y Continuar
           </button>
