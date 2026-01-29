@@ -722,69 +722,65 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             </div>
           </div>
 
-          {/* 3+1 Metric Grid */}
-          <div className="flex flex-col gap-6">
-            {/* ROW 1: 3 Columns (Support, Technique, Flow) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* 1. Soporte */}
-              <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                  SOPORTE DE MUESTREO
-                </label>
-                <div className="bg-[#f8fafc] rounded-lg p-5 flex items-center gap-4 h-full border border-gray-100">
-                  {/* Green Tube Icon */}
-                  <div className="flex-shrink-0">
-                    <FlaskConical className="w-8 h-8 text-green-600" />
-                  </div>
-                  <span className="font-bold text-gray-800 text-lg leading-snug">
-                    {samplingSupport}
-                  </span>
-                </div>
+          {/* Premium 2x2 Metric Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 1. SOPORTE */}
+            <div className="group bg-white rounded-xl border border-gray-200 p-5 flex items-start gap-5 hover:shadow-lg hover:border-blue-200 transition-all duration-300">
+              <div className="w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                <FlaskConical className="w-7 h-7" strokeWidth={1.5} />
               </div>
-
-              {/* 2. Técnica */}
               <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                  TÉCNICA ANALÍTICA
-                </label>
-                <div className="bg-[#f8fafc] rounded-lg p-5 flex items-center gap-4 h-full border border-gray-100">
-                  <div className="flex-shrink-0">
-                    <Microscope className="w-8 h-8 text-slate-600" />
-                  </div>
-                  <span className="font-bold text-gray-800 text-lg">
-                    {richData?.sampling.technique || "Cromatografía (HPLC)"}
-                  </span>
-                </div>
-              </div>
-
-              {/* 3. Caudal */}
-              <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                  CAUDAL DE BOMBA
-                </label>
-                <div className="bg-[#f8fafc] rounded-lg p-5 flex items-center gap-4 h-full border border-gray-100">
-                  <div className="flex-shrink-0">
-                    <Wind className="w-8 h-8 text-blue-400" />
-                  </div>
-                  <span className="font-bold text-gray-800 text-lg">
-                    {flowRate}
-                  </span>
-                </div>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                  Soporte de Muestreo
+                </p>
+                <p className="font-bold text-gray-900 text-lg leading-tight">
+                  {samplingSupport}
+                </p>
               </div>
             </div>
 
-            {/* ROW 2: Time (aligned left, approx width) */}
-            <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                TIEMPO MÍN. MUESTREO
-              </label>
-              <div className="bg-[#f8fafc] rounded-lg p-5 flex items-center gap-4 border border-gray-100 md:w-[32.6%]">
-                <div className="flex-shrink-0">
-                  <Clock className="w-8 h-8 text-gray-400" />
-                </div>
-                <span className="font-bold text-gray-800 text-lg">
+            {/* 2. TÉCNICA */}
+            <div className="group bg-white rounded-xl border border-gray-200 p-5 flex items-start gap-5 hover:shadow-lg hover:border-indigo-200 transition-all duration-300">
+              <div className="w-14 h-14 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                <Microscope className="w-7 h-7" strokeWidth={1.5} />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                  Técnica Analítica
+                </p>
+                <p className="font-bold text-gray-900 text-lg leading-tight">
+                  {richData?.sampling.technique || "Cromatografía (HPLC)"}
+                </p>
+              </div>
+            </div>
+
+            {/* 3. CAUDAL */}
+            <div className="group bg-white rounded-xl border border-gray-200 p-5 flex items-start gap-5 hover:shadow-lg hover:border-cyan-200 transition-all duration-300">
+              <div className="w-14 h-14 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                <Wind className="w-7 h-7" strokeWidth={1.5} />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                  Caudal de Bomba
+                </p>
+                <p className="font-bold text-gray-900 text-lg leading-tight">
+                  {flowRate}
+                </p>
+              </div>
+            </div>
+
+            {/* 4. TIEMPO */}
+            <div className="group bg-white rounded-xl border border-gray-200 p-5 flex items-start gap-5 hover:shadow-lg hover:border-amber-200 transition-all duration-300">
+              <div className="w-14 h-14 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                <Clock className="w-7 h-7" strokeWidth={1.5} />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                  Tiempo Mín. Muestreo
+                </p>
+                <p className="font-bold text-gray-900 text-lg leading-tight">
                   {minTime}
-                </span>
+                </p>
               </div>
             </div>
           </div>
