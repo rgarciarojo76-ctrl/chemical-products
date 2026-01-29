@@ -8,6 +8,7 @@ import {
   Microscope,
   ClipboardList,
   Video,
+  Info,
 } from "lucide-react";
 import { StepCard } from "../../ui/StepCard";
 import { BasicCharacterizationStep } from "./BasicCharacterizationStep";
@@ -844,6 +845,41 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               Tarea Puntual / Picos (Muy corta duración)
             </option>
           </select>
+
+          {/* Strategy Proposal Logic */}
+          {formData.strategyType && (
+            <div className="mt-6 animate-fadeIn">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
+                <h4 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                  <Info className="w-5 h-5" /> Estrategia Recomendada
+                </h4>
+                {formData.strategyType === "continuous" && (
+                  <p className="text-blue-700 text-sm">
+                    Para exposición constante, se recomienda{" "}
+                    <strong>1 muestreo de larga duración</strong> (mín. 80%
+                    jornada) o <strong>3 muestras aleatorias</strong> de 2 horas
+                    (UNE-EN 689).
+                  </p>
+                )}
+                {formData.strategyType === "variable" && (
+                  <p className="text-blue-700 text-sm">
+                    La exposición varía. Realizar{" "}
+                    <strong>Muestreo Estratificado</strong>: Identificar fases
+                    de alta exposición y muestrear esas fases por separado (min.
+                    15 min cada una).
+                  </p>
+                )}
+                {formData.strategyType === "peaks" && (
+                  <p className="text-blue-700 text-sm">
+                    Exposición de corta duración. Muestreo{" "}
+                    <strong>STEL (15 min)</strong> durante el momento de mayor
+                    actividad. Repetir 3 veces si es posible para validar.
+                  </p>
+                )}
+                {/* Fallback for undefined strategy logic if any */}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="step4-actions">
