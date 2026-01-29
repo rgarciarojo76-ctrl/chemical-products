@@ -6,7 +6,6 @@ import {
   Wind,
   Clock,
   Microscope,
-  ClipboardList,
   Video,
   Info,
 } from "lucide-react";
@@ -48,6 +47,8 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   // 1: Caracterización Básica (Standard Scenarios / Wizard)
   // 2: GES (Grupos de Exposición Similar)
   // 3: Stoffenmanager (Only Advanced)
+  // 4: ESTRATEGIA INTEGRADA (Exposición + Medición)
+  // 6: RESULTADOS (Saltamos el 5 antiguo)
   const [internalStep, setInternalStep] = useState(0);
   const [evaluationMethod, setEvaluationMethod] = useState<
     "simplified" | "advanced"
@@ -69,6 +70,10 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         duration: "2h_4h",
         hygieneRights: false,
       },
+      stoffenmanager: {
+        // Initialize with defaults to avoid null checks on strategyType
+        strategyType: undefined,
+      } as any,
     },
   );
 
@@ -104,6 +109,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           ppeUsed: false,
           exposureDuration: "min_30",
           exposureFrequency: "day_1",
+          strategyType: undefined, // Ensure field exists
         },
       }));
     }
@@ -652,7 +658,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     );
   }
 
-  // --- RENDER: STEP 4 - ESTRATEGIA DE MEDICIÓN (Diseño Uniforme Grid) ---
+  // --- RENDER: STEP 4 - ESTRATEGIA (COMBINADO: Expo + Medición) ---
   if (internalStep === 4) {
     const substanceName =
       formData.stoffenmanager?.productName || "Agente Desconocido";
@@ -678,36 +684,106 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
     return (
       <StepCard
-        title="3. Estrategia de Medición (UNE-EN 689)"
-        description="Requisitos Técnicos de Muestreo y Análisis"
+        title="3. Estrategia de Muestreo y Exposición"
+        description="Definición del perfil estratégico y métodos técnicos"
         icon={<FlaskConical className="w-6 h-6" />}
       >
-        {/* Main Content Card (White Background like screenshot) */}
-        <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-6">
-          {/* Header Flex */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-gray-100 pb-4">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
-                <ClipboardList className="w-6 h-6" />
+        {/* SECTION 1: 3. TIPO DE EXPOSICIÓN (First as requested) */}
+        <div className="mb-8 border-b pb-8 border-gray-100">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-2xl">📉</span>
+            <h3 className="text-lg font-bold text-gray-800">
+              3. Tipo de Exposición (Perfil Temporal)
+            </h3>
+          </div>
+
+          <div className="bg-[#fffbeb] border border-[#fcd34d] rounded-lg p-6">
+            <label className="block text-[#92400e] font-semibold mb-2">
+              ¿Cómo es el perfil de exposición temporal?
+            </label>
+            <select
+              className="w-full p-3 border border-gray-300 rounded bg-white text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+              value={formData.strategyType || ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  strategyType: e.target.value as any,
+                }))
+              }
+            >
+              <option value="" disabled>
+                Seleccione tipo de proceso...
+              </option>
+              <option value="continuous">
+                Exposición Continua (Constante en jornada)
+              </option>
+              <option value="variable">
+                Exposición Variable (Picos o cambios)
+              </option>
+              <option value="peaks">
+                Tarea Puntual / Picos (Muy corta duración)
+              </option>
+            </select>
+
+            {/* Strategy Logic Feedback */}
+            {formData.strategyType && (
+              <div className="mt-4 animate-fadeIn">
+                <div className="bg-white/50 backdrop-blur-sm border border-orange-200 rounded-md p-4">
+                  <h4 className="font-bold text-orange-800 mb-1 flex items-center gap-2 text-sm uppercase tracking-wide">
+                    <Info className="w-4 h-4" /> Recomendación Técnica
+                  </h4>
+                  {formData.strategyType === "continuous" && (
+                    <p className="text-orange-900 text-sm">
+                      Recomendado: <strong>1 muestreo de larga duración</strong>{" "}
+                      (mín. 80% jornada) o{" "}
+                      <strong>3 muestras aleatorias</strong> de 2 horas (UNE-EN
+                      689).
+                    </p>
+                  )}
+                  {formData.strategyType === "variable" && (
+                    <p className="text-orange-900 text-sm">
+                      Recomendado: <strong>Muestreo Estratificado</strong>.
+                      Identifique fases de alta exposición y muestree por
+                      separado (min. 15 min).
+                    </p>
+                  )}
+                  {formData.strategyType === "peaks" && (
+                    <p className="text-orange-900 text-sm">
+                      Recomendado: <strong>STEL (15 min)</strong>. Realizar
+                      durante el momento de mayor actividad. Repetir 3 veces
+                      para validar.
+                    </p>
+                  )}
+                </div>
               </div>
+            )}
+          </div>
+        </div>
+
+        {/* SECTION 2: 4. ESTRATEGIA DE MEDICIÓN (Second as requested) */}
+        <div>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">📋</span>
               <div>
-                <h3 className="font-bold text-gray-900 text-lg">
-                  Método de Captación y Análisis
+                <h3 className="text-lg font-bold text-gray-800">
+                  4. Estrategia de Medición (UNE-EN 689)
                 </h3>
-                <p className="text-gray-500 text-sm">
-                  Protocolo oficial de higiene industrial.
+                <p className="text-sm text-gray-500">
+                  Métodos de captación y análisis oficiales.
                 </p>
               </div>
             </div>
+
             <div className="flex gap-2">
               {richData?.sampling.methodUrl && (
                 <a
                   href={richData.sampling.methodUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 hover:bg-black transition-colors"
+                  className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md transition-colors flex items-center gap-1 border border-gray-200"
                 >
-                  <FileText className="w-4 h-4" /> Ver método INSST
+                  <FileText className="w-3 h-3" /> Método INSST
                 </a>
               )}
               {richData?.sampling.videoUrl && (
@@ -715,9 +791,9 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                   href={richData.sampling.videoUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="bg-[#ea580c] text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 hover:bg-[#c2410c] transition-colors"
+                  className="text-xs bg-orange-50 hover:bg-orange-100 text-orange-700 px-3 py-1.5 rounded-md transition-colors flex items-center gap-1 border border-orange-200"
                 >
-                  <Video className="w-4 h-4" /> Guía de vídeo
+                  <Video className="w-3 h-3" /> Vídeo Guía
                 </a>
               )}
             </div>
@@ -787,103 +863,8 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           </div>
         </div>
 
-        <div className="step4-actions">
+        <div className="step4-actions mt-8">
           <button onClick={() => setInternalStep(2)} className="step4-btn-back">
-            ← Volver
-          </button>
-          <button
-            onClick={() => setInternalStep(5)}
-            className="step4-btn-confirm"
-          >
-            Siguiente: Tipo de Exposición →
-          </button>
-        </div>
-      </StepCard>
-    );
-  }
-
-  // --- RENDER: STEP 5 - ASISTENTE ESTRATEGIA (Diseño Recuperado) ---
-  if (internalStep === 5) {
-    return (
-      <StepCard
-        title="4. Tipo de Exposición"
-        description="Definición del perfil temporal para el muestreo"
-        icon="📉"
-      >
-        <div className="bg-[#fffbeb] border border-[#fcd34d] rounded-lg p-6 mb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-2xl">✏️</span>
-            <h3 className="text-[#92400e] font-bold text-lg">
-              Asistente de Estrategia de Muestreo
-            </h3>
-          </div>
-
-          <label className="block text-[#92400e] font-semibold mb-2">
-            ¿Cómo es el perfil de exposición temporal?
-          </label>
-
-          <select
-            className="w-full p-3 border border-gray-300 rounded bg-white text-gray-700"
-            value={formData.strategyType || ""}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                strategyType: e.target.value as any,
-              }))
-            }
-          >
-            <option value="" disabled>
-              Seleccione tipo de proceso...
-            </option>
-            <option value="continuous">
-              Exposición Continua (Constante en jornada)
-            </option>
-            <option value="variable">
-              Exposición Variable (Picos o cambios)
-            </option>
-            <option value="peaks">
-              Tarea Puntual / Picos (Muy corta duración)
-            </option>
-          </select>
-
-          {/* Strategy Proposal Logic */}
-          {formData.strategyType && (
-            <div className="mt-6 animate-fadeIn">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
-                <h4 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
-                  <Info className="w-5 h-5" /> Estrategia Recomendada
-                </h4>
-                {formData.strategyType === "continuous" && (
-                  <p className="text-blue-700 text-sm">
-                    Para exposición constante, se recomienda{" "}
-                    <strong>1 muestreo de larga duración</strong> (mín. 80%
-                    jornada) o <strong>3 muestras aleatorias</strong> de 2 horas
-                    (UNE-EN 689).
-                  </p>
-                )}
-                {formData.strategyType === "variable" && (
-                  <p className="text-blue-700 text-sm">
-                    La exposición varía. Realizar{" "}
-                    <strong>Muestreo Estratificado</strong>: Identificar fases
-                    de alta exposición y muestrear esas fases por separado (min.
-                    15 min cada una).
-                  </p>
-                )}
-                {formData.strategyType === "peaks" && (
-                  <p className="text-blue-700 text-sm">
-                    Exposición de corta duración. Muestreo{" "}
-                    <strong>STEL (15 min)</strong> durante el momento de mayor
-                    actividad. Repetir 3 veces si es posible para validar.
-                  </p>
-                )}
-                {/* Fallback for undefined strategy logic if any */}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="step4-actions">
-          <button onClick={() => setInternalStep(4)} className="step4-btn-back">
             ← Volver
           </button>
           <button
@@ -984,7 +965,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
         <div className="flex justify-between mt-8">
           <button
-            onClick={() => setInternalStep(5)}
+            onClick={() => setInternalStep(4)}
             className="text-gray-600 border border-gray-300 px-4 py-2 rounded"
           >
             ← Atrás
