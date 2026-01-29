@@ -1,14 +1,13 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import {
-  Info,
   FileText,
   FlaskConical,
   Wind,
   Clock,
-  Play,
-  ExternalLink,
-  ShieldCheck,
+  Microscope,
+  ClipboardList,
+  Video,
 } from "lucide-react";
 import { StepCard } from "../../ui/StepCard";
 import { BasicCharacterizationStep } from "./BasicCharacterizationStep";
@@ -435,13 +434,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 </select>
               </div>
             )}
-
-            {/* Assuming Dilution is needed but not shown in screenshot? Screenshot shows only Physical State and Vapour P.
-                     I will keep Dilution as it is critical for calculations, maybe as a 3rd field or row?
-                     Screenshot shows 2 columns. I will put it below or hide if implicit?
-                     Better to keep it for correctness, maybe alongside or below.
-                     Actually, I'll add it to the grid to be safe.
-                  */}
           </div>
         </div>
 
@@ -659,7 +651,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     );
   }
 
-  // --- RENDER: STEP 4 - ESTRATEGIA DE MEDICIÓN (MTA / UNE-EN 689) ---
+  // --- RENDER: STEP 4 - ESTRATEGIA DE MEDICIÓN (Diseño Uniforme Grid) ---
   if (internalStep === 4) {
     const substanceName =
       formData.stoffenmanager?.productName || "Agente Desconocido";
@@ -675,390 +667,112 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       richData = INSST_DATABASE[matchKey];
     }
 
+    // Fallback values if no DB match
+    const samplingSupport =
+      formData.stoffenmanager?.measurementStrategy?.samplingSupport ||
+      richData?.sampling.support ||
+      "Filtro de Membrana";
+    const flowRate = richData?.sampling.flowRate || "2 L/min";
+    const minTime = richData?.sampling.minTime || "60 min";
+
     return (
       <StepCard
         title="3. Estrategia de Medición (UNE-EN 689)"
         description="Requisitos Técnicos de Muestreo y Análisis"
         icon={<FlaskConical className="w-6 h-6" />}
       >
-        <div className="step4-layout">
-          {/* LEFT COL: TECHNICAL DATA & CONFIG */}
-          <div className="space-y-6">
-            {/* TECHNICAL DATA CARD */}
-            {richData ? (
-              <div className="step4-card animate-fadeIn">
-                <div className="step4-card-header">
-                  <div className="flex items-center gap-3">
-                    <div className="step4-icon-circle">
-                      <Info className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="step4-title">{richData.name}</h4>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="step4-pill">CAS: {richData.cas}</span>
-                        <span
-                          className="step4-subtitle"
-                          style={{ margin: 0, fontWeight: 400 }}
-                        >
-                          {richData.notes}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="step4-card-body">
-                  <div className="step4-metric-grid">
-                    {/* VLA-ED CARD */}
-                    <div className="step4-metric-card blue">
-                      <span className="step4-metric-dot blue"></span>
-                      <span className="step4-metric-label">
-                        VLA-ED (Diario)
-                      </span>
-                      <div>
-                        <span className="step4-metric-value">
-                          {richData.vla.ed_mg}
-                        </span>
-                        <span className="step4-metric-unit">mg/m³</span>
-                      </div>
-                      {richData.vla.ed_ppm && (
-                        <span className="text-xs text-gray-400 block mt-1">
-                          ({richData.vla.ed_ppm} ppm)
-                        </span>
-                      )}
-                    </div>
-
-                    {/* VLA-EC CARD */}
-                    {richData.vla.ec_mg && (
-                      <div className="step4-metric-card orange">
-                        <span className="step4-metric-dot orange"></span>
-                        <span className="step4-metric-label">
-                          VLA-EC (Corto)
-                        </span>
-                        <div>
-                          <span className="step4-metric-value">
-                            {richData.vla.ec_mg}
-                          </span>
-                          <span className="step4-metric-unit">mg/m³</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+        {/* Main Content Card (White Background like screenshot) */}
+        <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-6">
+          {/* Header Flex */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-gray-100 pb-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
+                <ClipboardList className="w-6 h-6" />
               </div>
-            ) : (
-              <div
-                className="step4-card"
-                style={{ backgroundColor: "#fffbeb", borderColor: "#fcd34d" }}
-              >
-                <div className="step4-card-body text-center">
-                  <div
-                    className="step4-icon-circle"
-                    style={{
-                      backgroundColor: "#fef3c7",
-                      color: "#d97706",
-                      margin: "0 auto 1rem",
-                    }}
-                  >
-                    <Info className="w-6 h-6" />
-                  </div>
-                  <h4
-                    className="step4-title"
-                    style={{ justifyContent: "center", color: "#92400e" }}
-                  >
-                    Sin Datos Específicos
-                  </h4>
-                  <p className="text-sm text-amber-800 mt-2">
-                    No se ha encontrado ficha técnica para "{substanceName}".
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* SAMPLING CONFIG FORM */}
-            <div className="step4-card">
-              <div className="step4-card-body">
-                <h4 className="step4-title mb-4 border-b border-gray-100 pb-2">
-                  <FlaskConical className="w-5 h-5 text-gray-400" />
-                  Configuración de Muestreo
-                </h4>
-
-                <div className="step4-input-group">
-                  <label className="step4-label">
-                    Método de Referencia (MTA)
-                  </label>
-                  <div className="flex gap-3">
-                    <div className="flex-1 step4-input-wrapper">
-                      <FileText className="step4-input-icon" />
-                      <input
-                        type="text"
-                        className="step4-input"
-                        placeholder="Ej: MTA/MA-062/A16"
-                        value={
-                          formData.stoffenmanager?.measurementStrategy
-                            ?.technique ||
-                          richData?.sampling.method ||
-                          ""
-                        }
-                        onChange={(e) =>
-                          updateStoffenmanager("measurementStrategy", {
-                            ...formData.stoffenmanager?.measurementStrategy,
-                            technique: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    {richData?.sampling.methodUrl && (
-                      <a
-                        href={richData.sampling.methodUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="step4-btn-pdf"
-                      >
-                        <ExternalLink className="w-4 h-4" /> PDF
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                <div className="step4-input-group">
-                  <label className="step4-label">Soporte de Captación</label>
-                  <input
-                    type="text"
-                    className="step4-input"
-                    style={{ paddingLeft: "0.75rem" }}
-                    value={
-                      formData.stoffenmanager?.measurementStrategy
-                        ?.samplingSupport ||
-                      richData?.sampling.support ||
-                      ""
-                    }
-                    readOnly
-                  />
-                </div>
+              <div>
+                <h3 className="font-bold text-gray-900 text-lg">
+                  Método de Captación y Análisis
+                </h3>
+                <p className="text-gray-500 text-sm">
+                  Protocolo oficial de higiene industrial.
+                </p>
               </div>
             </div>
-          </div>
-
-          {/* RIGHT COL: VIDEO & EXTRAS */}
-          <div className="space-y-6">
-            <div className="step4-card h-full flex flex-col">
-              <div className="step4-card-header">
-                <h4 className="step4-title">
-                  <Play className="w-5 h-5 text-red-500" />
-                  Recurso Formativo
-                </h4>
-                <span
-                  className="step4-pill"
-                  style={{
-                    backgroundColor: "#eff6ff",
-                    color: "#2563eb",
-                    borderColor: "#dbeafe",
-                  }}
+            <div className="flex gap-2">
+              {richData?.sampling.methodUrl && (
+                <a
+                  href={richData.sampling.methodUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 hover:bg-black transition-colors"
                 >
-                  INSST / APA
-                </span>
-              </div>
-
-              <div
-                className="flex-1 bg-gray-50 flex flex-col justify-center"
-                style={{ minHeight: "200px" }}
-              >
-                {richData?.sampling.videoUrl ? (
-                  <div className="step4-video-container group">
-                    <iframe
-                      className="step4-video-frame"
-                      src={richData.sampling.videoUrl.replace(
-                        "youtu.be/",
-                        "www.youtube.com/embed/",
-                      )}
-                      title="Video Técnica de Muestreo"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                ) : (
-                  <div className="step4-video-placeholder">
-                    <div
-                      className="step4-icon-circle"
-                      style={{ backgroundColor: "#f3f4f6", color: "#9ca3af" }}
-                    >
-                      <Play className="w-6 h-6" />
-                    </div>
-                    <p className="text-sm font-medium">Video no disponible</p>
-                  </div>
-                )}
-              </div>
-
-              <div className="p-4 bg-white border-t border-gray-100">
-                <div className="step4-footer-stats">
-                  <div className="step4-stat-box blue">
-                    <span className="step4-subtitle flex-center mb-1">
-                      <Wind className="w-3 h-3 mr-1" /> Caudal
-                    </span>
-                    <span className="step4-title text-blue-700 justify-center">
-                      {richData?.sampling.flowRate || "-"}
-                    </span>
-                  </div>
-                  <div className="step4-stat-box purple">
-                    <span className="step4-subtitle flex-center mb-1">
-                      <Clock className="w-3 h-3 mr-1" /> Tiempo
-                    </span>
-                    <span className="step4-title text-purple-700 justify-center">
-                      {richData?.sampling.minTime || "-"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* FOOTER ACTIONS */}
-        <div className="step4-actions">
-          <button onClick={() => setInternalStep(2)} className="step4-btn-back">
-            ← Volver
-          </button>
-          <button
-            onClick={() => setInternalStep(5)}
-            className="step4-btn-confirm"
-          >
-            <ShieldCheck className="w-4 h-4" />
-            Siguiente: Tipo de Exposición →
-          </button>
-        </div>
-      </StepCard>
-    );
-  }
-  // --- RENDER: STEP 4 - ESTRATEGIA DE MEDICIÓN (MTA / UNE-EN 689) ---
-  if (internalStep === 4) {
-    const substanceName =
-      formData.stoffenmanager?.productName || "Agente Desconocido";
-
-    // Lookup logic for INSST Database (capitalization agnostic)
-    let richData: any = null;
-    const dbKeys = Object.keys(INSST_DATABASE);
-    const matchKey = dbKeys.find((k) =>
-      substanceName.toLowerCase().includes(k.toLowerCase()),
-    );
-
-    if (matchKey) {
-      richData = INSST_DATABASE[matchKey];
-    }
-
-    return (
-      <StepCard
-        title="3. Estrategia de Medición (UNE-EN 689)"
-        description="Requisitos Técnicos de Muestreo y Análisis"
-        icon={<FlaskConical className="w-6 h-6" />}
-      >
-        <div className="step4-layout">
-          {/* LEFT COL: TECHNICAL DATA & CONFIG */}
-          <div className="space-y-6">
-            <div className="step4-card animate-fadeIn">
-              <div className="step4-card-header">
-                <div className="flex items-center gap-3">
-                  <div className="step4-icon-circle">
-                    <Info className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="step4-title">
-                      {richData?.name || substanceName}
-                    </h4>
-                    {richData && (
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="step4-pill">CAS: {richData.cas}</span>
-                        <span className="step4-pill">
-                          VLA: {richData.vla} mg/m³
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="step4-card-body">
-                <div className="step4-input-group">
-                  <label className="step4-label">Soporte de Captación</label>
-                  <input
-                    type="text"
-                    className="step4-input"
-                    readOnly
-                    value={
-                      formData.stoffenmanager?.measurementStrategy
-                        ?.samplingSupport ||
-                      richData?.sampling.support ||
-                      "Filtro de Membrana"
-                    }
-                  />
-                </div>
-                {richData?.sampling.method && (
-                  <div className="step4-input-group">
-                    <label className="step4-label">Método Recomendado</label>
-                    <div className="p-3 bg-gray-50 border rounded text-sm text-gray-700 font-medium">
-                      {richData.sampling.method}
-                    </div>
-                  </div>
-                )}
-              </div>
+                  <FileText className="w-4 h-4" /> Ver método INSST
+                </a>
+              )}
+              {richData?.sampling.videoUrl && (
+                <a
+                  href={richData.sampling.videoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-[#ea580c] text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 hover:bg-[#c2410c] transition-colors"
+                >
+                  <Video className="w-4 h-4" /> Guía de vídeo
+                </a>
+              )}
             </div>
           </div>
 
-          {/* RIGHT COL: VIDEO & EXTRAS */}
-          <div className="space-y-6">
-            <div className="step4-card h-full flex flex-col">
-              <div className="step4-card-header">
-                <h4 className="step4-title">
-                  <Play className="w-5 h-5 text-red-500" />
-                  Recurso Formativo
-                </h4>
-                <span className="step4-pill bg-blue-50 text-blue-600 border-blue-100">
-                  INSST / APA
+          {/* Grid 2x2 for Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 leading-tight">
+            {/* 1. Soporte */}
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                SOPORTE DE MUESTREO
+              </label>
+              <div className="bg-[#f1f5f9] rounded-lg p-4 flex items-center gap-4">
+                <FlaskConical className="w-8 h-8 text-green-600" />
+                <span className="font-bold text-gray-800 text-lg leading-snug">
+                  {samplingSupport}
                 </span>
               </div>
+            </div>
 
-              <div className="flex-1 bg-gray-50 flex flex-col justify-center min-h-[200px]">
-                {richData?.sampling.videoUrl ? (
-                  <div className="step4-video-container group">
-                    <iframe
-                      className="step4-video-frame"
-                      src={richData.sampling.videoUrl.replace(
-                        "youtu.be/",
-                        "www.youtube.com/embed/",
-                      )}
-                      title="Video Técnica de Muestreo"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                ) : (
-                  <div className="step4-video-placeholder">
-                    <div className="step4-icon-circle bg-gray-100 text-gray-400">
-                      <Play className="w-6 h-6" />
-                    </div>
-                    <p className="text-sm font-medium">Video no disponible</p>
-                  </div>
-                )}
+            {/* 2. Técnica */}
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                TÉCNICA ANALÍTICA
+              </label>
+              <div className="bg-[#f1f5f9] rounded-lg p-4 flex items-center gap-4">
+                <Microscope className="w-8 h-8 text-blue-600" />
+                <span className="font-bold text-gray-800 text-lg">
+                  {richData?.sampling.technique || "Cromatografía (HPLC)"}
+                </span>
               </div>
+            </div>
 
-              <div className="p-4 bg-white border-t border-gray-100">
-                <div className="step4-footer-stats">
-                  <div className="step4-stat-box blue">
-                    <span className="step4-subtitle flex justify-center mb-1">
-                      <Wind className="w-3 h-3 mr-1" /> Caudal
-                    </span>
-                    <span className="step4-title text-blue-700 justify-center">
-                      {richData?.sampling.flowRate || "-"}
-                    </span>
-                  </div>
-                  <div className="step4-stat-box purple">
-                    <span className="step4-subtitle flex justify-center mb-1">
-                      <Clock className="w-3 h-3 mr-1" /> Tiempo
-                    </span>
-                    <span className="step4-title text-purple-700 justify-center">
-                      {richData?.sampling.minTime || "-"}
-                    </span>
-                  </div>
-                </div>
+            {/* 3. Caudal */}
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                CAUDAL DE BOMBA
+              </label>
+              <div className="bg-[#f1f5f9] rounded-lg p-4 flex items-center gap-4">
+                <Wind className="w-8 h-8 text-blue-400" />
+                <span className="font-bold text-gray-800 text-lg">
+                  {flowRate}
+                </span>
+              </div>
+            </div>
+
+            {/* 4. Tiempo */}
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                TIEMPO MÍN. MUESTREO
+              </label>
+              <div className="bg-[#f1f5f9] rounded-lg p-4 flex items-center gap-4">
+                <Clock className="w-8 h-8 text-gray-500" />
+                <span className="font-bold text-gray-800 text-lg">
+                  {minTime}
+                </span>
               </div>
             </div>
           </div>
