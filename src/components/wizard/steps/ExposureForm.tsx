@@ -13,6 +13,7 @@ interface ExposureFormProps {
   onFinish: () => void;
   initialData?: ExposureSieveInput;
   substanceName?: string;
+  detectedPhysicalState?: ExposureSieveInput["physicalForm"];
 }
 
 export const ExposureForm: React.FC<ExposureFormProps> = ({
@@ -22,6 +23,7 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({
   onFinish,
   initialData,
   substanceName,
+  detectedPhysicalState,
 }) => {
   const [formData, setFormData] = useState<ExposureSieveInput>(
     initialData || {
@@ -253,34 +255,64 @@ export const ExposureForm: React.FC<ExposureFormProps> = ({
         >
           Forma Física del Agente
         </label>
-        <select
-          value={formData.physicalForm}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              physicalForm: e.target
-                .value as ExposureSieveInput["physicalForm"],
-            })
-          }
-          style={{
-            width: "100%",
-            padding: "0.5rem",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-          }}
-        >
-          <option value="solid_massive">
-            Sólido Masivo / Aleación (Pieza compacta)
-          </option>
-          <option value="solid_dust">Sólido Pulvurulento / Polvo</option>
-          <option value="liquid_low_volatility">
-            Líquido (Baja volatilidad)
-          </option>
-          <option value="liquid_high_volatility">
-            Líquido (Alta volatilidad / Aerosol)
-          </option>
-          <option value="gas">Gas / Vapor</option>
-        </select>
+        <div style={{ position: "relative" }}>
+          <select
+            value={formData.physicalForm}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                physicalForm: e.target
+                  .value as ExposureSieveInput["physicalForm"],
+              })
+            }
+            style={{
+              width: "100%",
+              padding: "0.5rem",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+              backgroundColor:
+                detectedPhysicalState === formData.physicalForm
+                  ? "#f0fdf4"
+                  : "white", // Light green bg if matches
+              borderColor:
+                detectedPhysicalState === formData.physicalForm
+                  ? "#86efac"
+                  : "#ccc",
+            }}
+          >
+            <option value="solid_massive">
+              Sólido Masivo / Aleación (Pieza compacta)
+            </option>
+            <option value="solid_dust">Sólido Pulvurulento / Polvo</option>
+            <option value="liquid_low_volatility">
+              Líquido (Baja volatilidad)
+            </option>
+            <option value="liquid_high_volatility">
+              Líquido (Alta volatilidad / Aerosol)
+            </option>
+            <option value="gas">Gas / Vapor</option>
+          </select>
+          {detectedPhysicalState &&
+            detectedPhysicalState === formData.physicalForm && (
+              <span
+                style={{
+                  position: "absolute",
+                  right: "30px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  fontSize: "0.75rem",
+                  color: "#166534",
+                  fontWeight: 600,
+                  backgroundColor: "#dcfce7",
+                  padding: "2px 8px",
+                  borderRadius: "12px",
+                  pointerEvents: "none",
+                }}
+              >
+                ✨ Sugerido por FDS
+              </span>
+            )}
+        </div>
       </div>
 
       <div className="form-group mb-2">

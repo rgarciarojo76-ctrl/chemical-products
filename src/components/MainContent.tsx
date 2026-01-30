@@ -197,6 +197,7 @@ const MainContent = () => {
           onFinish={() => engine.goToStep(5)}
           initialData={engine.state.exposureSieve.input}
           substanceName={engine.state.hazard.input.substanceName}
+          detectedPhysicalState={engine.state.hazard.input.detectedPhysicalForm}
         />
       )}
 
