@@ -12,6 +12,7 @@ import {
 import { StepCard } from "../../ui/StepCard";
 import { BasicCharacterizationStep } from "./BasicCharacterizationStep";
 import { GesConstitutionStep } from "./GesConstitutionStep";
+import { MeasurementResultsStep } from "./MeasurementResultsStep";
 import { calculateStoffenmanager } from "../../../utils/stoffenmanagerLogic";
 import type {
   HygienicEvalInput,
@@ -790,106 +791,27 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     );
   }
 
-  // --- RENDER: STEP 6 - RESULTADOS DE MEDICIÓN ---
+  // --- RENDER: STEP 6 - RESULTADOS DE MEDICIÓN (UNE-EN 689) ---
   if (internalStep === 6) {
-    const strategy = formData.stoffenmanager?.measurementStrategy;
-    const vla = strategy?.vlaValue || 1;
-    const conc = formData.stoffenmanager?.measurementResult?.concentration || 0;
-    const index = conc / vla;
-
-    let trafficLightColor = "#ef4444"; // Red
-    if (index <= 0.1)
-      trafficLightColor = "#22c55e"; // Green
-    else if (index <= 1) trafficLightColor = "#eab308"; // Yellow
-
     return (
-      <StepCard
-        title="Resultados de las Mediciones"
-        description="Evaluación de la conformidad (Índice I)"
-        icon="📊"
-      >
-        <div className="p-4 bg-blue-50 rounded mb-4 border border-blue-200">
-          <div className="flex justify-between items-center">
-            <span>VLA de Referencia:</span>
-            <span className="font-bold">{vla} mg/m³</span>
-          </div>
-        </div>
-
-        <div className="form-group mb-4">
-          <label className="block text-sm font-bold mb-1">
-            Concentración Ambiental (C) [mg/m³]
-          </label>
-          <input
-            type="number"
-            className="w-full p-3 border rounded text-lg"
-            placeholder="Introducir valor del laboratorio..."
-            value={
-              formData.stoffenmanager?.measurementResult?.concentration || ""
-            }
-            onChange={(e) => {
-              const val = Number(e.target.value);
-              const idx = val / vla;
-              updateStoffenmanager("measurementResult", {
-                concentration: val,
-                complianceIndex: idx,
-                isCompliant: idx <= 1,
-                nextCheckDate:
-                  idx <= 0.1
-                    ? "3 años"
-                    : idx <= 0.5
-                      ? "1 año"
-                      : "Inmediato (Corrección)",
-              });
-            }}
-          />
-        </div>
-
-        {formData.stoffenmanager?.measurementResult && (
-          <div
-            className="p-6 rounded-lg border text-center mt-6"
-            style={{
-              backgroundColor: trafficLightColor + "20",
-              borderColor: trafficLightColor,
-            }}
-          >
-            <h2
-              className="text-2xl font-bold"
-              style={{ color: trafficLightColor }}
-            >
-              Índice I = {index.toFixed(3)}
-            </h2>
-            <p className="text-lg font-semibold mt-2">
-              {index <= 1
-                ? "✅ CONFORME (Exposición Aceptable)"
-                : "❌ NO CONFORME (Exposición Inaceptable)"}
-            </p>
-            <div className="mt-4 text-sm text-gray-700 bg-white p-3 rounded">
-              <strong>Acción Requerida:</strong>
-              <br />
-              {index <= 0.1
-                ? "Mantener condiciones. Reevaluar en 3 años."
-                : index <= 1
-                  ? "Mejorar medidas preventivas. Reevaluar periódicamente."
-                  : "🛑 PARADA / CORRECCIÓN INMEDIATA. Implementar medidas urgentes."}
-            </div>
-          </div>
-        )}
-
-        <div className="flex justify-between mt-8">
-          <button
-            onClick={() => setInternalStep(4)}
-            className="text-gray-600 border border-gray-300 px-4 py-2 rounded"
-          >
-            ← Atrás
-          </button>
-          <button
-            onClick={onNext}
-            className="bg-green-600 text-white px-6 py-2 rounded flex items-center gap-2"
-          >
-            Ver Informe Final de Higiene ✨
-          </button>
-        </div>
-      </StepCard>
+      <MeasurementResultsStep
+        vlaReference={
+          formData.vla ||
+          hazardData?.vlaInfo?.vlaVal ||
+          formData.stoffenmanager?.measurementStrategy?.vlaValue ||
+          1.0
+        }
+        gesData={formData.ges}
+        initialSamples={formData.en689Result?.samples}
+        onUpdate={(result) => {
+          setFormData((prev) => ({
+            ...prev,
+            en689Result: result,
+          }));
+        }}
+        onBack={() => setInternalStep(4)}
+        onNext={onNext}
+      />
     );
   }
 

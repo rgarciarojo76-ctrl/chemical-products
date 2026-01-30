@@ -235,6 +235,7 @@ export interface HygienicEvalInput {
   };
   strategyType?: "continuous" | "peaks" | "variable";
   stoffenmanager?: StoffenmanagerInput;
+  en689Result?: En689Result; // Final results from Module 4
 }
 
 export interface HygienicAssessment {
@@ -271,6 +272,38 @@ export interface MeasureStatus {
 export type SCOELGroup = "A" | "B" | "C" | "D";
 
 // The Global State
+// Module 4: Measurement Results (UNE-EN 689)
+export interface Sample {
+  id: string;
+  type: "direct" | "lab_calc";
+  value: number; // Final concentration (mg/m3 or ppm)
+  raw?: {
+    mass: number; // ug
+    flow: number; // l/min
+    time: number; // min
+  };
+  isBelowLod: boolean;
+  lodMultiplier?: 0.5 | 1; // Factor for calculating value if < LOD
+  date?: string;
+  comments?: string;
+}
+
+export interface En689Result {
+  decision: "compliant" | "non_compliant" | "need_more_samples";
+  ruleApplied: "screening" | "statistical_utl" | "statistical_fail";
+  stats?: {
+    gm: number; // Geometric Mean
+    gsd: number; // Geometric Standard Deviation
+    p95: number; // 95th Percentile
+    ur: number; // Upper Range (UCL of P95, 70% Confidence)
+    complianceIndex: number; // ur / vla
+  };
+  nextCheck: string; // "12 months", "36 months" or specific date
+  samples: Sample[];
+  vlaApplied: number;
+  qualityAlerts: string[]; // e.g. "GSD > 3: Variabilidad excesiva"
+}
+
 export interface AssessmentState {
   step: number;
   hazard: {
@@ -284,6 +317,7 @@ export interface AssessmentState {
   hygienicEval: {
     input: HygienicEvalInput;
     result: HygienicAssessment | null;
+    en689Result?: En689Result; // New field for Module 4
   };
   measures: MeasureStatus[];
   hygieneRights: {
