@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Users, Filter, CheckCircle2, Calculator } from "lucide-react";
-import type { BasicCharacterizationInput, GesData } from "../../../types";
+import type {
+  BasicCharacterizationInput,
+  GesData,
+  StoffenmanagerInput,
+} from "../../../types";
 
 interface GesConstitutionStepProps {
   basicCharData?: BasicCharacterizationInput;
+  evaluationMethod?: "simplified" | "advanced";
+  stoffenmanagerData?: StoffenmanagerInput;
   substanceName?: string;
   onUpdate: (data: GesData) => void;
   onNext: () => void;
@@ -13,6 +19,8 @@ interface GesConstitutionStepProps {
 
 export const GesConstitutionStep: React.FC<GesConstitutionStepProps> = ({
   basicCharData,
+  evaluationMethod = "simplified",
+  stoffenmanagerData,
   substanceName,
   onUpdate,
   onNext,
@@ -64,7 +72,15 @@ export const GesConstitutionStep: React.FC<GesConstitutionStepProps> = ({
   const samplingReq = calculateSamplingNeeds(workerCount);
 
   // Auto-generate Justification
-  const narrative = `Se constituye el GES ${generatedId} debido a la identidad absoluta de sus perfiles de exposición según los criterios de la caracterización básica (Agente: ${substanceName}, Tarea: ${basicCharData?.processDescription}), garantizando la homogeneidad del grupo para la posterior evaluación higiénica.`;
+  // Adjust justification based on method
+  const processDesc =
+    evaluationMethod === "advanced" && stoffenmanagerData
+      ? `Proceso Avanzado: ${stoffenmanagerData.handlingType} (Stoffenmanager)`
+      : basicCharData?.processDescription || "Proceso Genérico";
+
+  const narrative = `Se constituye el GES ${generatedId} debido a la identidad absoluta de sus perfiles de exposición según los criterios de la caracterización básica ${
+    evaluationMethod === "advanced" ? "(Avanzada - Stoffenmanager)" : ""
+  } (Agente: ${substanceName}, Tarea: ${processDesc}), garantizando la homogeneidad del grupo para la posterior evaluación higiénica.`;
 
   // HELPER: Translations
   const formatFrequency = (f?: string) => {
@@ -72,6 +88,13 @@ export const GesConstitutionStep: React.FC<GesConstitutionStepProps> = ({
       daily: "Diario",
       weekly: "Semanal",
       sporadic: "Esporádica",
+      // Stoffenmanager mappings
+      day_1: "Diario (1 día/jornada)",
+      week_4_5: "4-5 días/semana",
+      week_2_3: "2-3 días/semana",
+      week_1: "1 día/semana",
+      month_1: "Mensual",
+      year_1: "Anual",
     };
     return f ? map[f] || f : "No definido";
   };
@@ -82,8 +105,29 @@ export const GesConstitutionStep: React.FC<GesConstitutionStepProps> = ({
       "15m_2h": "15 min - 2 h",
       "2h_4h": "2 h - 4 h",
       gt_4h: "> 4 h",
+      // Stoffenmanager mappings
+      min_15: "< 15 min",
+      min_30: "15 - 30 min",
+      hour_2: "30 min - 2 h",
+      hour_4: "2 - 4 h",
+      hour_8: "> 4 h",
     };
     return d ? map[d] || d : "-";
+  };
+
+  // Helper for Technical Control Display
+  const formatControl = () => {
+    if (evaluationMethod === "advanced" && stoffenmanagerData) {
+      const map: Record<string, string> = {
+        containment_extraction: "Cabina Cerrada con Extracción",
+        containment_no_extract: "Cerramiento (Sin Extracción)",
+        local_extraction: "Extracción Localizada (LEA)",
+        suppression: "Supresión (Nebulización/Húmedo)",
+        none: "Sin Control Local Específico",
+      };
+      return map[stoffenmanagerData.localControl] || "No definido";
+    }
+    return basicCharData?.technicalMeasure || "No definido";
   };
 
   // Update parent on any change
@@ -102,7 +146,7 @@ export const GesConstitutionStep: React.FC<GesConstitutionStepProps> = ({
       {/* HEADER CARD */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
         <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-2">
-          <Users className="text-blue-600" /> 2. Constitución de GES
+          <Users className="text-blue-600" /> Constitución de GES
         </h3>
         <p className="text-gray-500 mb-6">
           Definición de Grupos de Exposición Similar según UNE-EN 689.
@@ -123,20 +167,23 @@ export const GesConstitutionStep: React.FC<GesConstitutionStepProps> = ({
             <div>
               <span className="text-slate-500 block">Tarea / Proceso:</span>
               <span className="font-medium text-slate-900">
-                {basicCharData?.processDescription || "No definida"}
+                {evaluationMethod === "advanced" && stoffenmanagerData
+                  ? `Clase ${stoffenmanagerData.handlingType} (Stoffenmanager)`
+                  : basicCharData?.processDescription || "No definida"}
               </span>
             </div>
             <div>
               <span className="text-slate-500 block">Perfil Temporal:</span>
               <span className="font-medium text-slate-900">
-                {formatFrequency(basicCharData?.frequency)} /{" "}
-                {formatDuration(basicCharData?.duration)}
+                {evaluationMethod === "advanced" && stoffenmanagerData
+                  ? `${formatFrequency(stoffenmanagerData.exposureFrequency)} / ${formatDuration(stoffenmanagerData.exposureDuration)}`
+                  : `${formatFrequency(basicCharData?.frequency)} / ${formatDuration(basicCharData?.duration)}`}
               </span>
             </div>
             <div>
               <span className="text-slate-500 block">Control Técnico:</span>
               <span className="font-medium text-slate-900">
-                {basicCharData?.technicalMeasure}
+                {formatControl()}
               </span>
             </div>
           </div>
@@ -218,9 +265,9 @@ export const GesConstitutionStep: React.FC<GesConstitutionStepProps> = ({
             <div className="text-4xl font-extrabold text-blue-600 mb-1">
               {samplingReq.minSamples}
             </div>
-            <div className="text-xs text-blue-400">
+            {/* <div className="text-xs text-blue-400">
               mediciones para el screening inicial
-            </div>
+            </div> */}
           </div>
 
           {/* EXPLANATION */}

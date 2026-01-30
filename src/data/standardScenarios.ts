@@ -27,7 +27,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Soldadura TIG en Acero Inoxidable",
     keywords: ["soldadura", "tig", "acero", "inox", "cromo", "níquel"],
     source: "BASEQUIM Ficha 011",
-    documentUrl: "https://www.insst.es/basequim",
+    documentUrl:
+      "https://www.insst.es/documents/94886/791398/BASEQUIM_011_0.pdf",
     risks: ["carcinogen", "sensitizer"],
     icon: "🔥",
     description: "Volatilización de metales (Cr VI, Ni) por arco eléctrico.",
@@ -53,7 +54,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["soldadura", "mig", "mag", "hilo", "humos", "manganeso"],
     source: "INSST NTP 1022",
     documentUrl:
-      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
+      "https://www.insst.es/documentacion/colecciones-tecnicas/ntp-notas-tecnicas-de-prevencion/29-serie-ntp-numeros-996-a-1030-ano-2014/nota-tecnica-de-prevencion-ntp-1022",
     risks: ["carcinogen", "reprotoxic"], // Mn is Repro, Fumes Carcinogen
     icon: "⚡",
     description: "Soldadura de hilo continuo. Alta generación de humos y Mn.",
@@ -165,8 +166,9 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "isocianatos",
       "disolvente",
     ],
-    source: "BASEQUIM 054",
-    documentUrl: "https://www.insst.es/basequim",
+    source: "BASEQUIM 033",
+    documentUrl:
+      "https://www.insst.es/documents/94886/791398/BASEQUIM_033_0.pdf",
     risks: ["sensitizer", "carcinogen"], // Isocyanates and some solvent/pigments
     icon: "🎨",
     description:
@@ -308,7 +310,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["demolición", "martillo", "obra", "escombros", "sílice"],
     source: "Guía Técnica Sílice",
     documentUrl:
-      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/guias-tecnicas",
+      "https://www.insst.es/documents/94886/2927460/Gu%C3%ADa+t%C3%A9cnica+para+la+evaluaci%C3%B3n+y+prevenci%C3%B3n+de+los+riesgos+relacionados+con+agentes+qu%C3%ADmicos+2022.pdf",
     risks: ["carcinogen"],
     icon: "🔨",
     description: "Picado de hormigón/paredes. Alta emisión de polvo.",
@@ -335,7 +337,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["amianto", "uralita", "fibrocemento", "tejado"],
     source: "RD 396/2006 (Plan de Trabajo)",
     documentUrl:
-      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/guias-tecnicas",
+      "https://www.insst.es/documents/94886/2927460/Gu%C3%ADa+t%C3%A9cnica+para+la+evaluaci%C3%B3n+y+prevenci%C3%B3n+de+los+riesgos+relacionados+con+la+exposici%C3%B3n+al+amianto.pdf",
     risks: ["carcinogen"],
     icon: "☠️",
     description:
@@ -364,8 +366,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Manipulación en Vitrina de Gases",
     keywords: ["laboratorio", "vitrina", "reactivos", "química", "ácido"],
     source: "NTP 672 (Vitrina)",
-    documentUrl:
-      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
+    documentUrl: "https://www.insst.es/documents/d/portal-insst/ntp_672-pdf",
     risks: ["carcinogen", "mutagen", "reprotoxic"], // Generic lab
     icon: "⚗️",
     description: "Trasvases o reacciones dentro de vitrina extractora.",
@@ -426,7 +427,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "tanatorio",
     ],
     source: "Guía Bioseguridad Funeraria",
-    documentUrl: "https://www.insst.es",
+    documentUrl:
+      "https://www.insst.es/documents/94886/715218/Directrices+de+buenas+pr%C3%A1cticas+en+el+Sector+Servicios+Funerarios/51965441-e6e7-4e6a-b5b7-83d78e828d3c",
     risks: ["carcinogen", "sensitizer"],
     relatedSubstances: ["formaldehído", "formol", "metanal"],
     relatedCNAEs: ["9603"],
@@ -454,7 +456,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["resina", "fenol", "formaldehído", "tableros", "cola"],
     source: "NTP 873 (Tableros)",
     documentUrl:
-      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
+      "https://www.insst.es/documentacion/colecciones-tecnicas/ntp-notas-tecnicas-de-prevencion/25-serie-ntp-numeros-856-a-890-ano-2011/nota-tecnica-de-prevencion-ntp-873",
     risks: ["carcinogen", "sensitizer"],
     relatedSubstances: ["formaldehído", "formol", "fenol"],
     relatedCNAEs: ["20", "16"], // Química y Madera
@@ -508,7 +510,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["harina", "panadería", "obrador", "asma", "polvo"],
     source: "NTP 1060 (Enzimas/Harina)",
     documentUrl:
-      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
+      "https://www.insst.es/documents/94886/329558/ntp-1060w.pdf/86ce0090-0894-47a2-b29a-8bd9dd7b11ad",
     risks: ["sensitizer"], // NOT CARCINOGEN - Should be filtered out
     icon: "🥖",
     description: "Sensibilizante (Asma del panadero).",
@@ -559,7 +561,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     keywords: ["pesticida", "herbicida", "mochila", "campo", "sulfatar"],
     source: "INSST Guía Fito",
     documentUrl:
-      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/guias-tecnicas",
+      "https://www.insst.es/documents/94886/1409228/Evaluaci%C3%B3n+del+riesgo+por+exposici%C3%B3n+a+productos+fitosanitarios+-+A%C3%B1o+2020.pdf",
     risks: ["carcinogen", "reprotoxic"], // Many are suspected
     icon: "🌾",
     description: "Pulverización manual de productos químicos agrícolas.",
@@ -616,7 +618,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "hexano",
     ],
     source: "Ficha Sector Calzado",
-    documentUrl: "https://www.insst.es",
+    documentUrl: "https://www.insst.es/documents/94886/791398/BASEQUIM_028.pdf",
     risks: ["reprotoxic"],
     icon: "👟",
     description:
@@ -643,7 +645,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Peluquería (Tintes/Decolorantes)",
     keywords: ["peluquería", "persulfato", "tinte", "amoniaco", "asma"],
     source: "Guía Asma Peluquería",
-    documentUrl: "https://www.insst.es",
+    documentUrl:
+      "https://www.insst.es/documents/94886/791398/BASEQUIM_013_0.pdf",
     risks: ["sensitizer"], // NOT CMR
     icon: "💇",
     description: "Preparación de mezclas colorantes. Riesgo asma y dermatitis.",
@@ -835,7 +838,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "niebla",
     ],
     source: "R.D. 374/2001 / Guía Técnica",
-    documentUrl: "https://www.insst.es/",
+    documentUrl:
+      "https://www.insst.es/documents/94886/2927460/Gu%C3%ADa+t%C3%A9cnica+para+la+evaluaci%C3%B3n+y+prevenci%C3%B3n+de+los+riesgos+relacionados+con+agentes+qu%C3%ADmicos+2022.pdf",
     risks: ["carcinogen", "sensitizer", "other"], // other=corrosine
     relatedSubstances: [
       "cromo vi",
@@ -956,8 +960,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "hospital",
       "equipos",
     ],
-    source: "NTP 1157",
-    documentUrl: "https://www.insst.es/",
+    source: "NTP 470",
+    documentUrl: "https://www.insst.es/documents/94886/211513/ntp_470.pdf",
     risks: ["carcinogen", "mutagen", "reprotoxic"],
     relatedSubstances: ["óxido de etileno"],
     icon: "🧼",
@@ -993,7 +997,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "refractario",
     ],
     source: "Directiva Cancerígenos",
-    documentUrl: "https://www.insst.es/",
+    documentUrl:
+      "https://www.insst.es/documents/94886/2927460/Gu%C3%ADa+t%C3%A9cnica+para+la+evaluaci%C3%B3n+y+prevenci%C3%B3n+de+los+riesgos+relacionados+con+agentes+cancer%C3%ADgenos+o+mut%C3%A1genos+durante+el+trabajo+2022.pdf",
     risks: ["carcinogen", "other"], // other=irritant
     relatedSubstances: ["fibras cerámicas", "fcr", "lana aislante"],
     icon: "🧱",
@@ -1051,7 +1056,8 @@ export const StandardScenarios_DB: StandardScenario[] = [
     title: "Disolventes Reprotóxicos (DMF, DMAc, 2-ME)",
     keywords: ["reprotoxico", "disolvente", "dmf", "dmac", "metoxietanol"],
     source: "Guía Reprotóxicos",
-    documentUrl: "https://www.insst.es/",
+    documentUrl:
+      "https://www.insst.es/documents/94886/2927460/Gu%C3%ADa+t%C3%A9cnica+para+la+evaluaci%C3%B3n+y+prevenci%C3%B3n+de+los+riesgos+relacionados+con+agentes+qu%C3%ADmicos+2022.pdf",
     risks: ["reprotoxic", "other"],
     relatedSubstances: [
       "n,n-dimetilformamida",

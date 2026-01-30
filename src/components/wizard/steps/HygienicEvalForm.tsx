@@ -265,6 +265,8 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     return (
       <GesConstitutionStep
         basicCharData={formData.basicCharacterization}
+        evaluationMethod={evaluationMethod}
+        stoffenmanagerData={formData.stoffenmanager}
         substanceName={
           hazardData?.substanceName ||
           formData.stoffenmanager?.productName ||
@@ -281,7 +283,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             setInternalStep(4); // Skip Stoffenmanager, go to Strategy for Simplified
           }
         }}
-        onBack={() => setInternalStep(1)} // Back to Basic Characterization
+        onBack={() => setInternalStep(evaluationMethod === "advanced" ? 3 : 1)} // Back to Basic Characterization or Stoffenmanager
       />
     );
   }
@@ -594,7 +596,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
     return (
       <StepCard
-        title="3. Estrategia de Muestreo y Exposición"
+        title="Estrategia de Muestreo y Exposición"
         description="Definición del perfil estratégico y métodos técnicos"
         icon={<FlaskConical className="w-6 h-6" />}
       >
@@ -603,7 +605,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           <div className="flex items-center gap-3 mb-4">
             <span className="text-2xl">📉</span>
             <h3 className="text-lg font-bold text-gray-800">
-              3. Tipo de Exposición (Perfil Temporal)
+              Tipo de Exposición (Perfil Temporal)
             </h3>
           </div>
 
@@ -677,7 +679,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               <span className="text-2xl">📋</span>
               <div>
                 <h3 className="text-lg font-bold text-gray-800">
-                  4. Estrategia de Medición (UNE-EN 689)
+                  Estrategia de Medición (UNE-EN 689)
                 </h3>
                 <p className="text-sm text-gray-500">
                   Métodos de captación y análisis oficiales.
@@ -802,7 +804,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
     return (
       <StepCard
-        title="5. Resultados de la Medición"
+        title="Resultados de las Mediciones"
         description="Evaluación de la conformidad (Índice I)"
         icon="📊"
       >
