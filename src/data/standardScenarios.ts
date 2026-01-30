@@ -427,7 +427,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
     ],
     source: "Guía Bioseguridad Funeraria",
     documentUrl:
-      "https://www.insst.es/el-instituto-al-dia/catalogo-de-publicaciones/ntp",
+      "https://www.insst.es/divulgacion/publicaciones/notas-tecnicas-de-prevencion",
     risks: ["carcinogen", "sensitizer"],
     relatedSubstances: ["formaldehído", "formol", "metanal"],
     relatedCNAEs: ["9603"],
