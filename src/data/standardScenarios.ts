@@ -426,8 +426,7 @@ export const StandardScenarios_DB: StandardScenario[] = [
       "tanatorio",
     ],
     source: "Guía Bioseguridad Funeraria",
-    documentUrl:
-      "https://www.insst.es/divulgacion/publicaciones/notas-tecnicas-de-prevencion",
+    documentUrl: "https://www.insst.es",
     risks: ["carcinogen", "sensitizer"],
     relatedSubstances: ["formaldehído", "formol", "metanal"],
     relatedCNAEs: ["9603"],
