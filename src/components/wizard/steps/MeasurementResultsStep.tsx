@@ -164,16 +164,24 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                     {sample.type === "direct" ? (
                       <div className="flex items-center gap-2">
                         <input
-                          type="number"
-                          step="0.001"
+                          type="text"
+                          inputMode="decimal"
                           className="border rounded p-2 w-32 font-mono"
-                          value={sample.value || ""}
-                          onChange={(e) =>
-                            updateSample(sample.id, {
-                              value: parseFloat(e.target.value),
-                            })
+                          defaultValue={
+                            sample.value?.toString().replace(".", ",") || ""
                           }
-                          placeholder="0.000"
+                          key={`direct-${sample.id}-${sample.value}`} // Re-render on value change
+                          onBlur={(e) => {
+                            const val = parseFloat(
+                              e.target.value.replace(",", "."),
+                            );
+                            if (!isNaN(val)) {
+                              updateSample(sample.id, {
+                                value: val,
+                              });
+                            }
+                          }}
+                          placeholder="0,000"
                         />
                         <label className="flex items-center gap-1 text-xs text-gray-500 cursor-pointer">
                           <input
@@ -212,19 +220,29 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                             Masa (µg)
                           </span>
                           <input
-                            type="number"
+                            type="text"
+                            inputMode="decimal"
                             className="border rounded p-1 w-20 text-xs"
                             placeholder="µg"
-                            value={sample.raw?.mass || ""}
-                            onChange={(e) =>
-                              updateSample(sample.id, {
-                                raw: {
-                                  mass: parseFloat(e.target.value),
-                                  flow: sample.raw?.flow || 0,
-                                  time: sample.raw?.time || 0,
-                                },
-                              })
+                            defaultValue={
+                              sample.raw?.mass?.toString().replace(".", ",") ||
+                              ""
                             }
+                            key={`mass-${sample.id}-${sample.raw?.mass}`}
+                            onBlur={(e) => {
+                              const val = parseFloat(
+                                e.target.value.replace(",", "."),
+                              );
+                              if (!isNaN(val)) {
+                                updateSample(sample.id, {
+                                  raw: {
+                                    mass: val,
+                                    flow: sample.raw?.flow || 0,
+                                    time: sample.raw?.time || 0,
+                                  },
+                                });
+                              }
+                            }}
                           />
                         </div>
                         <div className="flex flex-col">
@@ -232,19 +250,29 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                             Caudal (l/min)
                           </span>
                           <input
-                            type="number"
+                            type="text"
+                            inputMode="decimal"
                             className="border rounded p-1 w-16 text-xs"
                             placeholder="l/min"
-                            value={sample.raw?.flow || ""}
-                            onChange={(e) =>
-                              updateSample(sample.id, {
-                                raw: {
-                                  mass: sample.raw?.mass || 0,
-                                  flow: parseFloat(e.target.value),
-                                  time: sample.raw?.time || 0,
-                                },
-                              })
+                            defaultValue={
+                              sample.raw?.flow?.toString().replace(".", ",") ||
+                              ""
                             }
+                            key={`flow-${sample.id}-${sample.raw?.flow}`}
+                            onBlur={(e) => {
+                              const val = parseFloat(
+                                e.target.value.replace(",", "."),
+                              );
+                              if (!isNaN(val)) {
+                                updateSample(sample.id, {
+                                  raw: {
+                                    mass: sample.raw?.mass || 0,
+                                    flow: val,
+                                    time: sample.raw?.time || 0,
+                                  },
+                                });
+                              }
+                            }}
                           />
                         </div>
                         <div className="flex flex-col">
@@ -252,19 +280,29 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                             Tiempo (min)
                           </span>
                           <input
-                            type="number"
+                            type="text"
+                            inputMode="decimal"
                             className="border rounded p-1 w-16 text-xs"
                             placeholder="min"
-                            value={sample.raw?.time || ""}
-                            onChange={(e) =>
-                              updateSample(sample.id, {
-                                raw: {
-                                  mass: sample.raw?.mass || 0,
-                                  flow: sample.raw?.flow || 0,
-                                  time: parseFloat(e.target.value),
-                                },
-                              })
+                            defaultValue={
+                              sample.raw?.time?.toString().replace(".", ",") ||
+                              ""
                             }
+                            key={`time-${sample.id}-${sample.raw?.time}`}
+                            onBlur={(e) => {
+                              const val = parseFloat(
+                                e.target.value.replace(",", "."),
+                              );
+                              if (!isNaN(val)) {
+                                updateSample(sample.id, {
+                                  raw: {
+                                    mass: sample.raw?.mass || 0,
+                                    flow: sample.raw?.flow || 0,
+                                    time: val,
+                                  },
+                                });
+                              }
+                            }}
                           />
                         </div>
                       </div>
