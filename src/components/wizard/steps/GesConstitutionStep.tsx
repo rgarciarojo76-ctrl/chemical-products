@@ -55,8 +55,8 @@ export const GesConstitutionStep: React.FC<GesConstitutionStepProps> = ({
         "N > 50: Estrategia estadística (Tabla B.1 y Apéndice D). Mínimo recomendado escalable.";
     }
 
-    // Override for very small N per prompt "N<=10 suggest n=3"
-    if (N > 10 && N < 15) n = 3; // Refine lower bound
+    // Override removed to respect standard rule for 10 < N <= 20 (n=4)
+    // if(N > 10 && N < 15) n = 3;
 
     return { minSamples: n, rule };
   };
