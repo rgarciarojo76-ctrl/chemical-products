@@ -66,6 +66,26 @@ export const GesConstitutionStep: React.FC<GesConstitutionStepProps> = ({
   // Auto-generate Justification
   const narrative = `Se constituye el GES ${generatedId} debido a la identidad absoluta de sus perfiles de exposición según los criterios de la caracterización básica (Agente: ${substanceName}, Tarea: ${basicCharData?.processDescription}), garantizando la homogeneidad del grupo para la posterior evaluación higiénica.`;
 
+  // HELPER: Translations
+  const formatFrequency = (f?: string) => {
+    const map: Record<string, string> = {
+      daily: "Diario",
+      weekly: "Semanal",
+      sporadic: "Esporádica",
+    };
+    return f ? map[f] || f : "No definido";
+  };
+
+  const formatDuration = (d?: string) => {
+    const map: Record<string, string> = {
+      lt_15m: "< 15 min",
+      "15m_2h": "15 min - 2 h",
+      "2h_4h": "2 h - 4 h",
+      gt_4h: "> 4 h",
+    };
+    return d ? map[d] || d : "-";
+  };
+
   // Update parent on any change
   useEffect(() => {
     onUpdate({
@@ -109,7 +129,8 @@ export const GesConstitutionStep: React.FC<GesConstitutionStepProps> = ({
             <div>
               <span className="text-slate-500 block">Perfil Temporal:</span>
               <span className="font-medium text-slate-900">
-                {basicCharData?.frequency} / {basicCharData?.duration}
+                {formatFrequency(basicCharData?.frequency)} /{" "}
+                {formatDuration(basicCharData?.duration)}
               </span>
             </div>
             <div>
@@ -197,7 +218,9 @@ export const GesConstitutionStep: React.FC<GesConstitutionStepProps> = ({
             <div className="text-4xl font-extrabold text-blue-600 mb-1">
               {samplingReq.minSamples}
             </div>
-            <div className="text-xs text-blue-400">Jornadas Completas</div>
+            <div className="text-xs text-blue-400">
+              mediciones para el screening inicial
+            </div>
           </div>
 
           {/* EXPLANATION */}
