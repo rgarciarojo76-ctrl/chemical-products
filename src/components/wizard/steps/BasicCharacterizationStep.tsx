@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from "react";
 import {
-  AlertTriangle,
   Shield,
   Factory,
   Users,
@@ -796,7 +795,7 @@ export const BasicCharacterizationStep: React.FC<
           }}
         >
           <Shield size={24} color="var(--color-primary)" />
-          Caracterización Avanzada
+          Caracterización Básica
           {activeScenario && (
             <a
               href={activeScenario.documentUrl}
@@ -986,51 +985,6 @@ export const BasicCharacterizationStep: React.FC<
             <option value="none">6. Ninguna / Ventilación Natural</option>
           </select>
         </div>
-
-        {showLegalAlert && (
-          <div
-            style={{
-              background: "#fff7ed",
-              border: "1px solid #fdba74",
-              padding: "1rem",
-              borderRadius: "8px",
-            }}
-          >
-            <div style={{ display: "flex", gap: "0.75rem" }}>
-              <AlertTriangle size={20} color="#ea580c" />
-              <div>
-                <h6
-                  style={{
-                    fontWeight: 700,
-                    color: "#9a3412",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  Justificación Requerida
-                </h6>
-                <p
-                  style={{
-                    fontSize: "0.85rem",
-                    color: "#c2410c",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  Para cancerígenos se exige Sistema Cerrado. Justifique la
-                  inviabilidad técnica:
-                </p>
-                <textarea
-                  className="expert-textarea"
-                  rows={3}
-                  placeholder="Escriba aquí la justificación técnica..."
-                  value={form.measureJustification || ""}
-                  onChange={(e) =>
-                    handleChange("measureJustification", e.target.value)
-                  }
-                />
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* C & D. ENTORNO Y ORGANIZACIÓN */}
