@@ -810,7 +810,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
                   Soporte de Muestreo
                 </p>
-                <p className="font-bold text-gray-900 text-lg leading-tight">
+                <p className="font-bold text-gray-900 text-base leading-tight">
                   {samplingSupport}
                 </p>
               </div>
@@ -825,7 +825,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
                   Técnica Analítica
                 </p>
-                <p className="font-bold text-gray-900 text-lg leading-tight">
+                <p className="font-bold text-gray-900 text-base leading-tight">
                   {richData?.sampling.technique || "Cromatografía (HPLC)"}
                 </p>
               </div>
@@ -840,7 +840,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
                   Caudal de Bomba
                 </p>
-                <p className="font-bold text-gray-900 text-lg leading-tight">
+                <p className="font-bold text-gray-900 text-base leading-tight">
                   {flowRate}
                 </p>
               </div>
@@ -855,7 +855,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
                   Tiempo Mín. Muestreo
                 </p>
-                <p className="font-bold text-gray-900 text-lg leading-tight">
+                <p className="font-bold text-gray-900 text-base leading-tight">
                   {minTime}
                 </p>
               </div>
