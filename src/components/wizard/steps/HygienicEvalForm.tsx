@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { StepCard } from "../../ui/StepCard";
 import { BasicCharacterizationStep } from "./BasicCharacterizationStep";
+import { GesConstitutionStep } from "./GesConstitutionStep";
 import { calculateStoffenmanager } from "../../../utils/stoffenmanagerLogic";
 import type {
   HygienicEvalInput,
@@ -77,10 +78,6 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     },
   );
 
-  const [result, setResult] = useState<HygienicAssessment | null>(
-    initialData?.labResult ? onAnalyze(initialData) : null,
-  );
-
   // --- LOGIC: Stoffenmanager Auto-fill ---
   useEffect(() => {
     if (!formData.stoffenmanager && hazardData) {
@@ -127,21 +124,9 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
   const calculateResults = () => {
     if (evaluationMethod === "advanced" && formData.stoffenmanager) {
-      const smResult = calculateStoffenmanager(formData.stoffenmanager);
-      setResult({
-        isSafe: smResult.riskPriority === "III",
-        justification: {
-          technical: `Puntuación de Exposición: ${smResult.exposureScore}. Prioridad de riesgo: ${smResult.riskPriority}.`,
-          legal: {
-            article: "NTP 937",
-            text: "Modelo Stoffenmanager® (Algoritmo Simplificado)",
-          },
-        },
-        stoffenmanagerResult: smResult,
-      });
+      calculateStoffenmanager(formData.stoffenmanager);
     } else {
-      const assessment = onAnalyze(formData);
-      setResult(assessment);
+      onAnalyze(formData);
     }
   };
 
@@ -278,101 +263,26 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   // --- RENDER: STEP 2 - GES (Grupos de Exposición Similar) ---
   if (internalStep === 2) {
     return (
-      <StepCard
-        title="2. Definición de GES"
-        description="Grupos de Exposición Similar"
-        icon="👥"
-      >
-        <div className="form-group mb-4">
-          <label className="block text-sm font-medium mb-1">
-            Nombre del Grupo (GES)
-          </label>
-          <input
-            type="text"
-            className="w-full p-2 border rounded"
-            placeholder="Ej: Operarios de Limpieza Turno Mañana"
-          />
-        </div>
-        <div className="form-group mb-4">
-          <label className="block text-sm font-medium mb-1">
-            Nº Trabajadores Expuestos
-          </label>
-          <input
-            type="number"
-            className="w-full p-2 border rounded"
-            defaultValue={1}
-          />
-        </div>
-
-        <div
-          style={{
-            marginTop: "2rem",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <button
-            onClick={() => {
-              if (evaluationMethod === "advanced") {
-                setInternalStep(3); // Back to Stoffenmanager
-              } else {
-                setInternalStep(1); // Back to Simplified
-              }
-            }}
-            className="step4-btn-back"
-          >
-            ← Atrás
-          </button>
-          <button
-            onClick={() => {
-              // Proceed to Strategy (Step 4) regardless of method
-              setInternalStep(4);
-            }}
-            className="step4-btn-confirm"
-          >
-            Siguiente: Estrategia de Medición →
-          </button>
-        </div>
-
-        {/* RESULTS DISPLAY for Simplified */}
-        {evaluationMethod === "simplified" && result && (
-          <div
-            style={{
-              marginTop: "2rem",
-              padding: "1.5rem",
-              borderRadius: "8px",
-              backgroundColor: result.isSafe ? "#f0fdf4" : "#fef2f2",
-              border: `2px solid ${result.isSafe ? "#22c55e" : "#ef4444"}`,
-            }}
-          >
-            <h3
-              style={{
-                fontWeight: "bold",
-                color: result.isSafe ? "#15803d" : "#b91c1c",
-              }}
-            >
-              {result.isSafe
-                ? "✅ RIESGO CONTROLADO"
-                : "⚠️ RIESGO NO DESCARTABLE"}
-            </h3>
-            <p style={{ marginTop: "0.5rem" }}>
-              {result.justification.technical}
-            </p>
-            <button
-              onClick={onNext}
-              style={{
-                marginTop: "1rem",
-                background: "#2563eb",
-                color: "white",
-                padding: "0.5rem 1rem",
-                borderRadius: "4px",
-              }}
-            >
-              Ver Informe
-            </button>
-          </div>
-        )}
-      </StepCard>
+      <GesConstitutionStep
+        basicCharData={formData.basicCharacterization}
+        substanceName={
+          hazardData?.substanceName ||
+          formData.stoffenmanager?.productName ||
+          "Agente Químico"
+        }
+        initialData={formData.ges}
+        onUpdate={(data) => setFormData((prev) => ({ ...prev, ges: data }))}
+        onNext={() => {
+          // Proceed to Strategy (Step 4) regardless of method
+          // Or back to Stoffenmanager if Advanced
+          if (evaluationMethod === "advanced") {
+            setInternalStep(3); // Go to Stoffenmanager to complete quantitative variables
+          } else {
+            setInternalStep(4); // Skip Stoffenmanager, go to Strategy for Simplified
+          }
+        }}
+        onBack={() => setInternalStep(1)} // Back to Basic Characterization
+      />
     );
   }
 

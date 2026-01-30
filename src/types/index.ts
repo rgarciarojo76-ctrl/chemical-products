@@ -206,9 +206,21 @@ export interface BasicCharacterizationInput {
   observations?: string;
 }
 
+// Module 3.1.2: GES
+export interface GesData {
+  gesId: string;
+  workerCount: number;
+  samplingStrategy: {
+    minSamples: number;
+    rule: string;
+  };
+  justification: string;
+}
+
 export interface HygienicEvalInput {
   evaluationMethod?: "simplified" | "advanced";
   basicCharacterization?: BasicCharacterizationInput;
+  ges?: GesData;
   labResult?: number; // mg/m3
   lod?: number; // Limit of Detection
   vla?: number; // Reference Limit (VLA-ED)
