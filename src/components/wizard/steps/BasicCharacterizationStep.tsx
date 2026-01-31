@@ -576,10 +576,6 @@ export const BasicCharacterizationStep: React.FC<
                   s.relatedSubstances?.some((rs) => subName.includes(rs)),
               );
 
-              const others = filteredScenarios.filter(
-                (s) => !recommended.includes(s),
-              );
-
               const renderScenario = (scenario: StandardScenario) => (
                 <div
                   key={scenario.id}
@@ -720,25 +716,6 @@ export const BasicCharacterizationStep: React.FC<
                       </div>
                     </div>
                   )}
-
-                  <div>
-                    {recommended.length > 0 && (
-                      <h4
-                        style={{
-                          fontSize: "1rem",
-                          color: "#64748b",
-                          marginBottom: "1rem",
-                          borderTop: "1px solid #e2e8f0",
-                          paddingTop: "1rem",
-                        }}
-                      >
-                        Otros Escenarios de Exposición
-                      </h4>
-                    )}
-                    <div className="scenario-grid">
-                      {others.map(renderScenario)}
-                    </div>
-                  </div>
                 </div>
               );
             })()}
