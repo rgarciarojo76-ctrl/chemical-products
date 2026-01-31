@@ -121,9 +121,24 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
     });
 
     // 2. Run Engine
-    const evalResult = runEn689Evaluation(processedSamples, vlaReference);
-    setResult(evalResult);
-    onUpdate(evalResult);
+    try {
+      const evalResult = runEn689Evaluation(processedSamples, vlaReference);
+      setResult(evalResult);
+      onUpdate(evalResult);
+    } catch (err) {
+      console.error("Calculator Error:", err);
+      // Fallback safe result
+      const errorResult: En689Result = {
+        decision: "need_more_samples",
+        ruleApplied: "screening",
+        vlaApplied: vlaReference,
+        samples: processedSamples,
+        qualityAlerts: ["Error interno de cálculo. Revise los datos."],
+        nextCheck: "Error",
+        stats: undefined,
+      };
+      setResult(errorResult);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [samples, vlaReference]);
 
@@ -469,8 +484,9 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
               <div className="text-center py-8 text-gray-400 text-sm">
                 <p>Estadística avanzada disponible con N ≥ 6.</p>
                 <div className="mt-2 text-xs bg-gray-50 p-2 rounded inline-block">
-                  Criterio actual: Todos ≤ {(result.stats?.ur || 0).toFixed(2)}{" "}
-                  (Fracción del VLA)
+                  Criterio actual: Todos ≤{" "}
+                  {(Number(result.stats?.ur) || 0).toFixed(2)} (Fracción del
+                  VLA)
                 </div>
               </div>
             )}
