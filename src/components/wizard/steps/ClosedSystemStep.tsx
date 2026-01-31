@@ -51,6 +51,36 @@ const INITIAL_PHASES: Record<
   } as PhaseAnalysis,
 };
 
+const EDUCATIONAL_CONFIG: Record<
+  string,
+  { juniorText: string; validationQuestion: string }
+> = {
+  loading: {
+    juniorText:
+      "El mayor riesgo de exposición ocurre al conectar el envase al reactor. Un sistema cerrado real debe impedir que el polvo o vapor escape al aire durante la conexión",
+    validationQuestion:
+      "¿Usa válvulas de doble mariposa o acoplamientos rápidos estancos?",
+  },
+  process: {
+    juniorText:
+      "Durante la mezcla o reacción, la presión interna puede empujar el cancerígeno hacia fuera a través de juntas o poros. La presión negativa (depresión) garantiza que, si hay una fuga, el aire entre, evitando que el químico salga",
+    validationQuestion:
+      "¿Trabaja el equipo en depresión o tiene sensores de presión con alarma?",
+  },
+  emptying: {
+    juniorText:
+      "Al sacar el producto final, el desplazamiento del aire puede arrastrar partículas cancerígenas al rostro del operario. El envasado debe ser estanco o mediante sistemas de flujo compensado",
+    validationQuestion:
+      "¿Se utiliza envasado en bucle cerrado o transferencia por vacío?",
+  },
+  maintenance: {
+    juniorText:
+      "Abrir un equipo para limpiarlo es romper el sistema cerrado. Un sistema excelente debe limpiarse solo por dentro antes de que nadie lo toque físicamente",
+    validationQuestion:
+      "¿Dispone de sistema CIP (Clean-in-place) con certificado de eficacia?",
+  },
+};
+
 export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
   onUpdate,
   onNext,
@@ -104,11 +134,31 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
         outputDoc,
       });
     } else if (isClosed === true) {
-      onUpdate({
-        isClosedSystem: true,
-        phases: INITIAL_PHASES as ClosedSystemAnalysis["phases"],
-        outputDoc: "exemption_justification", // Not used if closed
-      });
+      // Educational Flow: Only output if all validated
+      const allValidated = Object.values(phases).every(
+        (p) =>
+          p.validation?.isTight === true &&
+          p.validation?.hasPhoto &&
+          p.validation?.hasPdf,
+      );
+
+      if (allValidated) {
+        onUpdate({
+          isClosedSystem: true,
+          phases: phases as ClosedSystemAnalysis["phases"],
+          outputDoc: "exemption_justification",
+        });
+      } else {
+        // Keep updating parent but maybe mark it as partial or incomplete?
+        // Actually, for the wizard, we might want to wait until Next is clicked.
+        // But the previous logic was auto-finish.
+        // We will Handle it on 'onNext' or just sync current state.
+        onUpdate({
+          isClosedSystem: true,
+          phases: phases as ClosedSystemAnalysis["phases"],
+          outputDoc: "exemption_justification", // Will be valid once completed
+        });
+      }
     }
   }, [isClosed, phases, materialFactor, estimate, onUpdate]); // Added props to dep array, but careful with loops. Using JSON stringify might be safer if frequent updates.
   // Actually onUpdate is stable usually.
@@ -120,97 +170,101 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
     }));
   };
 
-  const renderPhaseContent = (
-    key: "loading" | "process" | "emptying" | "maintenance",
-  ) => {
+  const renderValidationControls = (key: string) => {
     const phase = phases[key];
-    const reasons: string[] =
-      (STANDARD_REASONS as Record<string, string[]>)[key] || [];
-
-    const phaseImages = {
-      loading: "/images/closed_system/phase_a_loading.png",
-      process: "/images/closed_system/phase_b_process.png",
-      emptying: "/images/closed_system/phase_c_discharge.png",
-      maintenance: "/images/closed_system/phase_d_cleaning.png",
-    };
-
-    const phaseEducation = {
-      loading: (
-        <>
-          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
-          <p className="text-sm text-gray-600 mb-2">
-            La apertura de bocas de carga y la conexión de mangueras son los
-            momentos de mayor riesgo de exposición.
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Objetivo:</strong> Eliminar la interfaz abierta mediante
-            sistemas de transferencia por vacío o gravedad estanca.
-          </p>
-        </>
-      ),
-      process: (
-        <>
-          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
-          <p className="text-sm text-gray-600 mb-2">
-            Durante la reacción, la presión y temperatura pueden forzar fugas en
-            sellos mecánicos, juntas y válvulas.
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Objetivo:</strong> Garantizar estanqueidad total en ejes de
-            agitación y puntos de muestreo.
-          </p>
-        </>
-      ),
-      emptying: (
-        <>
-          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
-          <p className="text-sm text-gray-600 mb-2">
-            El envasado final suele generar vapores y salpicaduras si se realiza
-            por vertido libre.
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Objetivo:</strong> Utilizar cabezales de llenado estancos,
-            acoples secos o sistemas de dosificación automática.
-          </p>
-        </>
-      ),
-      maintenance: (
-        <>
-          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
-          <p className="text-sm text-gray-600 mb-2">
-            La limpieza manual requiere apertura de equipos y entrada en
-            espacios confinados.
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Objetivo:</strong> Implementar sistemas CIP (Clean-In-Place)
-            para lavar sin abrir el equipo.
-          </p>
-        </>
-      ),
-    };
+    const validation = phase.validation || {};
 
     return (
-      <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
-        {/* Visual Schematic & Education */}
-        <div className="mb-6 bg-white p-4 rounded border border-gray-100 shadow-sm">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            {/* Left: Image */}
-            <div className="flex justify-center border-r border-gray-100 pr-6">
-              <img
-                src={phaseImages[key]}
-                alt={`Esquema Fase ${phase.name}`}
-                className="max-h-48 object-contain"
-              />
-            </div>
-            {/* Right: Education */}
-            <div className="pl-2">
-              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
-                {phaseEducation[key]}
+      <div className="space-y-4">
+        {/* 1. Validation YES/NO */}
+        <div className="fixed-buttons flex gap-4 justify-center">
+          <button
+            onClick={() =>
+              updatePhase(key, {
+                validation: { ...validation, isTight: true },
+                status: "evaluated",
+              })
+            }
+            className={`px-4 py-2 rounded-lg font-bold border transition-colors flex items-center gap-2 ${
+              validation.isTight === true
+                ? "bg-green-600 text-white border-green-600"
+                : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
+            }`}
+          >
+            <CheckCircle2 size={18} /> SÍ, CUMPLE
+          </button>
+          <button
+            onClick={() => {
+              // FALLBACK LOGIC
+              if (
+                confirm(
+                  "Si no puede asegurar la estanqueidad, el sistema se reclasificará como 'Parcialmente Cerrado'. ¿Continuar?",
+                )
+              ) {
+                setIsClosed(false); // Switch to NO flow
+              }
+            }}
+            className={`px-4 py-2 rounded-lg font-bold border transition-colors flex items-center gap-2 bg-white text-gray-600 border-gray-300 hover:bg-red-50 hover:text-red-600`}
+          >
+            <XCircle size={18} /> No puedo asegurar la estanqueidad
+          </button>
+        </div>
+
+        {/* 2. Evidence Upload (Only if YES) */}
+        {validation.isTight && (
+          <div className="bg-green-50 p-4 rounded border border-green-100 animate-fadeIn">
+            <h5 className="font-bold text-green-800 text-sm mb-3">
+              📸 Evidencias Obligatorias
+            </h5>
+            <div className="grid grid-cols-2 gap-4">
+              <div
+                onClick={() =>
+                  updatePhase(key, {
+                    validation: {
+                      ...validation,
+                      hasPhoto: !validation.hasPhoto,
+                    },
+                  })
+                }
+                className={`cursor-pointer p-4 rounded border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-colors ${
+                  validation.hasPhoto
+                    ? "bg-green-100 border-green-400 text-green-700"
+                    : "bg-white border-gray-300 text-gray-400 hover:border-blue-400"
+                }`}
+              >
+                <div className="font-bold text-xs">
+                  {validation.hasPhoto ? "FOTO SUBIDA" : "SUBIR FOTO"}
+                </div>
+              </div>
+              <div
+                onClick={() =>
+                  updatePhase(key, {
+                    validation: { ...validation, hasPdf: !validation.hasPdf },
+                  })
+                }
+                className={`cursor-pointer p-4 rounded border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-colors ${
+                  validation.hasPdf
+                    ? "bg-green-100 border-green-400 text-green-700"
+                    : "bg-white border-gray-300 text-gray-400 hover:border-blue-400"
+                }`}
+              >
+                <div className="font-bold text-xs">
+                  {validation.hasPdf ? "PDF SUBIDO" : "SUBIR PDF"}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
+      </div>
+    );
+  };
 
+  const renderStandardControls = (key: string) => {
+    const phase = phases[key];
+    const reasons: string[] =
+      (STANDARD_REASONS as Record<string, string[]>)[key] || [];
+    return (
+      <>
         <div className="flex items-center justify-between mb-4">
           <h4 className="font-bold text-gray-800 flex items-center gap-2">
             <Factory size={18} /> Fase {phase.id}: {phase.name}
@@ -370,6 +424,123 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
             </div>
           </div>
         )}
+      </>
+    );
+  };
+
+  const renderPhaseContent = (
+    key: "loading" | "process" | "emptying" | "maintenance",
+  ) => {
+    const phase = phases[key];
+
+    const phaseImages = {
+      loading: "/images/closed_system/phase_a_loading.png",
+      process: "/images/closed_system/phase_b_process.png",
+      emptying: "/images/closed_system/phase_c_discharge.png",
+      maintenance: "/images/closed_system/phase_d_cleaning.png",
+    };
+
+    const phaseEducation = {
+      loading: (
+        <>
+          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
+          <p className="text-sm text-gray-600 mb-2">
+            La apertura de bocas de carga y la conexión de mangueras son los
+            momentos de mayor riesgo de exposición.
+          </p>
+          <p className="text-sm text-gray-600">
+            <strong>Objetivo:</strong> Eliminar la interfaz abierta mediante
+            sistemas de transferencia por vacío o gravedad estanca.
+          </p>
+        </>
+      ),
+      process: (
+        <>
+          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
+          <p className="text-sm text-gray-600 mb-2">
+            Durante la reacción, la presión y temperatura pueden forzar fugas en
+            sellos mecánicos, juntas y válvulas.
+          </p>
+          <p className="text-sm text-gray-600">
+            <strong>Objetivo:</strong> Garantizar estanqueidad total en ejes de
+            agitación y puntos de muestreo.
+          </p>
+        </>
+      ),
+      emptying: (
+        <>
+          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
+          <p className="text-sm text-gray-600 mb-2">
+            El envasado final suele generar vapores y salpicaduras si se realiza
+            por vertido libre.
+          </p>
+          <p className="text-sm text-gray-600">
+            <strong>Objetivo:</strong> Utilizar cabezales de llenado estancos,
+            acoples secos o sistemas de dosificación automática.
+          </p>
+        </>
+      ),
+      maintenance: (
+        <>
+          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
+          <p className="text-sm text-gray-600 mb-2">
+            La limpieza manual requiere apertura de equipos y entrada en
+            espacios confinados.
+          </p>
+          <p className="text-sm text-gray-600">
+            <strong>Objetivo:</strong> Implementar sistemas CIP (Clean-In-Place)
+            para lavar sin abrir el equipo.
+          </p>
+        </>
+      ),
+    };
+
+    return (
+      <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
+        {/* Visual Schematic & Education */}
+        <div className="mb-6 bg-white p-4 rounded border border-gray-100 shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            {/* Left: Image */}
+            <div className="flex justify-center border-r border-gray-100 pr-6">
+              <img
+                src={phaseImages[key]}
+                alt={`Esquema Fase ${phase.name}`}
+                className="max-h-48 object-contain"
+              />
+            </div>
+            {/* Right: Education */}
+            <div className="pl-2">
+              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                {isClosed === true ? (
+                  // Educational Flow (User said YES)
+                  <div>
+                    <h5 className="font-bold text-blue-900 mb-2">
+                      🎓 Explicación (Nivel Junior):
+                    </h5>
+                    <p className="text-sm text-gray-700 italic mb-3">
+                      "{EDUCATIONAL_CONFIG[key].juniorText}"
+                    </p>
+                    <div className="bg-white p-3 rounded border border-blue-100">
+                      <p className="font-bold text-sm text-blue-800 mb-2">
+                        🔍 Validación Técnica:
+                      </p>
+                      <p className="text-sm text-gray-800">
+                        {EDUCATIONAL_CONFIG[key].validationQuestion}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  // Original Flow (User said NO)
+                  phaseEducation[key]
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {isClosed === true
+          ? renderValidationControls(key)
+          : renderStandardControls(key)}
       </div>
     );
   };
@@ -413,7 +584,7 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
           </div>
         </div>
 
-        {isClosed === false && (
+        {isClosed !== null && (
           <div className="space-y-6 animate-fadeIn">
             {/* TABS */}
             <div className="flex border-b">

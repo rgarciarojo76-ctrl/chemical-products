@@ -318,6 +318,12 @@ export interface PhaseAnalysis {
     units?: number; // Points or Lines
     volume?: number; // m3
   };
+  // Educational Validation (For YES flow)
+  validation?: {
+    isTight?: boolean; // Answer to specific validation question
+    hasPhoto?: boolean; // Evidence 1
+    hasPdf?: boolean; // Evidence 2
+  };
 }
 
 export interface SystemCostEstimate {

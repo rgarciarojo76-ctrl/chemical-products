@@ -318,10 +318,29 @@ export const BasicCharacterizationStep: React.FC<
             <button className="card-btn">Abrir Asistente</button>
           </div>
 
-          {/* Card 2: Expert Mode */}
-          <div className="selection-card" onClick={() => setMode("expert")}>
+          {/* Card 2: Expert Mode (Visually Updated to Assistant) */}
+          <div
+            className="selection-card relative"
+            onClick={() => setMode("expert")}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: "-12px",
+                right: "20px",
+                backgroundColor: "#2563eb",
+                color: "white",
+                fontSize: "0.7rem",
+                padding: "0.25rem 0.75rem",
+                fontWeight: 700,
+                borderRadius: "99px",
+                textTransform: "uppercase",
+              }}
+            >
+              Recomendado
+            </div>
             <div className="card-icon-wrapper">
-              <Shield size={32} strokeWidth={2} />
+              <BookOpen size={32} strokeWidth={2} />
             </div>
 
             <h3
@@ -332,7 +351,7 @@ export const BasicCharacterizationStep: React.FC<
                 color: "var(--color-text-main)",
               }}
             >
-              Modo Experto / Libre
+              Asistente de Escenarios Estándar
             </h3>
             <p
               style={{
@@ -342,11 +361,12 @@ export const BasicCharacterizationStep: React.FC<
                 lineHeight: 1.5,
               }}
             >
-              Configure manualmente cada parámetro de la evaluación cualitativa.
-              Ideal para procesos atípicos o no estandarizados.
+              Utilice situaciones de trabajo pre-validadas por el{" "}
+              <strong>INSST</strong>. Carga automáticamente medidas de control,
+              EPIs y perfiles de exposición conformes a normativa.
             </p>
 
-            <button className="card-btn">Configuración Manual</button>
+            <button className="card-btn">Abrir Asistente</button>
           </div>
         </div>
       </div>
@@ -716,6 +736,39 @@ export const BasicCharacterizationStep: React.FC<
                       </div>
                     </div>
                   )}
+
+                  {/* Expert Mode Fallback */}
+                  <div className="mt-8 pt-8 border-t border-gray-100 animate-fadeIn">
+                    <h4 className="text-sm font-medium text-gray-500 mb-4 text-center">
+                      Si no encuentras un escenario estándar pulsa en el
+                      siguiente botón para configurar manualmente tu escenario
+                    </h4>
+
+                    <div
+                      onClick={() => setMode("expert")}
+                      className="mx-auto max-w-sm bg-white p-6 rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-400 hover:shadow-md cursor-pointer transition-all group text-center"
+                    >
+                      <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-50 transition-colors">
+                        <Shield
+                          size={24}
+                          className="text-gray-400 group-hover:text-blue-500 transition-colors"
+                        />
+                      </div>
+
+                      <h3 className="font-bold text-gray-700 mb-2 group-hover:text-blue-700">
+                        Modo Experto / Libre
+                      </h3>
+
+                      <p className="text-xs text-gray-500 mb-4 line-clamp-2">
+                        Configure manualmente cada parámetro de la evaluación
+                        cualitativa. Ideal para procesos atípicos.
+                      </p>
+
+                      <button className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
+                        Manual de configuración
+                      </button>
+                    </div>
+                  </div>
                 </div>
               );
             })()}
