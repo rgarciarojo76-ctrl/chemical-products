@@ -52,7 +52,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
   // 3: Stoffenmanager (Only Advanced)
   // 4: ESTRATEGIA INTEGRADA (Exposición + Medición)
   // 6: RESULTADOS (Saltamos el 5 antiguo)
-  const [internalStep, setInternalStep] = useState(0);
+  const [internalStep, setInternalStep] = useState(1);
   const [evaluationMethod, setEvaluationMethod] = useState<
     "simplified" | "advanced"
   >("simplified");
