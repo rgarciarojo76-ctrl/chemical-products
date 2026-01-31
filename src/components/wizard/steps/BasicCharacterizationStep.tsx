@@ -241,11 +241,11 @@ export const BasicCharacterizationStep: React.FC<
     return (
       <div className="animate-fadeIn h-full flex flex-col">
         {/* Trust Header */}
-        <div className="mb-4 text-center">
-          <h3 className="text-center font-bold text-xl mb-4 text-blue-600 flex items-center justify-center gap-2">
+        <div className="mb-10 text-center">
+          <h3 className="text-center font-bold text-2xl mb-3 text-blue-700 flex items-center justify-center gap-3">
             🤔 Módulo C: Selección de Metodología Caracterización Básica
           </h3>
-          <p className="text-center text-gray-500 mb-8">
+          <p className="text-center text-gray-500 max-w-2xl mx-auto text-base">
             Seleccione el nivel de profundidad para la caracterización básica
           </p>
         </div>
@@ -256,79 +256,57 @@ export const BasicCharacterizationStep: React.FC<
         >
           {/* Card 1: Assistant (Recommended) */}
           <div
-            className="selection-card recommended"
+            className="group relative bg-blue-50/40 border-2 border-blue-100 rounded-2xl p-8 cursor-pointer hover:border-blue-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center justify-start h-full"
             onClick={() => setMode("assistant")}
           >
-            <div
-              style={{
-                position: "absolute",
-                top: "1rem",
-                right: "1rem",
-                background: "var(--color-primary)",
-                color: "white",
-                fontSize: "0.7rem",
-                padding: "0.25rem 0.75rem",
-                fontWeight: 700,
-                borderRadius: "99px",
-                textTransform: "uppercase",
-              }}
-            >
-              Recomendado
+            {/* Icon Wrapper */}
+            <div className="bg-white p-4 rounded-full shadow-sm mb-6 group-hover:scale-110 transition-transform duration-300">
+              <BookOpen size={36} className="text-blue-600" strokeWidth={1.5} />
             </div>
 
-            <div className="card-icon-wrapper">
-              <BookOpen size={32} strokeWidth={2} />
-            </div>
-
-            <h3
-              style={{
-                fontSize: "1.1rem",
-                fontWeight: 700,
-                marginBottom: "0.5rem",
-                color: "var(--color-text-main)",
-              }}
-            >
+            <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-700 transition-colors">
               Asistente de Escenarios Estándar
             </h3>
-            <p
-              style={{
-                fontSize: "0.9rem",
-                color: "var(--color-text-light)",
-                marginBottom: "1.5rem",
-                lineHeight: 1.5,
-              }}
-            >
+
+            <p className="text-gray-500 text-sm leading-relaxed mb-8 flex-grow">
               Utilice situaciones de trabajo pre-validadas por el{" "}
-              <strong>INSST</strong>. Carga automáticamente medidas de control,
-              EPIs y perfiles de exposición conformes a normativa.
+              <strong className="text-gray-700">INSST</strong>. Carga
+              automáticamente medidas de control, EPIs y perfiles de exposición
+              conformes a normativa.
             </p>
 
-            <button className="card-btn">Abrir Asistente</button>
+            <button className="py-2.5 px-6 rounded-lg font-semibold text-sm bg-white border border-gray-200 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all shadow-sm w-full max-w-[200px]">
+              Abrir Asistente
+            </button>
           </div>
 
           {/* Card 2: Advanced (Stoffenmanager) */}
+          {/* Card 2: Advanced (Stoffenmanager) */}
           <div
-            className="selection-card bg-white hover:border-blue-300 transition-all cursor-pointer border-2 border-gray-100 p-8 rounded-xl"
+            className="group relative bg-white border-2 border-gray-100 rounded-2xl p-8 cursor-pointer hover:border-emerald-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center justify-start h-full"
             onClick={() => onSwitchToAdvanced && onSwitchToAdvanced()}
           >
-            <div className="card-icon-wrapper mb-4 text-green-600">
-              <FlaskConical size={32} strokeWidth={2} />
+            <div className="bg-gray-50 p-4 rounded-full shadow-sm mb-6 group-hover:scale-110 transition-transform duration-300">
+              <FlaskConical
+                size={36}
+                className="text-emerald-600"
+                strokeWidth={1.5}
+              />
             </div>
 
-            <h3
-              style={{
-                fontSize: "1.1rem",
-                fontWeight: 700,
-                marginBottom: "0.5rem",
-                color: "#0284c7", // Light blue title like in image? Or standard? Image has Blue title.
-              }}
-              className="text-blue-600"
-            >
+            <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-emerald-700 transition-colors">
               Caracterización básica (avanzada)
             </h3>
-            <p className="text-gray-500 text-sm mb-6">
-              Algoritmo Stoffenmanager® completo.
+
+            <p className="text-gray-500 text-sm leading-relaxed mb-8 flex-grow">
+              Algoritmo <strong>Stoffenmanager®</strong> completo. Control total
+              sobre parámetros cuantitativos y simulación de escenarios
+              complejos.
             </p>
+
+            <button className="py-2.5 px-6 rounded-lg font-semibold text-sm bg-white border border-gray-200 text-gray-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all shadow-sm w-full max-w-[200px]">
+              Configuración Manual
+            </button>
           </div>
         </div>
       </div>

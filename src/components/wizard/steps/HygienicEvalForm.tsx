@@ -298,7 +298,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             justifyContent: "space-between",
           }}
         >
-          <button onClick={() => setInternalStep(0)} className="step4-btn-back">
+          <button onClick={onBack} className="step4-btn-back">
             ← Atrás
           </button>
           <button
@@ -600,7 +600,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
 
         {/* FOOTER ACTIONS */}
         <div className="step4-actions">
-          <button onClick={() => setInternalStep(0)} className="step4-btn-back">
+          <button onClick={() => setInternalStep(1)} className="step4-btn-back">
             ← Anterior
           </button>
           <button
