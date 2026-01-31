@@ -170,7 +170,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
           <div className="flex-1 text-sm text-purple-800">
             <strong>GES Activo:</strong> {gesData?.gesId || "No definido"} (
             {gesData?.workerCount || 0} operarios). se requieren{" "}
-            {gesData?.samplingStrategy.minSamples || 3} muestras mínimas.
+            {gesData?.samplingStrategy?.minSamples || 3} muestras mínimas.
           </div>
         </div>
       </div>
@@ -427,7 +427,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Media Geométrica (MG):</span>
                   <span className="font-mono font-bold">
-                    {(result.stats?.gm || 0).toFixed(4)}
+                    {(Number(result.stats?.gm) || 0).toFixed(4)}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -439,7 +439,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                         : "text-gray-900"
                     }`}
                   >
-                    {(result.stats?.gsd || 0).toFixed(3)}
+                    {(Number(result.stats?.gsd) || 0).toFixed(3)}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -451,7 +451,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                         : "text-green-600"
                     }`}
                   >
-                    {(result.stats?.ur || 0).toFixed(4)}
+                    {(Number(result.stats?.ur) || 0).toFixed(4)}
                   </span>
                 </div>
                 <div className="mt-4 pt-3 border-t">
@@ -460,7 +460,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                       Índice (I)
                     </span>
                     <span className="text-xl font-bold text-gray-800">
-                      {(result.stats?.complianceIndex || 0).toFixed(2)}
+                      {(Number(result.stats?.complianceIndex) || 0).toFixed(2)}
                     </span>
                   </div>
                 </div>
