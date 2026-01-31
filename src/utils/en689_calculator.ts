@@ -78,15 +78,17 @@ export const runEn689Evaluation = (
   const qualityAlerts: string[] = [];
 
   // Extract numeric values (applying LOD multiplier if needed)
-  const concentrationValues = validSamples.map((s) => {
-    if (s.isBelowLod && s.lodMultiplier) {
-      // Logic: if value entered is LOD limit, multiply.
-      // E.g. user enters "0.1" as LOD limit, checks <LOD, multiplier 0.5 -> 0.05
-      // Assuming 'value' holds the input limit if isBelowLod is true.
-      return s.value * s.lodMultiplier;
-    }
-    return s.value;
-  });
+  const concentrationValues = validSamples
+    .map((s) => {
+      if (s.isBelowLod && s.lodMultiplier) {
+        // Logic: if value entered is LOD limit, multiply.
+        // E.g. user enters "0.1" as LOD limit, checks <LOD, multiplier 0.5 -> 0.05
+        // Assuming 'value' holds the input limit if isBelowLod is true.
+        return s.value * s.lodMultiplier;
+      }
+      return s.value;
+    })
+    .filter((v) => v > 0); // Critical: Log(0) is -Infinity. Filter out zeros.
 
   // --- PHASE 1: SCREENING Test (n < 6) ---
   if (n >= 3 && n < 6) {

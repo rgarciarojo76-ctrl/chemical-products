@@ -236,6 +236,7 @@ export interface HygienicEvalInput {
   strategyType?: "continuous" | "peaks" | "variable";
   stoffenmanager?: StoffenmanagerInput;
   en689Result?: En689Result; // Final results from Module 4
+  closedSystem?: ClosedSystemAnalysis; // Module 5.2
 }
 
 export interface HygienicAssessment {
@@ -302,6 +303,43 @@ export interface En689Result {
   samples: Sample[];
   vlaApplied: number;
   qualityAlerts: string[]; // e.g. "GSD > 3: Variabilidad excesiva"
+}
+
+// Module 5 (Hierarchy): Closed System (Art 5.2)
+export interface PhaseAnalysis {
+  id: "A" | "B" | "C" | "D";
+  name: string;
+  isViable: boolean; // YES = Can effect change (show calc) / NO = Impossible (show reasons)
+  reasons?: string[]; // If NO
+  comments?: string;
+  // Cost Inputs (If YES)
+  costInputs?: {
+    units?: number; // Points or Lines
+    volume?: number; // m3
+  };
+}
+
+export interface SystemCostEstimate {
+  totalCost: number;
+  currency: "EUR";
+  materialFactor: 1.0 | 1.4;
+  breakdown: {
+    loadingCost: number; // Phase A
+    processCost: number; // Phase B
+    emptyingCost: number; // Phase C
+  };
+}
+
+export interface ClosedSystemAnalysis {
+  isClosedSystem: boolean; // D.2 Answer
+  phases: {
+    loading: PhaseAnalysis;
+    process: PhaseAnalysis;
+    emptying: PhaseAnalysis;
+    maintenance: PhaseAnalysis;
+  };
+  financials?: SystemCostEstimate;
+  outputDoc: "exemption_justification" | "investment_plan";
 }
 
 export interface AssessmentState {

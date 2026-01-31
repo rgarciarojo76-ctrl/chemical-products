@@ -15,6 +15,56 @@ import {
   runEn689Evaluation,
 } from "../../../utils/en689_calculator";
 
+// Custom Input for handling comma/dot decimals
+
+const DecimalInput = ({
+  value,
+  onChange,
+  placeholder,
+  className,
+}: {
+  value?: number;
+  onChange: (val: number) => void;
+  placeholder?: string;
+  className?: string;
+}) => {
+  const [text, setText] = useState(
+    value !== undefined ? value.toString().replace(".", ",") : "",
+  );
+
+  // Sync external changes
+  useEffect(() => {
+    if (value !== undefined) {
+      const currentParsed = parseFloat(text.replace(",", "."));
+      // Only update if significantly different (avoids loop)
+      if (isNaN(currentParsed) || Math.abs(currentParsed - value) > 0.000001) {
+        setText(value.toString().replace(".", ","));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  return (
+    <input
+      type="text"
+      inputMode="decimal"
+      className={className}
+      placeholder={placeholder}
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      onBlur={() => {
+        const normalized = text.replace(",", ".");
+        const val = parseFloat(normalized);
+        if (!isNaN(val)) {
+          onChange(val);
+        } else if (text === "") {
+          onChange(0);
+        }
+      }}
+    />
+  );
+};
+
 interface MeasurementResultsStepProps {
   onUpdate: (result: En689Result) => void;
   onNext: () => void;
@@ -84,7 +134,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
   };
 
   const addSample = () => {
-    const newId = (samples.length + 1).toString();
+    const newId = Date.now().toString(); // Simple unique ID
     setSamples((prev) => [
       ...prev,
       { id: newId, type: "direct", value: 0, isBelowLod: false },
@@ -163,24 +213,12 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                   <td className="px-4 py-3">
                     {sample.type === "direct" ? (
                       <div className="flex items-center gap-2">
-                        <input
-                          type="text"
-                          inputMode="decimal"
+                        <DecimalInput
                           className="border rounded p-2 w-32 font-mono"
-                          defaultValue={
-                            sample.value?.toString().replace(".", ",") || ""
+                          value={sample.value}
+                          onChange={(val) =>
+                            updateSample(sample.id, { value: val })
                           }
-                          key={`direct-${sample.id}-${sample.value}`} // Re-render on value change
-                          onBlur={(e) => {
-                            const val = parseFloat(
-                              e.target.value.replace(",", "."),
-                            );
-                            if (!isNaN(val)) {
-                              updateSample(sample.id, {
-                                value: val,
-                              });
-                            }
-                          }}
                           placeholder="0,000"
                         />
                         <label className="flex items-center gap-1 text-xs text-gray-500 cursor-pointer">
@@ -219,90 +257,57 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                           <span className="text-[10px] text-gray-400">
                             Masa (µg)
                           </span>
-                          <input
-                            type="text"
-                            inputMode="decimal"
+                          <DecimalInput
                             className="border rounded p-1 w-20 text-xs"
                             placeholder="µg"
-                            defaultValue={
-                              sample.raw?.mass?.toString().replace(".", ",") ||
-                              ""
+                            value={sample.raw?.mass || 0}
+                            onChange={(val) =>
+                              updateSample(sample.id, {
+                                raw: {
+                                  mass: val,
+                                  flow: sample.raw?.flow || 0,
+                                  time: sample.raw?.time || 0,
+                                },
+                              })
                             }
-                            key={`mass-${sample.id}-${sample.raw?.mass}`}
-                            onBlur={(e) => {
-                              const val = parseFloat(
-                                e.target.value.replace(",", "."),
-                              );
-                              if (!isNaN(val)) {
-                                updateSample(sample.id, {
-                                  raw: {
-                                    mass: val,
-                                    flow: sample.raw?.flow || 0,
-                                    time: sample.raw?.time || 0,
-                                  },
-                                });
-                              }
-                            }}
                           />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-[10px] text-gray-400">
                             Caudal (l/min)
                           </span>
-                          <input
-                            type="text"
-                            inputMode="decimal"
+                          <DecimalInput
                             className="border rounded p-1 w-16 text-xs"
                             placeholder="l/min"
-                            defaultValue={
-                              sample.raw?.flow?.toString().replace(".", ",") ||
-                              ""
+                            value={sample.raw?.flow || 0}
+                            onChange={(val) =>
+                              updateSample(sample.id, {
+                                raw: {
+                                  mass: sample.raw?.mass || 0,
+                                  flow: val,
+                                  time: sample.raw?.time || 0,
+                                },
+                              })
                             }
-                            key={`flow-${sample.id}-${sample.raw?.flow}`}
-                            onBlur={(e) => {
-                              const val = parseFloat(
-                                e.target.value.replace(",", "."),
-                              );
-                              if (!isNaN(val)) {
-                                updateSample(sample.id, {
-                                  raw: {
-                                    mass: sample.raw?.mass || 0,
-                                    flow: val,
-                                    time: sample.raw?.time || 0,
-                                  },
-                                });
-                              }
-                            }}
                           />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-[10px] text-gray-400">
                             Tiempo (min)
                           </span>
-                          <input
-                            type="text"
-                            inputMode="decimal"
+                          <DecimalInput
                             className="border rounded p-1 w-16 text-xs"
                             placeholder="min"
-                            defaultValue={
-                              sample.raw?.time?.toString().replace(".", ",") ||
-                              ""
+                            value={sample.raw?.time || 0}
+                            onChange={(val) =>
+                              updateSample(sample.id, {
+                                raw: {
+                                  mass: sample.raw?.mass || 0,
+                                  flow: sample.raw?.flow || 0,
+                                  time: val,
+                                },
+                              })
                             }
-                            key={`time-${sample.id}-${sample.raw?.time}`}
-                            onBlur={(e) => {
-                              const val = parseFloat(
-                                e.target.value.replace(",", "."),
-                              );
-                              if (!isNaN(val)) {
-                                updateSample(sample.id, {
-                                  raw: {
-                                    mass: sample.raw?.mass || 0,
-                                    flow: sample.raw?.flow || 0,
-                                    time: val,
-                                  },
-                                });
-                              }
-                            }}
                           />
                         </div>
                       </div>

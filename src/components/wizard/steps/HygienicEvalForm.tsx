@@ -13,6 +13,7 @@ import { StepCard } from "../../ui/StepCard";
 import { BasicCharacterizationStep } from "./BasicCharacterizationStep";
 import { GesConstitutionStep } from "./GesConstitutionStep";
 import { MeasurementResultsStep } from "./MeasurementResultsStep";
+import { ClosedSystemStep } from "./ClosedSystemStep";
 import { calculateStoffenmanager } from "../../../utils/stoffenmanagerLogic";
 import type {
   HygienicEvalInput,
@@ -251,13 +252,27 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             ← Atrás
           </button>
           <button
-            onClick={() => setInternalStep(2)}
+            onClick={() => setInternalStep(8)}
             className="step4-btn-confirm"
           >
-            Siguiente: GES →
+            Siguiente: Sistemas Cerrados →
           </button>
         </div>
       </div>
+    );
+  }
+
+  // --- RENDER: STEP 8 - CLOSED SYSTEM (Art. 5.2) ---
+  if (internalStep === 8) {
+    return (
+      <ClosedSystemStep
+        initialData={formData.closedSystem}
+        onUpdate={(data) =>
+          setFormData((prev) => ({ ...prev, closedSystem: data }))
+        }
+        onBack={() => setInternalStep(1)}
+        onNext={() => setInternalStep(2)} // Continue to GES
+      />
     );
   }
 
@@ -277,12 +292,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         onUpdate={(data) => setFormData((prev) => ({ ...prev, ges: data }))}
         onNext={() => {
           // Proceed to Strategy (Step 4) regardless of method
-          // Or back to Stoffenmanager if Advanced
-          if (evaluationMethod === "advanced") {
-            setInternalStep(3); // Go to Stoffenmanager to complete quantitative variables
-          } else {
-            setInternalStep(4); // Skip Stoffenmanager, go to Strategy for Simplified
-          }
+          setInternalStep(4);
         }}
         onBack={() => setInternalStep(evaluationMethod === "advanced" ? 3 : 1)} // Back to Basic Characterization or Stoffenmanager
       />
