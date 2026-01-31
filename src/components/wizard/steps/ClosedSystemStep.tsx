@@ -134,15 +134,81 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
       maintenance: "/images/closed_system/phase_d_cleaning.png",
     };
 
+    const phaseEducation = {
+      loading: (
+        <>
+          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
+          <p className="text-sm text-gray-600 mb-2">
+            La apertura de bocas de carga y la conexión de mangueras son los
+            momentos de mayor riesgo de exposición.
+          </p>
+          <p className="text-sm text-gray-600">
+            <strong>Objetivo:</strong> Eliminar la interfaz abierta mediante
+            sistemas de transferencia por vacío o gravedad estanca.
+          </p>
+        </>
+      ),
+      process: (
+        <>
+          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
+          <p className="text-sm text-gray-600 mb-2">
+            Durante la reacción, la presión y temperatura pueden forzar fugas en
+            sellos mecánicos, juntas y válvulas.
+          </p>
+          <p className="text-sm text-gray-600">
+            <strong>Objetivo:</strong> Garantizar estanqueidad total en ejes de
+            agitación y puntos de muestreo.
+          </p>
+        </>
+      ),
+      emptying: (
+        <>
+          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
+          <p className="text-sm text-gray-600 mb-2">
+            El envasado final suele generar vapores y salpicaduras si se realiza
+            por vertido libre.
+          </p>
+          <p className="text-sm text-gray-600">
+            <strong>Objetivo:</strong> Utilizar cabezales de llenado estancos,
+            acoples secos o sistemas de dosificación automática.
+          </p>
+        </>
+      ),
+      maintenance: (
+        <>
+          <h5 className="font-bold text-blue-900 mb-2">Puntos Críticos:</h5>
+          <p className="text-sm text-gray-600 mb-2">
+            La limpieza manual requiere apertura de equipos y entrada en
+            espacios confinados.
+          </p>
+          <p className="text-sm text-gray-600">
+            <strong>Objetivo:</strong> Implementar sistemas CIP (Clean-In-Place)
+            para lavar sin abrir el equipo.
+          </p>
+        </>
+      ),
+    };
+
     return (
       <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
-        {/* Visual Schematic */}
-        <div className="mb-6 flex justify-center bg-white p-4 rounded border border-gray-100 shadow-sm">
-          <img
-            src={phaseImages[key]}
-            alt={`Esquema Fase ${phase.name}`}
-            className="max-h-48 object-contain"
-          />
+        {/* Visual Schematic & Education */}
+        <div className="mb-6 bg-white p-4 rounded border border-gray-100 shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            {/* Left: Image */}
+            <div className="flex justify-center border-r border-gray-100 pr-6">
+              <img
+                src={phaseImages[key]}
+                alt={`Esquema Fase ${phase.name}`}
+                className="max-h-48 object-contain"
+              />
+            </div>
+            {/* Right: Education */}
+            <div className="pl-2">
+              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                {phaseEducation[key]}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center justify-between mb-4">

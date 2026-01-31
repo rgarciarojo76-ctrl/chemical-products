@@ -74,24 +74,35 @@ export const runEn689Evaluation = (
   vla: number,
 ): En689Result => {
   const validSamples = samples.filter((s) => s.value > 0);
-  const n = validSamples.length;
+
   const qualityAlerts: string[] = [];
 
   // Extract numeric values (applying LOD multiplier if needed)
   const concentrationValues = validSamples
     .map((s) => {
-      if (s.isBelowLod && s.lodMultiplier) {
-        // Logic: if value entered is LOD limit, multiply.
-        // E.g. user enters "0.1" as LOD limit, checks <LOD, multiplier 0.5 -> 0.05
-        // Assuming 'value' holds the input limit if isBelowLod is true.
+      if (s.isBelowLod && s.lodMultiplier && s.value > 0) {
+        // Only apply multiplier if value is positive (the limit)
         return s.value * s.lodMultiplier;
       }
       return s.value;
     })
-    .filter((v) => v > 0); // Critical: Log(0) is -Infinity. Filter out zeros.
+    .filter((v) => v > 0);
+
+  if (concentrationValues.length === 0) {
+    return {
+      decision: "need_more_samples",
+      ruleApplied: "screening",
+      vlaApplied: vla,
+      samples: validSamples,
+      qualityAlerts: ["No hay muestras válidas (> 0)"],
+      nextCheck: "Pendiente",
+    };
+  }
+
+  const n = concentrationValues.length; // Use filtered length
 
   // --- PHASE 1: SCREENING Test (n < 6) ---
-  if (n >= 3 && n < 6) {
+  if (n < 6) {
     const maxVal = Math.max(...concentrationValues);
     let limitFraction = 0.1; // Default for n=3
     if (n === 4) limitFraction = 0.15;
@@ -101,7 +112,7 @@ export const runEn689Evaluation = (
     const isCompliant = maxVal <= limit;
 
     return {
-      decision: isCompliant ? "compliant" : "need_more_samples", // Fail in screening means "Go to Statistical" -> Need 6 samples
+      decision: isCompliant ? "compliant" : "need_more_samples",
       ruleApplied: "screening",
       vlaApplied: vla,
       samples: validSamples,
@@ -112,7 +123,7 @@ export const runEn689Evaluation = (
       stats: {
         gm: 0,
         gsd: 0,
-        p95: maxVal, // In screening, max value is the proxy for risk
+        p95: maxVal,
         ur: limit,
         complianceIndex: maxVal / vla,
       },
