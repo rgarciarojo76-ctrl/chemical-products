@@ -427,7 +427,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Media Geométrica (MG):</span>
                   <span className="font-mono font-bold">
-                    {result.stats?.gm.toFixed(4)}
+                    {(result.stats?.gm || 0).toFixed(4)}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -439,7 +439,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                         : "text-gray-900"
                     }`}
                   >
-                    {result.stats?.gsd.toFixed(3)}
+                    {(result.stats?.gsd || 0).toFixed(3)}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -451,7 +451,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                         : "text-green-600"
                     }`}
                   >
-                    {result.stats?.ur.toFixed(4)}
+                    {(result.stats?.ur || 0).toFixed(4)}
                   </span>
                 </div>
                 <div className="mt-4 pt-3 border-t">
