@@ -13,7 +13,6 @@ import { StepCard } from "../../ui/StepCard";
 import { BasicCharacterizationStep } from "./BasicCharacterizationStep";
 import { GesConstitutionStep } from "./GesConstitutionStep";
 import { MeasurementResultsStep } from "./MeasurementResultsStep";
-import { ClosedSystemStep } from "./ClosedSystemStep";
 import { calculateStoffenmanager } from "../../../utils/stoffenmanagerLogic";
 import type {
   HygienicEvalInput,
