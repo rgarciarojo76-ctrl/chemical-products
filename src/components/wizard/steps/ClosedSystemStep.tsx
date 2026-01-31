@@ -29,21 +29,25 @@ const INITIAL_PHASES: Record<
     id: "A",
     name: "Carga / Alimentación",
     isViable: false,
+    status: "pending",
   } as PhaseAnalysis,
   process: {
     id: "B",
     name: "Proceso / Reacción",
     isViable: false,
+    status: "pending",
   } as PhaseAnalysis,
   emptying: {
     id: "C",
     name: "Vaciado / Envasado",
     isViable: false,
+    status: "pending",
   } as PhaseAnalysis,
   maintenance: {
     id: "D",
     name: "Limpieza / Mant.",
     isViable: false,
+    status: "pending",
   } as PhaseAnalysis,
 };
 
@@ -123,15 +127,37 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
     const reasons: string[] =
       (STANDARD_REASONS as Record<string, string[]>)[key] || [];
 
+    const phaseImages = {
+      loading: "/images/closed_system/phase_a_loading.png",
+      process: "/images/closed_system/phase_b_process.png",
+      emptying: "/images/closed_system/phase_c_discharge.png",
+      maintenance: "/images/closed_system/phase_d_cleaning.png",
+    };
+
     return (
       <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
+        {/* Visual Schematic */}
+        <div className="mb-6 flex justify-center bg-white p-4 rounded border border-gray-100 shadow-sm">
+          <img
+            src={phaseImages[key]}
+            alt={`Esquema Fase ${phase.name}`}
+            className="max-h-48 object-contain"
+          />
+        </div>
+
         <div className="flex items-center justify-between mb-4">
           <h4 className="font-bold text-gray-800 flex items-center gap-2">
             <Factory size={18} /> Fase {phase.id}: {phase.name}
           </h4>
           <div className="flex gap-2">
             <button
-              onClick={() => updatePhase(key, { isViable: true, reasons: [] })}
+              onClick={() =>
+                updatePhase(key, {
+                  isViable: true,
+                  reasons: [],
+                  status: "evaluated",
+                })
+              }
               className={`px-3 py-1 rounded text-sm font-bold flex items-center gap-1 transition-colors ${
                 phase.isViable
                   ? "bg-green-600 text-white shadow"
@@ -142,7 +168,11 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
             </button>
             <button
               onClick={() =>
-                updatePhase(key, { isViable: false, costInputs: {} })
+                updatePhase(key, {
+                  isViable: false,
+                  costInputs: {},
+                  status: "evaluated",
+                })
               }
               className={`px-3 py-1 rounded text-sm font-bold flex items-center gap-1 transition-colors ${
                 !phase.isViable
@@ -450,9 +480,15 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
         </button>
         <button
           onClick={onNext}
-          disabled={isClosed === null}
+          disabled={
+            isClosed === null ||
+            (isClosed === false &&
+              Object.values(phases).some((p) => p.status !== "evaluated"))
+          }
           className={`px-6 py-2 rounded-lg font-bold shadow-md transition-all ${
-            isClosed === null
+            isClosed === null ||
+            (isClosed === false &&
+              Object.values(phases).some((p) => p.status !== "evaluated"))
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"
           }`}

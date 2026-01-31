@@ -308,6 +308,7 @@ export interface En689Result {
 // Module 5 (Hierarchy): Closed System (Art 5.2)
 export interface PhaseAnalysis {
   id: "A" | "B" | "C" | "D";
+  status?: "pending" | "evaluated";
   name: string;
   isViable: boolean; // YES = Can effect change (show calc) / NO = Impossible (show reasons)
   reasons?: string[]; // If NO
