@@ -8,6 +8,7 @@ import {
   Microscope,
   Video,
   Info,
+  BookOpen,
 } from "lucide-react";
 import { StepCard } from "../../ui/StepCard";
 import { BasicCharacterizationStep } from "./BasicCharacterizationStep";
@@ -160,24 +161,70 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               border: "2px solid #e2e8f0",
               cursor: "pointer",
               transition: "all 0.2s",
-              backgroundColor: "white",
+              backgroundColor: "#f0f9ff", // Ligher blue background to highlight
+              position: "relative",
+              overflow: "hidden",
             }}
             onMouseOver={(e) => (e.currentTarget.style.borderColor = "#3b82f6")}
             onMouseOut={(e) => (e.currentTarget.style.borderColor = "#e2e8f0")}
           >
-            <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>⚡</div>
+            <div
+              style={{
+                position: "absolute",
+                top: "12px",
+                right: "12px",
+                backgroundColor: "#2563eb",
+                color: "white",
+                fontSize: "0.7rem",
+                padding: "0.25rem 0.75rem",
+                fontWeight: 700,
+                borderRadius: "99px",
+                textTransform: "uppercase",
+              }}
+            >
+              Recomendado
+            </div>
+
+            <div style={{ marginBottom: "1rem", color: "#2563eb" }}>
+              <BookOpen size={40} />
+            </div>
             <h3
               style={{
                 fontSize: "1.25rem",
                 fontWeight: "bold",
                 marginBottom: "0.5rem",
+                color: "#1e3a8a",
               }}
             >
-              Caracterización básica (simplificada)
+              Asistente de Escenarios Estándar
             </h3>
-            <p style={{ color: "#64748b", fontSize: "0.9rem" }}>
-              Escenarios Estándar y listas de chequeo rápidas.
+            <p
+              style={{
+                color: "#64748b",
+                fontSize: "0.9rem",
+                lineHeight: 1.5,
+                marginBottom: "1.5rem",
+              }}
+            >
+              Utilice situaciones de trabajo pre-validadas por el{" "}
+              <strong>INSST</strong>. Carga automáticamente medidas de control,
+              EPIs y perfiles de exposición conformes a normativa.
             </p>
+
+            <button
+              style={{
+                padding: "0.5rem 1rem",
+                backgroundColor: "white",
+                border: "1px solid #bfdbfe",
+                borderRadius: "6px",
+                color: "#2563eb",
+                fontSize: "0.85rem",
+                fontWeight: 600,
+                width: "100%",
+              }}
+            >
+              Abrir Asistente
+            </button>
           </div>
           <div
             onClick={() => {
