@@ -221,6 +221,13 @@ const MainContent = () => {
           onUpdate={engine.updateMeasures}
           onNext={engine.nextStep}
           onBack={() => engine.goToStep(3)}
+          closedSystemData={engine.state.hygienicEval.input.closedSystem}
+          onUpdateClosedSystem={(data) =>
+            engine.runHygienicAssessment({
+              ...engine.state.hygienicEval.input,
+              closedSystem: data,
+            })
+          }
         />
       )}
 

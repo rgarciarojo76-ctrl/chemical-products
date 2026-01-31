@@ -73,7 +73,7 @@ export const runEn689Evaluation = (
   samples: Sample[],
   vla: number,
 ): En689Result => {
-  const validSamples = samples.filter((s) => s.value > 0 || s.isBelowLod);
+  const validSamples = samples.filter((s) => s.value > 0);
   const n = validSamples.length;
   const qualityAlerts: string[] = [];
 

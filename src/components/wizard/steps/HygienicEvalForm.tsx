@@ -252,27 +252,13 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             ← Atrás
           </button>
           <button
-            onClick={() => setInternalStep(8)}
+            onClick={() => setInternalStep(2)}
             className="step4-btn-confirm"
           >
-            Siguiente: Sistemas Cerrados →
+            Siguiente: Constitución de GES →
           </button>
         </div>
       </div>
-    );
-  }
-
-  // --- RENDER: STEP 8 - CLOSED SYSTEM (Art. 5.2) ---
-  if (internalStep === 8) {
-    return (
-      <ClosedSystemStep
-        initialData={formData.closedSystem}
-        onUpdate={(data) =>
-          setFormData((prev) => ({ ...prev, closedSystem: data }))
-        }
-        onBack={() => setInternalStep(1)}
-        onNext={() => setInternalStep(2)} // Continue to GES
-      />
     );
   }
 
