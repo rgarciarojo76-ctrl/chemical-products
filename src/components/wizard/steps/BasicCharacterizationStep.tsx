@@ -7,6 +7,7 @@ import {
   BookOpen,
   AlertOctagon,
   CheckCircle2,
+  FlaskConical,
 } from "lucide-react";
 import type { BasicCharacterizationInput, HazardInput } from "../../../types";
 import { StandardScenarios_DB } from "../../../data/standardScenarios";
@@ -18,11 +19,12 @@ interface BasicCharacterizationStepProps {
   onUpdate: (data: BasicCharacterizationInput) => void;
   hazardData?: HazardInput;
   selectedCnae?: CnaeEntry | null;
+  onSwitchToAdvanced?: () => void;
 }
 
 export const BasicCharacterizationStep: React.FC<
   BasicCharacterizationStepProps
-> = ({ data, onUpdate, hazardData, selectedCnae }) => {
+> = ({ data, onUpdate, hazardData, selectedCnae, onSwitchToAdvanced }) => {
   // Mode Selection: 'selection' | 'assistant' | 'expert'
   const [mode, setMode] = useState<"selection" | "assistant" | "expert">(
     data ? "expert" : "selection",
@@ -240,25 +242,11 @@ export const BasicCharacterizationStep: React.FC<
       <div className="animate-fadeIn h-full flex flex-col">
         {/* Trust Header */}
         <div className="mb-4 text-center">
-          <h3
-            style={{
-              fontSize: "1.25rem",
-              fontWeight: 700,
-              marginBottom: "0.5rem",
-              color: "var(--color-primary-dark)",
-            }}
-          >
-            Seleccione el Método de Caracterización
+          <h3 className="text-center font-bold text-xl mb-4 text-blue-600 flex items-center justify-center gap-2">
+            🤔 Módulo C: Selección de Metodología Caracterización Básica
           </h3>
-          <p
-            style={{
-              fontSize: "0.9rem",
-              color: "var(--color-text-light)",
-              maxWidth: "600px",
-              margin: "0 auto 1.5rem auto",
-            }}
-          >
-            Seleccione un escenario o busque por proceso.
+          <p className="text-center text-gray-500 mb-8">
+            Seleccione el nivel de profundidad para la caracterización básica
           </p>
         </div>
 
@@ -318,29 +306,13 @@ export const BasicCharacterizationStep: React.FC<
             <button className="card-btn">Abrir Asistente</button>
           </div>
 
-          {/* Card 2: Expert Mode (Visually Updated to Assistant) */}
+          {/* Card 2: Advanced (Stoffenmanager) */}
           <div
-            className="selection-card relative"
-            onClick={() => setMode("expert")}
+            className="selection-card bg-white hover:border-blue-300 transition-all cursor-pointer border-2 border-gray-100 p-8 rounded-xl"
+            onClick={() => onSwitchToAdvanced && onSwitchToAdvanced()}
           >
-            <div
-              style={{
-                position: "absolute",
-                top: "-12px",
-                right: "20px",
-                backgroundColor: "#2563eb",
-                color: "white",
-                fontSize: "0.7rem",
-                padding: "0.25rem 0.75rem",
-                fontWeight: 700,
-                borderRadius: "99px",
-                textTransform: "uppercase",
-              }}
-            >
-              Recomendado
-            </div>
-            <div className="card-icon-wrapper">
-              <BookOpen size={32} strokeWidth={2} />
+            <div className="card-icon-wrapper mb-4 text-green-600">
+              <FlaskConical size={32} strokeWidth={2} />
             </div>
 
             <h3
@@ -348,25 +320,15 @@ export const BasicCharacterizationStep: React.FC<
                 fontSize: "1.1rem",
                 fontWeight: 700,
                 marginBottom: "0.5rem",
-                color: "var(--color-text-main)",
+                color: "#0284c7", // Light blue title like in image? Or standard? Image has Blue title.
               }}
+              className="text-blue-600"
             >
-              Asistente de Escenarios Estándar
+              Caracterización básica (avanzada)
             </h3>
-            <p
-              style={{
-                fontSize: "0.9rem",
-                color: "var(--color-text-light)",
-                marginBottom: "1.5rem",
-                lineHeight: 1.5,
-              }}
-            >
-              Utilice situaciones de trabajo pre-validadas por el{" "}
-              <strong>INSST</strong>. Carga automáticamente medidas de control,
-              EPIs y perfiles de exposición conformes a normativa.
+            <p className="text-gray-500 text-sm mb-6">
+              Algoritmo Stoffenmanager® completo.
             </p>
-
-            <button className="card-btn">Abrir Asistente</button>
           </div>
         </div>
       </div>

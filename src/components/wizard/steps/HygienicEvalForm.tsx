@@ -286,6 +286,10 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
           }
           hazardData={hazardData}
           selectedCnae={selectedCnae}
+          onSwitchToAdvanced={() => {
+            setEvaluationMethod("advanced");
+            setInternalStep(3); // Jump to Advanced Flow (Step 3 or whatever advanced was)
+          }}
         />
         <div
           style={{
