@@ -302,7 +302,10 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             ← Atrás
           </button>
           <button
-            onClick={() => setInternalStep(2)}
+            onClick={() => {
+              setEvaluationMethod("simplified");
+              setInternalStep(2);
+            }}
             className="step4-btn-confirm"
           >
             Siguiente: Constitución de GES →
