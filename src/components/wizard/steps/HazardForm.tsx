@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import { determineTargetOrgans } from "../../../utils/targetOrgansLogic";
+import { TargetOrgansDisplay } from "../../visual/TargetOrgansDisplay";
 import * as pdfjsLib from "pdfjs-dist";
 import { StepCard } from "../../ui/StepCard";
 import type { HPhrase, HazardInput, HazardAssessment } from "../../../types";
-import { CMR_PHRASES } from "../../../utils/engineLogic";
+import { CMR_PHRASES } from "../../../data/hPhrases";
 import { lookupChemical } from "../../../data/insstDatabase";
 
 // Configure worker (assuming file will be in public folder or imported)
@@ -340,6 +342,12 @@ export const HazardForm: React.FC<HazardFormProps> = ({
     const assessment = onAnalyze(formData);
     setResult(assessment);
   };
+
+  // --- TARGET ORGANS LOGIC (Waterfall) ---
+  const organAnalysis = useMemo(() => {
+    if (!formData.substanceName) return null;
+    return determineTargetOrgans(formData.substanceName, formData.hPhrases);
+  }, [formData.substanceName, formData.hPhrases]);
 
   return (
     <StepCard
@@ -704,6 +712,11 @@ export const HazardForm: React.FC<HazardFormProps> = ({
           </div>
         </div>
       </div>
+
+      {/* TARGET ORGANS MODULE (Module Visual "Órganos Diana") */}
+      {organAnalysis && organAnalysis.organs.length > 0 && (
+        <TargetOrgansDisplay result={organAnalysis} />
+      )}
 
       <div className="form-group mb-2">
         <label
