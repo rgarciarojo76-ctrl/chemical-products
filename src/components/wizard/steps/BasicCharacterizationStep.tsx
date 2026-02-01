@@ -305,7 +305,7 @@ export const BasicCharacterizationStep: React.FC<
             </p>
 
             <button className="py-2.5 px-6 rounded-lg font-semibold text-sm bg-white border border-gray-200 text-gray-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all shadow-sm w-full max-w-[200px]">
-              Configuración Manual
+              Abrir asistente
             </button>
           </div>
         </div>
