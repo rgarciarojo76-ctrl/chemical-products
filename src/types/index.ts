@@ -1,4 +1,5 @@
 export type TrafficLightStatus = "safe" | "warning" | "danger";
+import type { VolumeValidationResult } from "../utils/uneEn482Logic";
 
 export interface LegalReference {
   article: string; // e.g., "Art. 4.1 RD 665/1997"
@@ -236,6 +237,11 @@ export interface HygienicEvalInput {
   strategyType?: "continuous" | "peaks" | "variable";
   stoffenmanager?: StoffenmanagerInput;
   en689Result?: En689Result; // Final results from Module 4
+  uneEn482Result?: {
+    result: VolumeValidationResult;
+    loq: number;
+    plannedTime: number;
+  };
   closedSystem?: ClosedSystemAnalysis; // Module 5.2
 }
 

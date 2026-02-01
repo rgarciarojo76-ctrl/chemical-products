@@ -22,6 +22,8 @@ import type {
   StoffenmanagerInput,
 } from "../../../types";
 import { INSST_DATABASE } from "../../../data/insstDatabase";
+import { MinimumVolumeValidation } from "./MinimumVolumeValidation";
+import type { VolumeValidationResult } from "../../../utils/uneEn482Logic";
 import "./HygienicStep4.css";
 
 interface HygienicEvalFormProps {
@@ -79,6 +81,12 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
       } as any,
     },
   );
+
+  const [validationResult, setValidationResult] = useState<{
+    result: VolumeValidationResult;
+    loq: number;
+    plannedTime: number;
+  } | null>(null);
 
   // --- LOGIC: Stoffenmanager Auto-fill ---
   useEffect(() => {
@@ -824,6 +832,22 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
             </div>
           </div>
         </div>
+
+        {/* SECTION 3: VALIDACIÓN VOLUMEN MÍNIMO (UNE-EN 482) */}
+        <MinimumVolumeValidation
+          vla={formData.vla || 0.05} // Fallback VLA
+          flowRate={parseFloat((flowRate || "2").replace(/[^\d.]/g, "")) || 2}
+          exposureType={formData.strategyType || "continuous"}
+          onValidationChange={(res, loq, time) => {
+            setValidationResult({ result: res, loq, plannedTime: time });
+            setFormData((prev) => ({
+              ...prev,
+              uneEn482Result: { result: res, loq, plannedTime: time },
+            }));
+          }}
+          initialLoq={validationResult?.loq || 10}
+          initialTime={validationResult?.plannedTime || 60}
+        />
 
         <div className="step4-actions mt-8">
           <button onClick={() => setInternalStep(2)} className="step4-btn-back">

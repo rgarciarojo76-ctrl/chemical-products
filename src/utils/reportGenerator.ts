@@ -162,6 +162,15 @@ export const generateReportData = (state: AssessmentState): ReportData => {
       ? `${lepData.vla_ed} mg/m³`
       : "el VLA aplicable";
     conclusionText = `La caracterización básica no permite descartar el riesgo higiénico por inhalación. ES OBLIGATORIO REALIZAR MEDICIONES. Se debe diseñar una Estrategia de Muestreo representativa (mínimo 3 mediciones según UNE-EN 689) para verificar la conformidad con el VLA-ED de ${vlaRef}.`;
+
+    // ADD UNE-EN 482 PARAGRAPH
+    const uneData = state.hygienicEval.input.uneEn482Result;
+    if (uneData && uneData.result.isValid) {
+      const vla = lepData?.vla_ed || hazard.vlaInfo?.vlaVal || "X";
+      const agentName = lepData?.name || hazard.substanceName || "Agente";
+
+      conclusionText += `\n\n**Validación del Método Analítico (UNE-EN 482:2021)**: Se ha verificado el cumplimiento de la norma. Para el agente ${agentName}, con un VLA de ${vla} mg/m³ y un LOQ analítico de ${uneData.loq} µg, se ha calculado un volumen mínimo de muestreo de ${uneData.result.vMinLiters.toFixed(1)} litros. La estrategia aplicada garantiza la capacidad del método para cuantificar concentraciones inferiores al 10% del VLA (o 50% del VLA-EC), asegurando la representatividad de los resultados incluso en rangos bajos de exposición.`;
+    }
   }
 
   // 4. Legal Obligations (RD 665)
