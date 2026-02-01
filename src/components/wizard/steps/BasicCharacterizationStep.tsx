@@ -250,10 +250,7 @@ export const BasicCharacterizationStep: React.FC<
           </p>
         </div>
 
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 routes-grid"
-          style={{ gridTemplateColumns: "1fr 1fr", gap: "2rem" }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1">
           {/* Card 1: Assistant (Recommended) */}
           <div
             className="group relative bg-blue-50/40 border-2 border-blue-100 rounded-2xl p-8 cursor-pointer hover:border-blue-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center justify-start h-full"

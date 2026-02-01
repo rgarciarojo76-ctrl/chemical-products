@@ -173,7 +173,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
         </p>
 
         {/* VLA Display */}
-        <div className="flex items-center gap-4 bg-purple-50 p-4 rounded-lg border border-purple-100">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 bg-purple-50 p-4 rounded-lg border border-purple-100">
           <div className="bg-white p-2 rounded-md shadow-sm">
             <span className="text-xs text-gray-500 uppercase font-bold block">
               VLA Referencia
