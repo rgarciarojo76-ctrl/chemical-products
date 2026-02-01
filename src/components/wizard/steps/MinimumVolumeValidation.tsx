@@ -34,8 +34,37 @@ export const MinimumVolumeValidation: React.FC<
   initialLoq = 10,
   initialTime = 60,
 }) => {
+  // String state for inputs to allow smooth typing (handling "10," etc.)
+  const [loqStr, setLoqStr] = useState<string>(initialLoq.toString());
+  const [timeStr, setTimeStr] = useState<string>(initialTime.toString());
+
+  // Logic state
   const [loq, setLoq] = useState<number>(initialLoq);
   const [plannedTime, setPlannedTime] = useState<number>(initialTime);
+
+  // Sync String -> Number
+  const handleLoqChange = (val: string) => {
+    setLoqStr(val);
+    const parsed = parseFloat(val.replace(",", "."));
+    if (!isNaN(parsed) && parsed >= 0) setLoq(parsed);
+  };
+
+  const handleTimeChange = (val: string) => {
+    setTimeStr(val);
+    const parsed = parseFloat(val.replace(",", "."));
+    if (!isNaN(parsed) && parsed >= 0) setPlannedTime(parsed);
+  };
+
+  // Sync External Changes (e.g. Auto-Fix updates plannedTime)
+  useEffect(() => {
+    if (
+      plannedTime.toString() !== timeStr &&
+      Math.abs(plannedTime - parseFloat(timeStr.replace(",", "."))) > 0.1
+    ) {
+      // eslint-disable-next-line
+      setTimeStr(plannedTime.toString());
+    }
+  }, [plannedTime, timeStr]);
 
   // Auto-validate (Calculation)
   const result = useMemo(() => {
@@ -48,11 +77,12 @@ export const MinimumVolumeValidation: React.FC<
       onValidationChange(result, loq, plannedTime);
     }, 300); // 300ms debounce
     return () => clearTimeout(timer);
-  }, [result, loq, plannedTime]);
+  }, [result, loq, plannedTime, onValidationChange]);
 
   const handleFixTime = () => {
     if (result && result.tMinMinutes > 0) {
       setPlannedTime(result.tMinMinutes);
+      setTimeStr(result.tMinMinutes.toString());
     }
   };
 
@@ -90,11 +120,10 @@ export const MinimumVolumeValidation: React.FC<
               </label>
               <div className="flex items-center gap-2">
                 <input
-                  type="number"
-                  min="0.1"
-                  step="0.1"
-                  value={loq}
-                  onChange={(e) => setLoq(parseFloat(e.target.value) || 0)}
+                  type="text"
+                  inputMode="decimal"
+                  value={loqStr}
+                  onChange={(e) => handleLoqChange(e.target.value)}
                   className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-100 outline-none font-mono"
                 />
                 <div className="group relative">
@@ -116,10 +145,10 @@ export const MinimumVolumeValidation: React.FC<
                 </span>
               </label>
               <input
-                type="number"
-                min="1"
-                value={plannedTime}
-                onChange={(e) => setPlannedTime(parseInt(e.target.value) || 0)}
+                type="text"
+                inputMode="numeric"
+                value={timeStr}
+                onChange={(e) => handleTimeChange(e.target.value)}
                 className={`w-full p-2 border rounded focus:ring-2 outline-none font-mono font-bold ${
                   result.isValid
                     ? "border-green-300 bg-green-50 text-green-800 focus:ring-green-100"
