@@ -4,7 +4,7 @@ import { TargetOrgansDisplay } from "../../visual/TargetOrgansDisplay";
 import * as pdfjsLib from "pdfjs-dist";
 import { StepCard } from "../../ui/StepCard";
 import type { HPhrase, HazardInput, HazardAssessment } from "../../../types";
-import { CMR_PHRASES } from "../../../data/hPhrases";
+import { CMR_PHRASES } from "../../../utils/engineLogic";
 import { lookupChemical } from "../../../data/insstDatabase";
 
 // Configure worker (assuming file will be in public folder or imported)
@@ -346,7 +346,15 @@ export const HazardForm: React.FC<HazardFormProps> = ({
   // --- TARGET ORGANS LOGIC (Waterfall) ---
   const organAnalysis = useMemo(() => {
     if (!formData.substanceName) return null;
-    return determineTargetOrgans(formData.substanceName, formData.hPhrases);
+    const res = determineTargetOrgans(
+      formData.substanceName,
+      formData.hPhrases,
+    );
+    console.log("DEBUG: Target Organs Analysis", {
+      name: formData.substanceName,
+      result: res,
+    });
+    return res;
   }, [formData.substanceName, formData.hPhrases]);
 
   return (
