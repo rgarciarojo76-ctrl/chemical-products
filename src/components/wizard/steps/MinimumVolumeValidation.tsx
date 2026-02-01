@@ -170,10 +170,23 @@ export const MinimumVolumeValidation: React.FC<
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Tiempo Mínimo (tmin):</span>
-              <span className="font-mono font-bold">
+              <span className="font-mono font-bold text-blue-700">
                 {result.tMinMinutes} min
               </span>
             </div>
+
+            {/* Logic Explanation */}
+            {result.tMinStrategy &&
+              result.tMinAnalytical &&
+              result.tMinStrategy > result.tMinAnalytical && (
+                <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded mt-2 border border-blue-100">
+                  <Info size={12} className="inline mr-1" />
+                  <strong>Nota:</strong> Analíticamente bastarían{" "}
+                  <strong>{result.tMinAnalytical} min</strong> (UNE-EN 482),
+                  pero se requieren <strong>{result.tMinStrategy} min</strong>{" "}
+                  para asegurar representatividad estadística (UNE-EN 689).
+                </div>
+              )}
           </div>
 
           {!result.isValid && (

@@ -7,7 +7,9 @@
 export interface VolumeValidationResult {
   cMin: number; // Concentration to validate (mg/m³)
   vMinLiters: number; // Minimum Volume in Liters
-  tMinMinutes: number; // Minimum Time in Minutes
+  tMinMinutes: number; // TOTAL Minimum Time (Max of Analytical vs Strategy)
+  tMinAnalytical?: number; // Time for UNE-EN 482 (LOQ)
+  tMinStrategy?: number; // Time for UNE-EN 689 (Representativeness)
   isValid: boolean; // plannedTime >= tMinMinutes
   message?: string;
 }
@@ -70,15 +72,27 @@ export function validateMinimumVolume(
     };
   }
 
-  const tMinMinutes = Math.ceil(vMinLiters / flowRate);
+  const tMinAnalytical = Math.ceil(vMinLiters / flowRate);
 
-  // 4. Validate
-  const isValid = plannedTime >= tMinMinutes;
+  // 4. UNE-EN 689 Constraint (Representativeness)
+  // For VLA-ED (Daily), minimum recommended is 2 hours (120 min) to cover variability.
+  let tMinStrategy = 0;
+  if (exposureType === "continuous" || exposureType === "variable") {
+    tMinStrategy = 120;
+  }
+
+  // Final Minimum Time is the MAX of Analytical and Strategic requirements
+  const tMinTotal = Math.max(tMinAnalytical, tMinStrategy);
+
+  // 5. Validate
+  const isValid = plannedTime >= tMinTotal;
 
   return {
     cMin,
     vMinLiters,
-    tMinMinutes,
+    tMinMinutes: tMinTotal, // Used for validation
+    tMinAnalytical, // Exposed for transparency
+    tMinStrategy, // Exposed for explanation
     isValid,
   };
 }
