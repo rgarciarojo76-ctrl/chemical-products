@@ -7,12 +7,12 @@ const USER_DB_TARGET_ORGANS: Record<string, string[]> = {
   amianto: ["Pulmón", "Pleura"],
   asbesto: ["Pulmón", "Pleura"],
   "polvo de madera dura": ["Fosas Nasales"],
-  formaldehído: ["Nasofaringe"],
+  formaldehido: ["Nasofaringe"], // Normalized key
   "cromo vi": ["Pulmón", "Senos Paranasales"],
   "compuestos de cromo hexavalente": ["Pulmón", "Senos Paranasales"],
   "cloruro de vinilo": ["Hígado"],
   "oxido de etileno": ["Sangre", "Sistema Linfático"],
-  "sílice cristalina": ["Pulmón"],
+  "silice cristalina": ["Pulmón"],
   plomo: ["Sistema Nervioso Central", "Riñón", "Sangre"],
   arsenico: ["Pulmón", "Piel", "Hígado"],
   niquel: ["Pulmón", "Senos Paranasales"],
@@ -43,7 +43,11 @@ export interface TargetOrganResult {
  * Normalizes text for comparison (lowercase, trimmed).
  */
 function normalize(text: string): string {
-  return text.toLowerCase().trim();
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
 }
 
 /**
@@ -116,15 +120,18 @@ export function determineTargetOrgans(
   const normSubstance = normalize(substanceName);
 
   // --- STEP 1: USER DATABASE (Exact or close match) ---
-  // In real app, this might be fuzzy search. Here strict for simplicity.
-  const dbMatch = USER_DB_TARGET_ORGANS[normSubstance]; // Exact match
-  // Also try keys that are contained in the name (e.g. "polvo de madera" inside "polvo de madera dura de roble")
+  console.log(`[TargetOrgans] Lookup for: "${normSubstance}"`);
+
+  const dbMatch = USER_DB_TARGET_ORGANS[normSubstance];
   let partialDbMatch: string[] | undefined = dbMatch;
   if (!partialDbMatch) {
     const foundKey = Object.keys(USER_DB_TARGET_ORGANS).find((k) =>
       normSubstance.includes(k),
     );
-    if (foundKey) partialDbMatch = USER_DB_TARGET_ORGANS[foundKey];
+    if (foundKey) {
+      console.log(`[TargetOrgans] Match found: "${foundKey}"`);
+      partialDbMatch = USER_DB_TARGET_ORGANS[foundKey];
+    }
   }
 
   // --- STEP 2: FDS H-PHRASES ANALYSIS ---
