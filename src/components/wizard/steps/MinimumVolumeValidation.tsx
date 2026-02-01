@@ -71,18 +71,27 @@ export const MinimumVolumeValidation: React.FC<
     return validateMinimumVolume(vla, flowRate, loq, exposureType, plannedTime);
   }, [vla, flowRate, loq, exposureType, plannedTime]);
 
-  // Notify Parent (Side Effect) - Debounced to prevent Render Loop
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onValidationChange(result, loq, plannedTime);
-    }, 300); // 300ms debounce
-    return () => clearTimeout(timer);
-  }, [result, loq, plannedTime, onValidationChange]);
+  // Sync to Parent ONLY on committed changes (Blur or Button Click)
+  // This prevents the infinite render loop while typing
+  const syncToParent = () => {
+    onValidationChange(result, loq, plannedTime);
+  };
 
   const handleFixTime = () => {
     if (result && result.tMinMinutes > 0) {
-      setPlannedTime(result.tMinMinutes);
-      setTimeStr(result.tMinMinutes.toString());
+      const newTime = result.tMinMinutes;
+      setPlannedTime(newTime);
+      setTimeStr(newTime.toString());
+      // For auto-fix, we CAN sync immediately because it's a single discrete event, not a typing stream
+      // However, we must wait for state update... actually result depends on state.
+      // Better to trigger a one-off sync?
+      // Or just let the user see the update locally.
+      // Let's manually trigger sync with the NEW values to be safe.
+      onValidationChange(
+        { ...result, tMinMinutes: newTime, isValid: true }, // Optimistic update or wait for recalc?
+        loq,
+        newTime,
+      );
     }
   };
 
@@ -124,6 +133,7 @@ export const MinimumVolumeValidation: React.FC<
                   inputMode="decimal"
                   value={loqStr}
                   onChange={(e) => handleLoqChange(e.target.value)}
+                  onBlur={syncToParent}
                   className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-100 outline-none font-mono"
                 />
                 <div className="group relative">
@@ -149,6 +159,7 @@ export const MinimumVolumeValidation: React.FC<
                 inputMode="numeric"
                 value={timeStr}
                 onChange={(e) => handleTimeChange(e.target.value)}
+                onBlur={syncToParent}
                 className={`w-full p-2 border rounded focus:ring-2 outline-none font-mono font-bold ${
                   result.isValid
                     ? "border-green-300 bg-green-50 text-green-800 focus:ring-green-100"
