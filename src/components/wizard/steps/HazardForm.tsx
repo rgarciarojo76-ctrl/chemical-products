@@ -364,6 +364,7 @@ export const HazardForm: React.FC<HazardFormProps> = ({
       icon="⚠️"
     >
       {/* Upload Area */}
+      {/* 1. COMPACT UPLOAD BANNER */}
       <div
         onDragEnter={(e) => {
           e.preventDefault();
@@ -381,51 +382,61 @@ export const HazardForm: React.FC<HazardFormProps> = ({
           setIsDragging(false);
         }}
         onDrop={onDrop}
-        style={{
-          marginBottom: "var(--spacing-lg)",
-          padding: "1.5rem",
-          border: isDragging
-            ? "2px dashed var(--color-primary-dark)"
-            : "2px dashed var(--color-primary)",
-          borderRadius: "8px",
-          textAlign: "center",
-          backgroundColor: isDragging ? "rgba(0, 86, 179, 0.1)" : "#f0f7ff",
-          transition: "all 0.2s ease",
-          cursor: "pointer",
-        }}
+        className={`mb-4 rounded-lg border-2 border-dashed transition-all duration-200 flex items-center justify-between px-4 py-3 cursor-pointer
+          ${
+            isDragging
+              ? "border-primary bg-blue-50 h-32"
+              : "border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-primary-light"
+          }`}
       >
-        <div
-          style={{
-            fontSize: "2rem",
-            marginBottom: "0.5rem",
-            pointerEvents: "none",
-          }}
-        >
-          📄
+        <div className="flex items-center gap-4 flex-1">
+          <div className="text-2xl select-none">{isDragging ? "📂" : "📄"}</div>
+
+          <div className="flex flex-col">
+            <h4 className="m-0 text-sm font-semibold text-gray-700 pointer-events-none">
+              {isDragging
+                ? "¡Suelta el PDF aquí!"
+                : "Análisis Automático de FDS"}
+            </h4>
+            {!isDragging && (
+              <p className="text-xs text-gray-500 m-0 pointer-events-none">
+                Arrastra tu PDF o haz clic para subir
+              </p>
+            )}
+          </div>
         </div>
-        <h4
-          style={{
-            margin: "0 0 0.5rem 0",
-            color: "var(--color-primary)",
-            pointerEvents: "none",
-          }}
-        >
-          {isDragging
-            ? "¡SUELTA EL DOCUMENTO AQUÍ!"
-            : "Análisis Automático de la Ficha de Datos de Seguridad"}
-        </h4>
-        <p
-          style={{
-            fontSize: "0.9rem",
-            color: "#666",
-            marginBottom: "1rem",
-            pointerEvents: "none",
-          }}
-        >
-          {isDragging
-            ? "..."
-            : "Arrastra tu PDF aquí o usa el botón para buscarlo."}
-        </p>
+
+        <div className="flex items-center gap-3">
+          {analysisStatus === "analyzing" && (
+            <span className="text-xs font-bold text-gray-500 animate-pulse">
+              Analizando...
+            </span>
+          )}
+          {analysisStatus === "success" && (
+            <span className="text-xs font-bold text-green-600">
+              ✅ Completado
+            </span>
+          )}
+          {analysisStatus === "error" && (
+            <span className="text-xs font-bold text-red-600">❌ Error</span>
+          )}
+
+          <label
+            htmlFor="fds-upload"
+            className={`px-3 py-1.5 text-xs font-semibold rounded border transition-colors cursor-pointer select-none
+              ${
+                analysisStatus === "analyzing"
+                  ? "bg-gray-200 text-gray-500 border-gray-300 pointer-events-none"
+                  : "bg-white text-primary border-primary hover:bg-primary hover:text-white"
+              }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {analysisStatus === "analyzing"
+              ? "Procesando..."
+              : "Buscar Archivo"}
+          </label>
+        </div>
+
         <input
           type="file"
           accept=".pdf"
@@ -433,290 +444,216 @@ export const HazardForm: React.FC<HazardFormProps> = ({
           style={{ display: "none" }}
           id="fds-upload"
         />
-        <label
-          htmlFor="fds-upload"
-          style={{
-            display: "inline-block",
-            padding: "0.5rem 1rem",
-            backgroundColor:
-              analysisStatus === "analyzing" ? "#ccc" : "var(--color-white)",
-            border: "1px solid var(--color-primary)",
-            color: "var(--color-primary)",
-            borderRadius: "4px",
-            cursor: analysisStatus === "analyzing" ? "wait" : "pointer",
-            fontWeight: 600,
-            position: "relative", // Ensure label stays clickable
-            zIndex: 10,
-          }}
-        >
-          {analysisStatus === "analyzing"
-            ? "Analizando Ficha..."
-            : "Subir Ficha de Seguridad (PDF)"}
-        </label>
-        {analysisStatus === "success" && (
-          <div
-            style={{ marginTop: "0.5rem", color: "green", fontWeight: "bold" }}
-          >
-            ✅ Datos extraídos correctamente
-          </div>
-        )}
-        {analysisStatus === "error" && (
-          <div
-            style={{ marginTop: "0.5rem", color: "red", fontWeight: "bold" }}
-          >
-            ❌ Error al leer el PDF
-          </div>
-        )}
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          margin: "1rem 0",
-          color: "#ccc",
-        }}
-      >
-        <div
-          style={{ flex: 1, height: "1px", background: "currentColor" }}
-        ></div>
-        <span style={{ padding: "0 1rem", fontSize: "0.8rem" }}>
-          O INTRODUCCIÓN MANUAL
-        </span>
-        <div
-          style={{ flex: 1, height: "1px", background: "currentColor" }}
-        ></div>
+      <div className="flex items-center gap-4 mb-4 text-xs text-gray-400 uppercase tracking-wider font-semibold">
+        <div className="flex-1 h-px bg-gray-200"></div>
+        <span>O INTRODUCCIÓN MANUAL</span>
+        <div className="flex-1 h-px bg-gray-200"></div>
       </div>
 
-      <div className="form-group mb-2">
-        <label
-          style={{ display: "block", fontWeight: 600, marginBottom: "0.5rem" }}
-        >
-          Agente(s) cancerigeno(s) identificado(s)
-        </label>
-        <input
-          type="text"
-          value={formData.substanceName}
-          onChange={(e) =>
-            setFormData({ ...formData, substanceName: e.target.value })
-          }
-          placeholder="Ej: Dicromato de Potasio"
-          style={{
-            width: "100%",
-            padding: "0.5rem",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-          }}
-        />
+      {/* 2. COMPACT INPUT ROW */}
+      <div className="flex flex-col md:flex-row gap-4 mb-4 items-start">
+        <div className="flex-1 w-full">
+          <label className="block text-sm font-semibold text-gray-700 mb-1">
+            Agente Químico / Producto
+          </label>
+          <input
+            type="text"
+            value={formData.substanceName}
+            onChange={(e) =>
+              setFormData({ ...formData, substanceName: e.target.value })
+            }
+            placeholder="Ej: Formaldehído, Benceno..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+          />
+        </div>
 
-        {/* MULTI-SUBSTANCE DISPLAY */}
-        {detectedComponents.length > 0 ? (
-          <div style={{ marginTop: "1rem" }}>
-            {detectedComponents.map((comp, idx) => (
+        <div className="flex items-center gap-3 pt-6 min-w-fit">
+          <label className="flex items-center gap-2 cursor-pointer bg-gray-50 px-3 py-2 rounded border border-gray-200 hover:bg-gray-100">
+            <input
+              type="checkbox"
+              checked={formData.isMixture}
+              onChange={(e) =>
+                setFormData({ ...formData, isMixture: e.target.checked })
+              }
+              className="rounded text-primary focus:ring-primary"
+            />
+            <span className="text-sm font-medium text-gray-700">Es Mezcla</span>
+          </label>
+
+          {formData.isMixture && (
+            <div className="relative">
+              <input
+                type="number"
+                step="0.01"
+                placeholder="%"
+                className="w-20 px-2 py-2 border border-gray-300 rounded-md text-sm focus:ring-primary"
+                value={formData.concentration || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    concentration: parseFloat(e.target.value),
+                  })
+                }
+              />
+              <span className="absolute right-2 top-2 text-gray-400 text-xs">
+                %
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* MULTI-SUBSTANCE DISPLAY */}
+      {detectedComponents.length > 0 ? (
+        <div style={{ marginTop: "1rem" }}>
+          {detectedComponents.map((comp, idx) => (
+            <div
+              key={idx}
+              style={{
+                marginBottom: "0.75rem",
+                padding: "0.75rem",
+                backgroundColor: "#fff8f1",
+                borderLeft: "4px solid #dc2626",
+                borderRadius: "4px",
+              }}
+            >
+              <div style={{ fontWeight: "bold", color: "#dc2626" }}>
+                {comp.name} - {comp.cat}
+              </div>
               <div
-                key={idx}
                 style={{
-                  marginBottom: "0.75rem",
-                  padding: "0.75rem",
-                  backgroundColor: "#fff8f1",
-                  borderLeft: "4px solid #dc2626",
-                  borderRadius: "4px",
+                  fontSize: "0.85rem",
+                  marginTop: "0.25rem",
+                  color: "#444",
                 }}
               >
-                <div style={{ fontWeight: "bold", color: "#dc2626" }}>
-                  {comp.name} - {comp.cat}
-                </div>
+                {comp.cat?.includes("1A") || comp.cat?.includes("1B")
+                  ? "Sustancia de ALTO RIESGO. Requiere evaluación rigurosa según Art. 5 (Sustitución/Sistema Cerrado)."
+                  : "Se recomienda verificar la FDS para confirmar la categoría específica."}
+              </div>
+              {comp.notes && (
                 <div
                   style={{
-                    fontSize: "0.85rem",
+                    fontSize: "0.75rem",
+                    color: "#666",
                     marginTop: "0.25rem",
-                    color: "#444",
                   }}
                 >
-                  {comp.cat?.includes("1A") || comp.cat?.includes("1B")
-                    ? "Sustancia de ALTO RIESGO. Requiere evaluación rigurosa según Art. 5 (Sustitución/Sistema Cerrado)."
-                    : "Se recomienda verificar la FDS para confirmar la categoría específica."}
+                  Notas: {comp.notes}
                 </div>
-                {comp.notes && (
-                  <div
-                    style={{
-                      fontSize: "0.75rem",
-                      color: "#666",
-                      marginTop: "0.25rem",
-                    }}
-                  >
-                    Notas: {comp.notes}
-                  </div>
-                )}
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        /* FALLBACK: SINGLE SUBSTANCE MANUAL logic (Keep existing) */
+
+        /* FALLBACK: SINGLE SUBSTANCE MANUAL logic (Keep existing) */
+        formData.hPhrases.length > 0 &&
+        (() => {
+          // Helper to infer explanation (embedded for now, or could be utils)
+          const getExplanation = (phrases: HPhrase[]) => {
+            let cat = "";
+            let text = "";
+            let color = "#d97706";
+
+            if (phrases.some((p) => ["H340", "H350", "H360FD"].includes(p))) {
+              cat = "Categoría 1A o 1B (Peligro Confirmado)";
+              text =
+                "Sustancia de la que se sabe o se supone que es carcinógena, mutágena o tóxica para la reproducción en humanos. REQUIERE SUSTITUCIÓN PRIORITARIA.";
+              color = "#dc2626"; // Red
+            } else if (
+              phrases.some((p) => ["H351", "H341", "H361"].includes(p))
+            ) {
+              cat = "Categoría 2 (Sospechoso)";
+              text =
+                "Se sospecha que provoca cáncer, defectos genéticos o daña la fertilidad/feto. Requiere vigilancia.";
+              color = "#d97706"; // Amber
+            } else {
+              cat = "Clasificación CMR Detectada";
+              text = "El agente presenta frases H vinculadas a riesgos CMR.";
+            }
+            return { cat, text, color };
+          };
+
+          const info = getExplanation(formData.hPhrases);
+
+          return (
+            <div
+              style={{
+                marginTop: "0.5rem",
+                padding: "0.75rem",
+                backgroundColor: "#fff8f1",
+                borderLeft: `4px solid ${info.color}`,
+                borderRadius: "4px",
+              }}
+            >
+              <div style={{ fontWeight: "bold", color: info.color }}>
+                {info.cat}
               </div>
-            ))}
-          </div>
-        ) : (
-          /* FALLBACK: SINGLE SUBSTANCE MANUAL logic (Keep existing) */
-
-          /* FALLBACK: SINGLE SUBSTANCE MANUAL logic (Keep existing) */
-          formData.hPhrases.length > 0 &&
-          (() => {
-            // Helper to infer explanation (embedded for now, or could be utils)
-            const getExplanation = (phrases: HPhrase[]) => {
-              let cat = "";
-              let text = "";
-              let color = "#d97706";
-
-              if (phrases.some((p) => ["H340", "H350", "H360FD"].includes(p))) {
-                cat = "Categoría 1A o 1B (Peligro Confirmado)";
-                text =
-                  "Sustancia de la que se sabe o se supone que es carcinógena, mutágena o tóxica para la reproducción en humanos. REQUIERE SUSTITUCIÓN PRIORITARIA.";
-                color = "#dc2626"; // Red
-              } else if (
-                phrases.some((p) => ["H351", "H341", "H361"].includes(p))
-              ) {
-                cat = "Categoría 2 (Sospechoso)";
-                text =
-                  "Se sospecha que provoca cáncer, defectos genéticos o daña la fertilidad/feto. Requiere vigilancia.";
-                color = "#d97706"; // Amber
-              } else {
-                cat = "Clasificación CMR Detectada";
-                text = "El agente presenta frases H vinculadas a riesgos CMR.";
-              }
-              return { cat, text, color };
-            };
-
-            const info = getExplanation(formData.hPhrases);
-
-            return (
-              <div
-                style={{
-                  marginTop: "0.5rem",
-                  padding: "0.75rem",
-                  backgroundColor: "#fff8f1",
-                  borderLeft: `4px solid ${info.color}`,
-                  borderRadius: "4px",
-                }}
-              >
-                <div style={{ fontWeight: "bold", color: info.color }}>
-                  {info.cat}
-                </div>
-                <div style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
-                  {info.text}
-                </div>
+              <div style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
+                {info.text}
               </div>
-            );
-          })()
-        )}
-      </div>
+            </div>
+          );
+        })()
+      )}
 
       {/* ROUTES OF EXPOSURE VISUALIZATION */}
-      <div className="form-group mb-4">
-        <label
-          style={{ display: "block", fontWeight: 600, marginBottom: "0.5rem" }}
-        >
-          Vías de Entrada (Identificadas en FDS)
+      {/* 3. COMPACT ROUTES STRIP */}
+      <div className="mb-4">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Vías de Entrada (FDS)
         </label>
-        <div className="routes-grid">
+        <div className="flex gap-2 bg-gray-50 p-2 rounded-lg border border-gray-100 overflow-x-auto">
+          {/* Inhalation */}
           <div
-            style={{
-              padding: "0.75rem",
-              borderRadius: "6px",
-              textAlign: "center",
-              backgroundColor: detectedRoutes.inhalation
-                ? "#e0f2fe"
-                : "#f3f4f6",
-              border: detectedRoutes.inhalation
-                ? "2px solid #0ea5e9"
-                : "1px solid #e5e7eb",
-              opacity: detectedRoutes.inhalation ? 1 : 0.6,
-            }}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm border transition-all select-none
+             ${
+               detectedRoutes.inhalation
+                 ? "bg-blue-100 text-blue-800 border-blue-300 font-semibold shadow-sm"
+                 : "bg-white text-gray-400 border-gray-200 opacity-60 grayscale"
+             }`}
           >
-            <div style={{ fontSize: "1.5rem", marginBottom: "0.25rem" }}>
-              👃
-            </div>
-            <div
-              style={{
-                fontSize: "0.85rem",
-                fontWeight: 600,
-                color: detectedRoutes.inhalation ? "#0369a1" : "#6b7280",
-              }}
-            >
-              Inhalatoria
-            </div>
+            <span>👃</span> Inhalatoria
           </div>
+
+          {/* Dermal */}
           <div
-            style={{
-              padding: "0.75rem",
-              borderRadius: "6px",
-              textAlign: "center",
-              backgroundColor: detectedRoutes.dermal ? "#fef3c7" : "#f3f4f6",
-              border: detectedRoutes.dermal
-                ? "2px solid #d97706"
-                : "1px solid #e5e7eb",
-              opacity: detectedRoutes.dermal ? 1 : 0.6,
-            }}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm border transition-all select-none
+             ${
+               detectedRoutes.dermal
+                 ? "bg-amber-100 text-amber-800 border-amber-300 font-semibold shadow-sm"
+                 : "bg-white text-gray-400 border-gray-200 opacity-60 grayscale"
+             }`}
           >
-            <div style={{ fontSize: "1.5rem", marginBottom: "0.25rem" }}>
-              ✋
-            </div>
-            <div
-              style={{
-                fontSize: "0.85rem",
-                fontWeight: 600,
-                color: detectedRoutes.dermal ? "#92400e" : "#6b7280",
-              }}
-            >
-              Dérmica
-            </div>
+            <span>✋</span> Dérmica
           </div>
+
+          {/* Oral */}
           <div
-            style={{
-              padding: "0.75rem",
-              borderRadius: "6px",
-              textAlign: "center",
-              backgroundColor: detectedRoutes.oral ? "#ffe4e6" : "#f3f4f6",
-              border: detectedRoutes.oral
-                ? "2px solid #e11d48"
-                : "1px solid #e5e7eb",
-              opacity: detectedRoutes.oral ? 1 : 0.6,
-            }}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm border transition-all select-none
+             ${
+               detectedRoutes.oral
+                 ? "bg-rose-100 text-rose-800 border-rose-300 font-semibold shadow-sm"
+                 : "bg-white text-gray-400 border-gray-200 opacity-60 grayscale"
+             }`}
           >
-            <div style={{ fontSize: "1.5rem", marginBottom: "0.25rem" }}>
-              👄
-            </div>
-            <div
-              style={{
-                fontSize: "0.85rem",
-                fontWeight: 600,
-                color: detectedRoutes.oral ? "#be123c" : "#6b7280",
-              }}
-            >
-              Oral / Digestiva
-            </div>
+            <span>👄</span> Oral
           </div>
+
+          {/* Parenteral */}
           <div
-            style={{
-              padding: "0.75rem",
-              borderRadius: "6px",
-              textAlign: "center",
-              backgroundColor: detectedRoutes.parenteral
-                ? "#f3e8ff"
-                : "#f3f4f6",
-              border: detectedRoutes.parenteral
-                ? "2px solid #9333ea"
-                : "1px solid #e5e7eb",
-              opacity: detectedRoutes.parenteral ? 1 : 0.6,
-            }}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm border transition-all select-none
+             ${
+               detectedRoutes.parenteral
+                 ? "bg-purple-100 text-purple-800 border-purple-300 font-semibold shadow-sm"
+                 : "bg-white text-gray-400 border-gray-200 opacity-60 grayscale"
+             }`}
           >
-            <div style={{ fontSize: "1.5rem", marginBottom: "0.25rem" }}>
-              🩹
-            </div>
-            <div
-              style={{
-                fontSize: "0.85rem",
-                fontWeight: 600,
-                color: detectedRoutes.parenteral ? "#7e22ce" : "#6b7280",
-              }}
-            >
-              Parenteral
-            </div>
+            <span>🩹</span> Parenteral
           </div>
         </div>
       </div>
@@ -762,56 +699,6 @@ export const HazardForm: React.FC<HazardFormProps> = ({
             </button>
           ))}
         </div>
-      </div>
-
-      <div className="form-group mb-4">
-        <label
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            cursor: "pointer",
-          }}
-        >
-          <input
-            type="checkbox"
-            checked={formData.isMixture}
-            onChange={(e) =>
-              setFormData({ ...formData, isMixture: e.target.checked })
-            }
-          />
-          <span style={{ fontWeight: 600 }}>Es una Mezcla</span>
-        </label>
-
-        {formData.isMixture && (
-          <div style={{ marginTop: "0.5rem", paddingLeft: "1.5rem" }}>
-            <label style={{ marginRight: "0.5rem" }}>Concentración (%):</label>
-            <input
-              type="number"
-              step="0.01"
-              placeholder="0.0"
-              style={{ width: "80px", padding: "0.25rem" }}
-              value={formData.concentration || ""}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  concentration: parseFloat(e.target.value),
-                })
-              }
-            />
-            <p
-              style={{
-                fontSize: "0.8rem",
-                color: "#666",
-                marginTop: "0.25rem",
-              }}
-            >
-              Nota Técnica: El límite legal de clasificación es 0.1% para
-              Cancerígenos/Mutágenos y 0.3% para Reprotóxicos. Por debajo de
-              estos valores, se emitirá una recomendación de precaución.
-            </p>
-          </div>
-        )}
       </div>
 
       <div
