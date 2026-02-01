@@ -1,5 +1,5 @@
 import React from "react";
-import { TargetOrganResult } from "../../utils/targetOrgansLogic";
+import type { TargetOrganResult } from "../../utils/targetOrgansLogic";
 import {
   Activity,
   Brain,
@@ -24,7 +24,8 @@ const getOrganVisuals = (organName: string) => {
     norm.includes("pulmón") ||
     norm.includes("respiratori") ||
     norm.includes("pleura") ||
-    norm.includes("nasal")
+    norm.includes("nasal") ||
+    norm.includes("nasofaringe")
   ) {
     return {
       icon: <Activity />,
@@ -172,10 +173,16 @@ export const TargetOrgansDisplay: React.FC<TargetOrgansDisplayProps> = ({
               <div
                 className={`p-3 bg-white rounded-full shadow-sm mb-3 ${visuals.color}`}
               >
-                {React.cloneElement(visuals.icon as React.ReactElement, {
-                  size: 32,
-                  strokeWidth: 1.5,
-                })}
+                {React.cloneElement(
+                  visuals.icon as React.ReactElement<{
+                    size: number;
+                    strokeWidth: number;
+                  }>,
+                  {
+                    size: 32,
+                    strokeWidth: 1.5,
+                  },
+                )}
               </div>
               <span className={`font-bold text-sm ${visuals.color}`}>
                 {visuals.label}
