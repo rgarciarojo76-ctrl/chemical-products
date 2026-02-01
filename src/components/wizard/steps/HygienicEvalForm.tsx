@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   FileText,
   FlaskConical,
@@ -82,13 +82,28 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
     },
   );
 
-  const [validationResult, setValidationResult] = useState<{
-    result: VolumeValidationResult;
-    loq: number;
-    plannedTime: number;
-  } | null>(null);
-
   // --- LOGIC: Stoffenmanager Auto-fill ---
+  const handleValidationChange = useCallback(
+    (res: VolumeValidationResult, loq: number, time: number) => {
+      setFormData((prev) => {
+        // Simple distinct check to avoid loop
+        if (
+          prev.uneEn482Result?.loq === loq &&
+          prev.uneEn482Result?.plannedTime === time &&
+          prev.uneEn482Result?.result.isValid === res.isValid &&
+          prev.uneEn482Result?.result.vMinLiters === res.vMinLiters
+        ) {
+          return prev;
+        }
+        return {
+          ...prev,
+          uneEn482Result: { result: res, loq, plannedTime: time },
+        };
+      });
+    },
+    [],
+  );
+
   useEffect(() => {
     if (!formData.stoffenmanager && hazardData) {
       const isLiquid =
@@ -834,19 +849,14 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         </div>
 
         {/* SECTION 3: VALIDACIÓN VOLUMEN MÍNIMO (UNE-EN 482) */}
+
         <MinimumVolumeValidation
-          vla={formData.vla || 0.05} // Fallback VLA
+          vla={formData.vla || 0.05}
           flowRate={parseFloat((flowRate || "2").replace(/[^\d.]/g, "")) || 2}
           exposureType={formData.strategyType || "continuous"}
-          onValidationChange={(res, loq, time) => {
-            setValidationResult({ result: res, loq, plannedTime: time });
-            setFormData((prev) => ({
-              ...prev,
-              uneEn482Result: { result: res, loq, plannedTime: time },
-            }));
-          }}
-          initialLoq={validationResult?.loq || richData?.loq_ug || 10}
-          initialTime={validationResult?.plannedTime || 60}
+          onValidationChange={handleValidationChange}
+          initialLoq={formData.uneEn482Result?.loq || richData?.loq_ug || 10}
+          initialTime={formData.uneEn482Result?.plannedTime || 60}
         />
 
         <div className="step4-actions mt-8">
