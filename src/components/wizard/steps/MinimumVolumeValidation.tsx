@@ -42,10 +42,13 @@ export const MinimumVolumeValidation: React.FC<
     return validateMinimumVolume(vla, flowRate, loq, exposureType, plannedTime);
   }, [vla, flowRate, loq, exposureType, plannedTime]);
 
-  // Notify Parent (Side Effect)
+  // Notify Parent (Side Effect) - Debounced to prevent Render Loop
   useEffect(() => {
-    onValidationChange(result, loq, plannedTime);
-  }, [result, loq, plannedTime]); // onValidationChange excluded to avoid loop if not memoized parent side
+    const timer = setTimeout(() => {
+      onValidationChange(result, loq, plannedTime);
+    }, 300); // 300ms debounce
+    return () => clearTimeout(timer);
+  }, [result, loq, plannedTime]);
 
   const handleFixTime = () => {
     if (result && result.tMinMinutes > 0) {
