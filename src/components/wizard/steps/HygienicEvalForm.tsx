@@ -845,7 +845,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
               uneEn482Result: { result: res, loq, plannedTime: time },
             }));
           }}
-          initialLoq={validationResult?.loq || 10}
+          initialLoq={validationResult?.loq || richData?.loq_ug || 10}
           initialTime={validationResult?.plannedTime || 60}
         />
 
