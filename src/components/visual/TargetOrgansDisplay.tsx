@@ -155,59 +155,50 @@ export const TargetOrgansDisplay: React.FC<TargetOrgansDisplayProps> = ({
         </div>
       )}
 
-      {/* ORGANS GRID */}
-      <div
-        className={`grid gap-4 ${
-          result.organs.length === 1
-            ? "grid-cols-1 max-w-sm mx-auto"
-            : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
-        }`}
-      >
+      {/* ORGANS COMPACT LIST */}
+      <div className="flex flex-wrap gap-2">
         {result.organs.map((organ, idx) => {
           const visuals = getOrganVisuals(organ);
           return (
             <div
               key={idx}
-              className={`${visuals.bg} border-2 ${visuals.border} rounded-xl p-4 flex flex-col items-center text-center transition-all hover:shadow-md hover:scale-[1.02]`}
+              className={`${visuals.bg} border ${visuals.border} rounded-full px-3 py-1.5 flex items-center gap-2 transition-all hover:shadow-sm select-none`}
             >
-              <div
-                className={`p-3 bg-white rounded-full shadow-sm mb-3 ${visuals.color}`}
-              >
+              <div className={visuals.color}>
                 {React.cloneElement(
                   visuals.icon as React.ReactElement<{
                     size: number;
                     strokeWidth: number;
                   }>,
                   {
-                    size: 32,
-                    strokeWidth: 1.5,
+                    size: 16,
+                    strokeWidth: 2,
                   },
                 )}
               </div>
-              <span className={`font-bold text-sm ${visuals.color}`}>
-                {visuals.label}
-              </span>
-              {/* Specific term if different from label (e.g. "Riñón" vs "Nefrotoxicidad") */}
-              {visuals.label !== organ && (
-                <span className="text-xs text-gray-500 mt-1 capitalize">
-                  Ref: {organ}
+              <div className="flex items-center gap-1">
+                <span className={`font-semibold text-sm ${visuals.color}`}>
+                  {visuals.label}
                 </span>
-              )}
+                {/* Specific term if different from label */}
+                {visuals.label !== organ && (
+                  <span className="text-xs opacity-70 text-gray-600">
+                    ({organ})
+                  </span>
+                )}
+              </div>
             </div>
           );
         })}
       </div>
 
       {/* SOURCE FOOTER tooltip */}
-      <div className="mt-3 flex items-center justify-end gap-2 text-xs text-gray-400">
-        <Info size={12} />
+      <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-gray-400">
+        <Info size={10} />
         <span>
-          {result.source === "user_db" &&
-            "Fuente: Base de Datos Interna Corporativa."}
-          {result.source === "fds_h_phrase" &&
-            "Fuente: Extracción automática de Frases H (FDS)."}
-          {result.source === "ai_inference" &&
-            "Fuente: Inferencia Toxicológica (Bibliografía IARC/INSST)."}
+          {result.source === "user_db" && "Fuente: Base de Datos Interna."}
+          {result.source === "fds_h_phrase" && "Fuente: Frases H (FDS)."}
+          {result.source === "ai_inference" && "Fuente: Inferencia AI."}
         </span>
       </div>
     </div>
