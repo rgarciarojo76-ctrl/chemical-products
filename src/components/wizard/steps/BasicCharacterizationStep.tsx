@@ -259,6 +259,9 @@ export const BasicCharacterizationStep: React.FC<
             className="group relative bg-blue-50/40 border-2 border-blue-100 rounded-2xl p-8 cursor-pointer hover:border-blue-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center justify-start h-full"
             onClick={() => setMode("assistant")}
           >
+            <div className="absolute top-4 right-4 bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-sm">
+              Recomendado
+            </div>
             {/* Icon Wrapper */}
             <div className="bg-white p-4 rounded-full shadow-sm mb-6 group-hover:scale-110 transition-transform duration-300">
               <BookOpen size={36} className="text-blue-600" strokeWidth={1.5} />
