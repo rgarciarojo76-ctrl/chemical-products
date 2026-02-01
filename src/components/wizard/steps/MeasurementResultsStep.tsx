@@ -14,6 +14,7 @@ import {
   calculateSampleConcentration,
   runEn689Evaluation,
 } from "../../../utils/en689_calculator";
+import { StatisticalChart } from "../../visual/StatisticalChart";
 
 // Custom Input for handling comma/dot decimals
 
@@ -479,6 +480,18 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                     </span>
                   </div>
                 </div>
+
+                {/* VISUAL CHART */}
+                <StatisticalChart
+                  samples={result.samples
+                    .filter((s) => s.value > 0)
+                    .map((s) => s.value)}
+                  vla={vlaReference || 1}
+                  gm={result.stats?.gm || 0}
+                  gsd={result.stats?.gsd || 1}
+                  ur={result.stats?.ur || 0}
+                  decision={result.decision}
+                />
               </div>
             ) : (
               <div className="text-center py-8 text-gray-400 text-sm">
