@@ -10,11 +10,10 @@ import {
   Calculator,
 } from "lucide-react";
 import {
-  En689Result,
-  Sample,
   calculateSampleConcentration,
   runEn689Evaluation,
 } from "../../../utils/en689_calculator";
+import type { Sample, En689Result } from "../../../types";
 import { DualStatisticalChart } from "../../visual/DualStatisticalChart";
 
 // Custom Input for handling comma/dot decimals
@@ -63,38 +62,47 @@ const DecimalInput = ({
 interface MeasurementResultsStepProps {
   onNext: () => void;
   onBack: () => void;
-  onChange: (data: any) => void;
-  initialData: any;
-  contextData: any;
+  onUpdate: (data: any) => void;
+  initialData?: any;
+  contextData?: any;
+  gesData?: any; // Added missing prop
+  initialSamples?: Sample[];
+  vlaReference?: number;
 }
 
 export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
   onNext,
   onBack,
-  onChange,
+  onUpdate,
   initialData,
   contextData,
+  gesData: gesDataProp,
+  initialSamples,
+  vlaReference: vlaProp,
 }) => {
   const [samples, setSamples] = useState<Sample[]>(
-    initialData.samples?.length > 0
-      ? initialData.samples
-      : [
-          { id: "1", type: "direct", value: 0, isBelowLod: false },
-          { id: "2", type: "direct", value: 0, isBelowLod: false },
-          { id: "3", type: "direct", value: 0, isBelowLod: false },
-        ],
+    initialSamples && initialSamples.length > 0
+      ? initialSamples
+      : initialData.samples?.length > 0
+        ? initialData.samples
+        : [
+            { id: "1", type: "direct", value: 0, isBelowLod: false },
+            { id: "2", type: "direct", value: 0, isBelowLod: false },
+            { id: "3", type: "direct", value: 0, isBelowLod: false },
+          ],
   );
 
   // Derive VLA from Context (or default)
   const vlaReference = useMemo(() => {
+    if (vlaProp !== undefined) return vlaProp;
     // Try to get from Hygienic Strategy -> Chemical -> VLA
     // But passed down context might be flattened.
     // Let's assume contextData has legalLimit or we extract it.
     // For now, let's use a safe fallback or passed prop.
     return contextData?.vlaEd || 1; // Default to 1 if missing for safety
-  }, [contextData]);
+  }, [contextData, vlaProp]);
 
-  const gesData = contextData?.hygienicStrategy;
+  const gesData = gesDataProp || contextData?.hygienicStrategy;
 
   // Real-time calculation
   const result: En689Result | null = useMemo(() => {
@@ -105,12 +113,12 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
   useEffect(() => {
     // Only sync if valid result
     if (result) {
-      onChange({
+      onUpdate({
         samples,
         result,
       });
     }
-  }, [result, samples, onChange]);
+  }, [result, samples, onUpdate]);
 
   const updateSample = (id: string, changes: Partial<Sample>) => {
     setSamples((prev) =>
@@ -391,7 +399,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
               <div className="w-full bg-white/60 rounded p-2 text-xs text-left text-red-700 flex items-start gap-2">
                 <AlertTriangle size={14} className="mt-0.5 shrink-0" />
                 <div>
-                  {result.qualityAlerts.map((alert, i) => (
+                  {result.qualityAlerts.map((alert: string, i: number) => (
                     <div key={i}>{alert}</div>
                   ))}
                 </div>
@@ -474,8 +482,8 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
         <div className="mb-8 animate-fadeIn delay-100">
           <DualStatisticalChart
             samples={result.samples
-              .filter((s) => s.value > 0)
-              .map((s) => s.value)}
+              .filter((s: Sample) => s.value > 0)
+              .map((s: Sample) => s.value)}
             vla={vlaReference || 1}
             gm={result.stats?.gm || 0}
             gsd={result.stats?.gsd || 1}

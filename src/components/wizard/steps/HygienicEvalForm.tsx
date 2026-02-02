@@ -886,7 +886,7 @@ export const HygienicEvalForm: React.FC<HygienicEvalFormProps> = ({
         }
         gesData={formData.ges}
         initialSamples={formData.en689Result?.samples}
-        onUpdate={(result) => {
+        onUpdate={(result: any) => {
           setFormData((prev) => ({
             ...prev,
             en689Result: result,

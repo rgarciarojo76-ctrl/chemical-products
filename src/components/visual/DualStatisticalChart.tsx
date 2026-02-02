@@ -11,7 +11,6 @@ interface DualStatisticalChartProps {
   gm: number;
   gsd: number;
   ur: number;
-  decision: "compliant" | "non_compliant" | "need_more_samples";
 }
 
 export const DualStatisticalChart: React.FC<DualStatisticalChartProps> = ({
