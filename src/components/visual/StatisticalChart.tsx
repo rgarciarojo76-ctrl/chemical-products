@@ -18,9 +18,9 @@ export const StatisticalChart: React.FC<StatisticalChartProps> = ({
   decision,
 }) => {
   // 1. Setup Graph Dimensions and Scales
-  const width = 600;
-  const height = 250;
-  const padding = { top: 20, right: 30, bottom: 40, left: 40 };
+  const width = 1000;
+  const height = 400;
+  const padding = { top: 40, right: 50, bottom: 50, left: 60 };
 
   const graphWidth = width - padding.left - padding.right;
   const graphHeight = height - padding.top - padding.bottom;
@@ -92,8 +92,8 @@ export const StatisticalChart: React.FC<StatisticalChartProps> = ({
   return (
     <div className="w-full overflow-hidden bg-white border border-gray-200 rounded-xl shadow-sm mt-4">
       <div className="p-4 border-b bg-gray-50 flex justify-between items-center">
-        <h4 className="font-bold text-gray-700 text-sm">
-          Visualización del Test (Log-Normal)
+        <h4 className="font-bold text-gray-700 text-lg flex items-center gap-2">
+          📊 Visualización del Test (Distribución Log-Normal)
         </h4>
         <div className="text-xs text-gray-500">
           Escala Lineal (0 - {xDomainMax.toFixed(2)} mg/m³)

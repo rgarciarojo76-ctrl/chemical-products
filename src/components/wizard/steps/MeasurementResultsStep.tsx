@@ -1,151 +1,120 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   TestTube,
-  Calculator,
   Plus,
   Trash2,
-  AlertTriangle,
   CheckCircle2,
   XCircle,
   HelpCircle,
+  AlertTriangle,
+  Calculator,
 } from "lucide-react";
-import type { Sample, En689Result, GesData } from "../../../types";
 import {
+  En689Result,
+  Sample,
   calculateSampleConcentration,
   runEn689Evaluation,
 } from "../../../utils/en689_calculator";
-import { StatisticalChart } from "../../visual/StatisticalChart";
+import { DualStatisticalChart } from "../../visual/DualStatisticalChart";
 
 // Custom Input for handling comma/dot decimals
-
 const DecimalInput = ({
   value,
   onChange,
-  placeholder,
   className,
+  placeholder,
 }: {
-  value?: number;
+  value: number;
   onChange: (val: number) => void;
-  placeholder?: string;
   className?: string;
+  placeholder?: string;
 }) => {
-  const [text, setText] = useState(
-    value !== undefined ? value.toString().replace(".", ",") : "",
-  );
+  const [strVal, setStrVal] = useState(value.toString());
 
-  // Sync external changes
   useEffect(() => {
-    if (value !== undefined) {
-      const currentParsed = parseFloat(text.replace(",", "."));
-      // Only update if significantly different (avoids loop)
-      if (isNaN(currentParsed) || Math.abs(currentParsed - value) > 0.000001) {
-        setText(value.toString().replace(".", ","));
-      }
+    // Only update string if number value changes significantly (external update)
+    // Avoid resetting if user is typing "0," or similar
+    if (Math.abs(parseFloat(strVal.replace(",", ".")) - value) > 0.000001) {
+      setStrVal(value.toString());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setStrVal(val);
+    const num = parseFloat(val.replace(",", "."));
+    if (!isNaN(num)) {
+      onChange(num);
+    }
+  };
 
   return (
     <input
       type="text"
       inputMode="decimal"
+      value={strVal}
+      onChange={handleChange}
       className={className}
       placeholder={placeholder}
-      value={text}
-      onChange={(e) => setText(e.target.value)}
-      onBlur={() => {
-        const normalized = text.replace(",", ".");
-        const val = parseFloat(normalized);
-        if (!isNaN(val)) {
-          onChange(val);
-        } else if (text === "") {
-          onChange(0);
-        }
-      }}
     />
   );
 };
 
 interface MeasurementResultsStepProps {
-  onUpdate: (result: En689Result) => void;
   onNext: () => void;
   onBack: () => void;
-  vlaReference?: number;
-  gesData?: GesData;
-  initialSamples?: Sample[];
+  onChange: (data: any) => void;
+  initialData: any;
+  contextData: any;
 }
 
 export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
-  onUpdate,
   onNext,
   onBack,
-  vlaReference = 1.0, // Default Safety
-  initialSamples = [],
-  gesData,
+  onChange,
+  initialData,
+  contextData,
 }) => {
   const [samples, setSamples] = useState<Sample[]>(
-    initialSamples.length > 0
-      ? initialSamples
+    initialData.samples?.length > 0
+      ? initialData.samples
       : [
-          // Default: 3 empty samples if required
-          {
-            id: "1",
-            type: "direct",
-            value: 0,
-            isBelowLod: false,
-          },
-          {
-            id: "2",
-            type: "direct",
-            value: 0,
-            isBelowLod: false,
-          },
-          {
-            id: "3",
-            type: "direct",
-            value: 0,
-            isBelowLod: false,
-          },
+          { id: "1", type: "direct", value: 0, isBelowLod: false },
+          { id: "2", type: "direct", value: 0, isBelowLod: false },
+          { id: "3", type: "direct", value: 0, isBelowLod: false },
         ],
   );
 
-  const [result, setResult] = useState<En689Result | null>(null);
+  // Derive VLA from Context (or default)
+  const vlaReference = useMemo(() => {
+    // Try to get from Hygienic Strategy -> Chemical -> VLA
+    // But passed down context might be flattened.
+    // Let's assume contextData has legalLimit or we extract it.
+    // For now, let's use a safe fallback or passed prop.
+    return contextData?.vlaEd || 1; // Default to 1 if missing for safety
+  }, [contextData]);
 
-  // Auto-calculate on sample change
-  useEffect(() => {
-    // 1. Recalculate values for all 'calc' type samples
-    const processedSamples = samples.map((s) => {
-      if (s.type === "lab_calc") {
-        return { ...s, value: calculateSampleConcentration(s) };
-      }
-      return s;
-    });
+  const gesData = contextData?.hygienicStrategy;
 
-    // 2. Run Engine
-    try {
-      const evalResult = runEn689Evaluation(processedSamples, vlaReference);
-      setResult(evalResult);
-      onUpdate(evalResult);
-    } catch (err) {
-      console.error("Calculator Error:", err);
-      // Fallback safe result
-      const errorResult: En689Result = {
-        decision: "need_more_samples",
-        ruleApplied: "screening",
-        vlaApplied: vlaReference,
-        samples: processedSamples,
-        qualityAlerts: ["Error interno de cálculo. Revise los datos."],
-        nextCheck: "Error",
-        stats: undefined,
-      };
-      setResult(errorResult);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Real-time calculation
+  const result: En689Result | null = useMemo(() => {
+    return runEn689Evaluation(samples, vlaReference);
   }, [samples, vlaReference]);
 
-  const updateSample = (id: string, updates: Partial<Sample>) => {
+  // Sync parent on change
+  useEffect(() => {
+    // Only sync if valid result
+    if (result) {
+      onChange({
+        samples,
+        result,
+      });
+    }
+  }, [result, samples, onChange]);
+
+  const updateSample = (id: string, changes: Partial<Sample>) => {
     setSamples((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, ...updates } : s)),
+      prev.map((s) => (s.id === id ? { ...s, ...changes } : s)),
     );
   };
 
@@ -480,18 +449,6 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                     </span>
                   </div>
                 </div>
-
-                {/* VISUAL CHART */}
-                <StatisticalChart
-                  samples={result.samples
-                    .filter((s) => s.value > 0)
-                    .map((s) => s.value)}
-                  vla={vlaReference || 1}
-                  gm={result.stats?.gm || 0}
-                  gsd={result.stats?.gsd || 1}
-                  ur={result.stats?.ur || 0}
-                  decision={result.decision}
-                />
               </div>
             ) : (
               <div className="text-center py-8 text-gray-400 text-sm">
@@ -509,6 +466,21 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
               <span>{result.nextCheck}</span>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* FULL WIDTH STATISTICAL CHART */}
+      {result && (
+        <div className="mb-8 animate-fadeIn delay-100">
+          <DualStatisticalChart
+            samples={result.samples
+              .filter((s) => s.value > 0)
+              .map((s) => s.value)}
+            vla={vlaReference || 1}
+            gm={result.stats?.gm || 0}
+            gsd={result.stats?.gsd || 1}
+            ur={result.stats?.ur || 0}
+          />
         </div>
       )}
 

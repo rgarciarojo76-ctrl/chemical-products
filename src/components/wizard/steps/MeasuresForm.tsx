@@ -13,6 +13,82 @@ interface MeasuresFormProps {
   onUpdateClosedSystem?: (data: ClosedSystemAnalysis) => void;
 }
 
+const TECHNICAL_ALTERNATIVES = [
+  {
+    id: 1,
+    title: "Plasma de Peróxido de Hidrógeno",
+    tag: "Esterilización",
+    tagColor: "green",
+    description:
+      "Elimina el uso de formaldehído gas cancerígeno. Tecnología limpia (subproductos: agua y oxígeno) con eficacia esporicida validada. Baja temperatura (47-56°C).",
+    sourceText: 'CDC "Guideline for Disinfection..."',
+    sourceUrl:
+      "https://www.cdc.gov/infectioncontrol/guidelines/disinfection/index.html",
+    providerText: "ASP (Web Oficial)",
+    providerUrl: "https://www.asp.com/es-es",
+    fdsText: "Buscar FDS (Biblioteca)",
+    fdsUrl: "https://www.asp.com/es-es/biblioteca-tecnica",
+  },
+  {
+    id: 2,
+    title: "Fijadores Base Etanol/Metanol (FineFIX)",
+    tag: "Histopatología",
+    tagColor: "blue",
+    description:
+      "Sustituye el cross-linking de aldehídos. Permite mayor recuperación de ADN/ARN para biología molecular sin la toxicidad/carcinogenicidad del formol.",
+    sourceText: 'NIH "Formalin-free fixatives review"',
+    sourceUrl: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3927343/",
+    providerText: "Milestone Medical",
+    providerUrl:
+      "https://www.milestonemedsrl.com/pathology/reagents-and-consumables/finefix/",
+    fdsText: "Descargas / FDS",
+    fdsUrl: "https://www.milestonemedsrl.com/resources/",
+  },
+  {
+    id: 3,
+    title: "Resinas MDI / Poliuretano (NAF)",
+    tag: "Industria Madera",
+    tagColor: "yellow",
+    description:
+      'Aglomerantes "No Added Formaldehyde" (NAF). Eliminan totalmente la emisión en tableros. Mayor resistencia a humedad que la urea-formol.',
+    sourceText: "Fichas Técnicas (Sonae Arauco)",
+    sourceUrl: "https://www.sonaearauco.com/es/productos",
+    providerText: "Sonae Arauco (Web)",
+    providerUrl: "https://www.sonaearauco.com/es/productos",
+    fdsText: "Área de Descargas",
+    fdsUrl: "https://www.sonaearauco.com/es/areadescargas",
+  },
+  {
+    id: 4,
+    title: "Ácido Peracético (PAA)",
+    tag: "Desinfección",
+    tagColor: "green",
+    description:
+      "Biocida oxidante biodegradable (se descompone en acético, agua, O2). No fija proteínas ni crea biofilms, a diferencia de los aldehídos.",
+    sourceText: "ISO 15883-4 (Endoscopios)",
+    sourceUrl: "https://www.iso.org/standard/53385.html",
+    providerText: "STERIS (Desinfectantes)",
+    providerUrl:
+      "https://www.sterislifesciences.com/products/surface-disinfectants",
+    fdsText: "Buscar FDS (Oficial)",
+    fdsUrl: "https://www.sterislifesciences.com/resources/safety-data-sheets",
+  },
+  {
+    id: 5,
+    title: "Miel / Jaggery (Soluciones Naturales)",
+    tag: "Histología Docente",
+    tagColor: "purple",
+    description:
+      "Alternativas no tóxicas para conservación de muestras en entornos de bajo riesgo. Preservación morfológica adecuada para H&E rutinaria.",
+    sourceText: "Journal of Oral and Maxillofacial Pathology (JOMFP)",
+    sourceUrl: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6996362/",
+    providerText: "(Producto Genérico)",
+    providerUrl: "",
+    fdsText: "Grado Alimentario",
+    fdsUrl: "", // No URL for generic
+  },
+];
+
 export const MeasuresForm: React.FC<MeasuresFormProps> = ({
   initialData,
   onUpdate,
@@ -37,6 +113,19 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({
 
   const [measures, setMeasures] = useState<MeasureStatus[]>(initializeMeasures);
   const [activeStep, setActiveStep] = useState(0);
+
+  // New State for Technical Alternatives Viability
+  const [altViability, setAltViability] = useState<
+    Record<number, "viable" | "not_viable" | null>
+  >({});
+
+  const toggleViability = (id: number, status: "viable" | "not_viable") => {
+    setAltViability((prev) => ({
+      ...prev,
+      [id]: prev[id] === status ? null : status, // Toggle off if clicked again
+    }));
+  };
+
   const currentMeasure = RD_MEASURES[activeStep];
   const currentStatus = measures.find(
     (m) => m.measureId === currentMeasure.id,
@@ -86,6 +175,22 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({
     (!currentStatus.implemented &&
       currentStatus.justificationIfNo.trim().length > 5);
   const isLastStep = activeStep === RD_MEASURES.length - 1;
+
+  // Helper to get tag colors
+  const getTagStyle = (color: string) => {
+    switch (color) {
+      case "green":
+        return { bg: "#dcfce7", text: "#166534" };
+      case "blue":
+        return { bg: "#e0f2fe", text: "#075985" };
+      case "yellow":
+        return { bg: "#fef3c7", text: "#92400e" };
+      case "purple":
+        return { bg: "#fae8ff", text: "#86198f" };
+      default:
+        return { bg: "#f1f5f9", text: "#475569" };
+    }
+  };
 
   return (
     <StepCard
@@ -250,549 +355,196 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({
             </div>
 
             <div style={{ display: "grid", gap: "1rem" }}>
-              {/* Alternative 1 */}
-              <div
-                style={{
-                  backgroundColor: "white",
-                  padding: "1rem",
-                  borderRadius: "8px",
-                  border: "1px solid #cbd5e1",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  <strong style={{ color: "#0f172a", fontSize: "1rem" }}>
-                    1. Plasma de Peróxido de Hidrógeno
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "0.75rem",
-                      backgroundColor: "#dcfce7",
-                      color: "#166534",
-                      padding: "4px 8px",
-                      borderRadius: "4px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Esterilización
-                  </span>
-                </div>
-                <p
-                  style={{
-                    fontSize: "0.9rem",
-                    color: "#475569",
-                    margin: "0 0 0.75rem 0",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Elimina el uso de formaldehído gas cancerígeno. Tecnología
-                  limpia (subproductos: agua y oxígeno) con eficacia esporicida
-                  validada. Baja temperatura (47-56°C).
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.5rem",
-                    borderTop: "1px solid #f1f5f9",
-                    paddingTop: "0.5rem",
-                  }}
-                >
-                  <a
-                    href="https://www.cdc.gov/infectioncontrol/guidelines/disinfection/index.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      color: "#64748b",
-                      fontStyle: "italic",
-                      fontSize: "0.8rem",
-                      textDecoration: "none",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    📖 Fuente: CDC "Guideline for Disinfection..." 🔗
-                  </a>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <a
-                      href="https://www.asp.com/es-es"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#2563eb",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                        fontSize: "0.85rem",
-                      }}
-                    >
-                      🏢 ASP (Web Oficial) &rarr;
-                    </a>
-                    <a
-                      href="https://www.asp.com/es-es/biblioteca-tecnica"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#dc2626",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        fontSize: "0.85rem",
-                      }}
-                    >
-                      📄 Buscar FDS (Biblioteca)
-                    </a>
-                  </div>
-                </div>
-              </div>
+              {TECHNICAL_ALTERNATIVES.map((alt) => {
+                const style = getTagStyle(alt.tagColor);
+                const viability = altViability[alt.id];
 
-              {/* Alternative 2 */}
-              <div
-                style={{
-                  backgroundColor: "white",
-                  padding: "1rem",
-                  borderRadius: "8px",
-                  border: "1px solid #cbd5e1",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  <strong style={{ color: "#0f172a", fontSize: "1rem" }}>
-                    2. Fijadores Base Etanol/Metanol (FineFIX)
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "0.75rem",
-                      backgroundColor: "#e0f2fe",
-                      color: "#075985",
-                      padding: "4px 8px",
-                      borderRadius: "4px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Histopatología
-                  </span>
-                </div>
-                <p
-                  style={{
-                    fontSize: "0.9rem",
-                    color: "#475569",
-                    margin: "0 0 0.75rem 0",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Sustituye el cross-linking de aldehídos. Permite mayor
-                  recuperación de ADN/ARN para biología molecular sin la
-                  toxicidad/carcinogenicidad del formol.
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.5rem",
-                    borderTop: "1px solid #f1f5f9",
-                    paddingTop: "0.5rem",
-                  }}
-                >
-                  <a
-                    href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3927343/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      color: "#64748b",
-                      fontStyle: "italic",
-                      fontSize: "0.8rem",
-                      textDecoration: "none",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    📖 Fuente: NIH "Formalin-free fixatives review" 🔗
-                  </a>
+                return (
                   <div
+                    key={alt.id}
                     style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
+                      backgroundColor: "white",
+                      padding: "1rem",
+                      borderRadius: "8px",
+                      border: "1px solid #cbd5e1",
+                      boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
                     }}
                   >
-                    <a
-                      href="https://www.milestonemedsrl.com/pathology/reagents-and-consumables/finefix/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <div
                       style={{
-                        color: "#2563eb",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                        fontSize: "0.85rem",
-                      }}
-                    >
-                      🏢 Milestone Medical &rarr;
-                    </a>
-                    <a
-                      href="https://www.milestonemedsrl.com/resources/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#dc2626",
-                        fontWeight: 600,
-                        textDecoration: "none",
                         display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        fontSize: "0.85rem",
+                        justifyContent: "space-between",
+                        alignItems: "baseline",
+                        marginBottom: "0.5rem",
                       }}
                     >
-                      📄 Descargas / FDS
-                    </a>
-                  </div>
-                </div>
-              </div>
+                      <strong style={{ color: "#0f172a", fontSize: "1rem" }}>
+                        {alt.id}. {alt.title}
+                      </strong>
+                      <span
+                        style={{
+                          fontSize: "0.75rem",
+                          backgroundColor: style.bg,
+                          color: style.text,
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {alt.tag}
+                      </span>
+                    </div>
+                    <p
+                      style={{
+                        fontSize: "0.9rem",
+                        color: "#475569",
+                        margin: "0 0 0.75rem 0",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {alt.description}
+                    </p>
 
-              {/* Alternative 3 */}
-              <div
-                style={{
-                  backgroundColor: "white",
-                  padding: "1rem",
-                  borderRadius: "8px",
-                  border: "1px solid #cbd5e1",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  <strong style={{ color: "#0f172a", fontSize: "1rem" }}>
-                    3. Resinas MDI / Poliuretano (NAF)
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "0.75rem",
-                      backgroundColor: "#fef3c7",
-                      color: "#92400e",
-                      padding: "4px 8px",
-                      borderRadius: "4px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Industria Madera
-                  </span>
-                </div>
-                <p
-                  style={{
-                    fontSize: "0.9rem",
-                    color: "#475569",
-                    margin: "0 0 0.75rem 0",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Aglomerantes "No Added Formaldehyde" (NAF). Eliminan
-                  totalmente la emisión en tableros. Mayor resistencia a humedad
-                  que la urea-formol.
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.5rem",
-                    borderTop: "1px solid #f1f5f9",
-                    paddingTop: "0.5rem",
-                  }}
-                >
-                  <a
-                    href="https://www.sonaearauco.com/es/productos"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      color: "#64748b",
-                      fontStyle: "italic",
-                      fontSize: "0.8rem",
-                      textDecoration: "none",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    📖 Fuente: Fichas Técnicas (Sonae Arauco) 🔗
-                  </a>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <a
-                      href="https://www.sonaearauco.com/es/productos"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    {/* VIABILITY BUTTONS */}
+                    <div
                       style={{
-                        color: "#2563eb",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                        fontSize: "0.85rem",
-                      }}
-                    >
-                      🏢 Sonae Arauco (Web) &rarr;
-                    </a>
-                    <a
-                      href="https://www.sonaearauco.com/es/areadescargas"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#dc2626",
-                        fontWeight: 600,
-                        textDecoration: "none",
                         display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        fontSize: "0.85rem",
+                        gap: "8px",
+                        marginBottom: "1rem",
                       }}
                     >
-                      📄 Área de Descargas
-                    </a>
-                  </div>
-                </div>
-              </div>
+                      <button
+                        onClick={() => toggleViability(alt.id, "viable")}
+                        style={{
+                          flex: 1,
+                          padding: "6px",
+                          fontSize: "0.8rem",
+                          borderRadius: "4px",
+                          border: "1px solid #16a34a",
+                          backgroundColor:
+                            viability === "viable" ? "#16a34a" : "white",
+                          color: viability === "viable" ? "white" : "#16a34a",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          transition: "all 0.2s",
+                        }}
+                      >
+                        ✓ VIABLE
+                      </button>
+                      <button
+                        onClick={() => toggleViability(alt.id, "not_viable")}
+                        style={{
+                          flex: 1,
+                          padding: "6px",
+                          fontSize: "0.8rem",
+                          borderRadius: "4px",
+                          border: "1px solid #dc2626",
+                          backgroundColor:
+                            viability === "not_viable" ? "#dc2626" : "white",
+                          color:
+                            viability === "not_viable" ? "white" : "#dc2626",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          transition: "all 0.2s",
+                        }}
+                      >
+                        ✕ NO VIABLE
+                      </button>
+                    </div>
 
-              {/* Alternative 4 */}
-              <div
-                style={{
-                  backgroundColor: "white",
-                  padding: "1rem",
-                  borderRadius: "8px",
-                  border: "1px solid #cbd5e1",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  <strong style={{ color: "#0f172a", fontSize: "1rem" }}>
-                    4. Ácido Peracético (PAA)
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "0.75rem",
-                      backgroundColor: "#dcfce7",
-                      color: "#166534",
-                      padding: "4px 8px",
-                      borderRadius: "4px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Desinfección
-                  </span>
-                </div>
-                <p
-                  style={{
-                    fontSize: "0.9rem",
-                    color: "#475569",
-                    margin: "0 0 0.75rem 0",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Biocida oxidante biodegradable (se descompone en acético,
-                  agua, O2). No fija proteínas ni crea biofilms, a diferencia de
-                  los aldehídos.
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.5rem",
-                    borderTop: "1px solid #f1f5f9",
-                    paddingTop: "0.5rem",
-                  }}
-                >
-                  <a
-                    href="https://www.iso.org/standard/53385.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      color: "#64748b",
-                      fontStyle: "italic",
-                      fontSize: "0.8rem",
-                      textDecoration: "none",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    📖 Fuente: ISO 15883-4 (Endoscopios) 🔗
-                  </a>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <a
-                      href="https://www.sterislifesciences.com/products/surface-disinfectants"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <div
                       style={{
-                        color: "#2563eb",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                        fontSize: "0.85rem",
-                      }}
-                    >
-                      🏢 STERIS (Desinfectantes) &rarr;
-                    </a>
-                    <a
-                      href="https://www.sterislifesciences.com/resources/safety-data-sheets"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#dc2626",
-                        fontWeight: 600,
-                        textDecoration: "none",
                         display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        fontSize: "0.85rem",
+                        flexDirection: "column",
+                        gap: "0.5rem",
+                        borderTop: "1px solid #f1f5f9",
+                        paddingTop: "0.5rem",
                       }}
                     >
-                      📄 Buscar FDS (Oficial)
-                    </a>
-                  </div>
-                </div>
-              </div>
+                      <a
+                        href={alt.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: "#64748b",
+                          fontStyle: "italic",
+                          fontSize: "0.8rem",
+                          textDecoration: "none",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                        }}
+                      >
+                        📖 Fuente: {alt.sourceText} 🔗
+                      </a>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        {alt.providerUrl ? (
+                          <a
+                            href={alt.providerUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              color: "#2563eb",
+                              fontWeight: 600,
+                              textDecoration: "none",
+                              fontSize: "0.85rem",
+                            }}
+                          >
+                            🏢 {alt.providerText} &rarr;
+                          </a>
+                        ) : (
+                          <span
+                            style={{
+                              color: "#999",
+                              cursor: "help",
+                              fontSize: "0.85rem",
+                            }}
+                          >
+                            🏢 {alt.providerText}
+                          </span>
+                        )}
 
-              {/* Alternative 5 */}
-              <div
-                style={{
-                  backgroundColor: "white",
-                  padding: "1rem",
-                  borderRadius: "8px",
-                  border: "1px solid #cbd5e1",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  <strong style={{ color: "#0f172a", fontSize: "1rem" }}>
-                    5. Miel / Jaggery (Soluciones Naturales)
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "0.75rem",
-                      backgroundColor: "#fae8ff",
-                      color: "#86198f",
-                      padding: "4px 8px",
-                      borderRadius: "4px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Histología Docente
-                  </span>
-                </div>
-                <p
-                  style={{
-                    fontSize: "0.9rem",
-                    color: "#475569",
-                    margin: "0 0 0.75rem 0",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Alternativas no tóxicas para conservación de muestras en
-                  entornos de bajo riesgo. Preservación morfológica adecuada
-                  para H&E rutinaria.
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.5rem",
-                    borderTop: "1px solid #f1f5f9",
-                    paddingTop: "0.5rem",
-                  }}
-                >
-                  <a
-                    href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6996362/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      color: "#64748b",
-                      fontStyle: "italic",
-                      fontSize: "0.8rem",
-                      textDecoration: "none",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    📖 Fuente: Journal of Oral and Maxillofacial Pathology
-                    (JOMFP) 🔗
-                  </a>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span
-                      style={{ color: "#999", cursor: "help" }}
-                      title="Solución natural no comercializada específicamente"
-                    >
-                      🏢 (Producto Genérico)
-                    </span>
-                    <span
-                      style={{
-                        color: "#28a745",
-                        fontSize: "0.7rem",
-                        border: "1px solid #28a745",
-                        padding: "1px 4px",
-                        borderRadius: "4px",
-                      }}
-                    >
-                      🌿 Grado Alimentario
-                    </span>
+                        {alt.fdsUrl ? (
+                          <a
+                            href={alt.fdsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              color: "#dc2626",
+                              fontWeight: 600,
+                              textDecoration: "none",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "4px",
+                              fontSize: "0.85rem",
+                            }}
+                          >
+                            📄 {alt.fdsText}
+                          </a>
+                        ) : (
+                          <span
+                            style={{
+                              color: "#28a745",
+                              fontSize: "0.7rem",
+                              border: "1px solid #28a745",
+                              padding: "1px 4px",
+                              borderRadius: "4px",
+                            }}
+                          >
+                            🌿 {alt.fdsText}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
         )}
