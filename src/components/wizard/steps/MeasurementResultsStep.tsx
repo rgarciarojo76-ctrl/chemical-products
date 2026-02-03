@@ -74,8 +74,8 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
   onNext,
   onBack,
   onUpdate,
-  initialData,
-  contextData,
+  initialData = {},
+  contextData = {},
   gesData: gesDataProp,
   initialSamples,
   vlaReference: vlaProp,
@@ -83,7 +83,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
   const [samples, setSamples] = useState<Sample[]>(
     initialSamples && initialSamples.length > 0
       ? initialSamples
-      : initialData.samples?.length > 0
+      : initialData?.samples?.length > 0
         ? initialData.samples
         : [
             { id: "1", type: "direct", value: 0, isBelowLod: false },
@@ -478,7 +478,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
       )}
 
       {/* FULL WIDTH STATISTICAL CHART */}
-      {result && (
+      {result && result.stats && (
         <div className="mb-8 animate-fadeIn delay-100">
           <DualStatisticalChart
             samples={result.samples
