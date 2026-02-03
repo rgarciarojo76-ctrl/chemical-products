@@ -101,8 +101,9 @@ export const runEn689Evaluation = (
 
   const n = concentrationValues.length; // Use filtered length
 
-  // --- PHASE 1: SCREENING Test (n < 6) ---
-  if (n < 6) {
+  // --- PHASE 1: SCREENING Test (3 <= n < 6) ---
+  // EN 689 requires minimum 3 measurements for the screening test.
+  if (n >= 3 && n < 6) {
     const maxVal = Math.max(...concentrationValues);
     let limitFraction = 0.1; // Default for n=3
     if (n === 4) limitFraction = 0.15;
