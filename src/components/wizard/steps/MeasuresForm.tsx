@@ -126,10 +126,47 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({
     }));
   };
 
+  // Must declare these before useEffect uses them
   const currentMeasure = RD_MEASURES[activeStep];
   const currentStatus = measures.find(
     (m) => m.measureId === currentMeasure.id,
   ) || { implemented: false, justificationIfNo: "" };
+
+  // Auto-generate justification when all 5 alternatives are marked as "not viable"
+  React.useEffect(() => {
+    if (currentMeasure.id === "substitution") {
+      const allMarked = TECHNICAL_ALTERNATIVES.every(
+        (alt) => altViability[alt.id] !== null,
+      );
+      const allNotViable = TECHNICAL_ALTERNATIVES.every(
+        (alt) => altViability[alt.id] === "not_viable",
+      );
+
+      if (allMarked && allNotViable && !currentStatus.justificationIfNo) {
+        // Generate comprehensive technical justification
+        const autoJustification = `JUSTIFICACIÓN TÉCNICA DE NO SUSTITUCIÓN (Art. 4.1 RD 665/1997)
+
+Tras el análisis exhaustivo de las alternativas técnicas disponibles en el mercado, se concluye que la sustitución del agente químico cancerígeno/mutágeno en uso NO ES TÉCNICAMENTE VIABLE en el proceso productivo actual, por las siguientes razones:
+
+1. **Plasma de Peróxido de Hidrógeno (Esterilización)**: No aplicable al proceso. Las condiciones operativas del equipo existente (temperatura, presión, geometría de la cámara) son incompatibles con la tecnología de plasma. La inversión en equipamiento nuevo (>50.000 €) no está justificada económicamente para el volumen de producción actual.
+
+2. **Fijadores Base Etanol/Metanol (FineFIX - Histopatología)**: No sustituye la función específica del formaldehído en nuestro proceso. Los protocolos de tinción validados (H&E, inmunohistoquímica) requieren cross-linking aldehídico para preservación antigénica. La reconversión del laboratorio implicaría revalidación completa de todos los procedimientos (coste estimado >6 meses + 30.000 € en pruebas).
+
+3. **Resinas MDI / Poliuretano NAF (Industria Madera)**: Incompatibilidad técnica. El proceso de prensado actual está diseñado para resinas UF (urea-formol) con tiempos de curado y temperaturas específicas. La migración a MDI requeriría sustitución de prensas (inversión >200.000 €) y genera nuevos riesgos (isocianatos libres, H351).
+
+4. **Ácido Peracético (PAA - Desinfección)**: Eficacia insuficiente para el espectro microbiano requerido (incluidas esporas). El PAA presenta incompatibilidad con materiales sensibles a la corrosión (acero inoxidable 304, aluminio) presentes en nuestros equipos. Además, su inestabilidad térmica (descomposición >40°C) impide su uso en ciclos de desinfección a alta temperatura.
+
+5. **Miel / Jaggery (Soluciones Naturales)**: No cumple criterios de trazabilidad ni reproducibilidad exigidos por la normativa de calidad ISO 15189 / ISO 17025. La ausencia de FDS y datos toxicológicos estandarizados impide su validación como reactivo químico en entorno industrial regulado.
+
+**CONCLUSIÓN LEGAL**:
+La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La no sustitución está técnicamente justificada. Se aplicarán las medidas de los Art. 5.2 y 5.3 (Sistema Cerrado, Control Técnico, EPIs) para reducir la exposición al mínimo técnicamente posible.
+
+**REVISIÓN**: Esta justificación será revisada anualmente o cuando aparezcan nuevas tecnologías en el mercado (vigilancia tecnológica activa).`;
+
+        handleJustification(currentMeasure.id, autoJustification);
+      }
+    }
+  }, [altViability, currentMeasure.id, currentStatus.justificationIfNo]);
 
   // Sync with parent when changed
   const handleToggle = (id: string, implemented: boolean) => {
