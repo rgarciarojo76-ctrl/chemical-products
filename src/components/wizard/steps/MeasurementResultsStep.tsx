@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import {
   TestTube,
   Plus,
@@ -17,6 +17,7 @@ import type { Sample, En689Result } from "../../../types";
 import { DualStatisticalChart } from "../../visual/DualStatisticalChart";
 
 // Custom Input for handling comma/dot decimals
+// Refactored to prevent Chrome-specific infinite loop issues
 const DecimalInput = ({
   value,
   onChange,
@@ -29,22 +30,36 @@ const DecimalInput = ({
   placeholder?: string;
 }) => {
   const [strVal, setStrVal] = useState(value.toString());
+  const isUserTypingRef = useRef(false);
+  const lastPropValueRef = useRef(value);
 
+  // Only update from props if value changed externally (not from user typing)
   useEffect(() => {
-    // Only update string if number value changes significantly (external update)
-    // Avoid resetting if user is typing "0," or similar
-    if (Math.abs(parseFloat(strVal.replace(",", ".")) - value) > 0.000001) {
+    if (!isUserTypingRef.current && lastPropValueRef.current !== value) {
       setStrVal(value.toString());
+      lastPropValueRef.current = value;
     }
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
+    isUserTypingRef.current = true;
     setStrVal(val);
+
     const num = parseFloat(val.replace(",", "."));
     if (!isNaN(num)) {
+      lastPropValueRef.current = num;
       onChange(num);
+    } else if (val === "" || val === "-") {
+      // Allow empty or just minus sign while typing
+      lastPropValueRef.current = 0;
+      onChange(0);
     }
+
+    // Reset typing flag after a short delay
+    setTimeout(() => {
+      isUserTypingRef.current = false;
+    }, 100);
   };
 
   return (
