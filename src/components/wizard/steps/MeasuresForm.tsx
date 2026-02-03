@@ -133,6 +133,31 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({
   ) || { implemented: false, justificationIfNo: "" };
 
   // Auto-generate justification when all 5 alternatives are marked as "not viable"
+
+  // Sync with parent when changed
+  const handleToggle = (id: string, implemented: boolean) => {
+    const updated = measures.map((m) =>
+      m.measureId === id
+        ? {
+            ...m,
+            implemented,
+            justificationIfNo: implemented ? "" : m.justificationIfNo,
+          }
+        : m,
+    );
+    setMeasures(updated);
+    onUpdate(updated);
+  };
+
+  const handleJustification = (id: string, text: string) => {
+    const updated = measures.map((m) =>
+      m.measureId === id ? { ...m, justificationIfNo: text } : m,
+    );
+    setMeasures(updated);
+    onUpdate(updated);
+  };
+
+  // Auto-generate justification when all 5 alternatives are marked as "not viable"
   React.useEffect(() => {
     if (currentMeasure.id === "substitution") {
       const allMarked = TECHNICAL_ALTERNATIVES.every(
@@ -167,29 +192,6 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
       }
     }
   }, [altViability, currentMeasure.id, currentStatus.justificationIfNo]);
-
-  // Sync with parent when changed
-  const handleToggle = (id: string, implemented: boolean) => {
-    const updated = measures.map((m) =>
-      m.measureId === id
-        ? {
-            ...m,
-            implemented,
-            justificationIfNo: implemented ? "" : m.justificationIfNo,
-          }
-        : m,
-    );
-    setMeasures(updated);
-    onUpdate(updated);
-  };
-
-  const handleJustification = (id: string, text: string) => {
-    const updated = measures.map((m) =>
-      m.measureId === id ? { ...m, justificationIfNo: text } : m,
-    );
-    setMeasures(updated);
-    onUpdate(updated);
-  };
 
   const handleNextStep = () => {
     if (activeStep < RD_MEASURES.length - 1) {
@@ -394,8 +396,8 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-                gap: "1rem",
+                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                gap: "0.75rem",
               }}
             >
               {TECHNICAL_ALTERNATIVES.map((alt) => {
@@ -407,61 +409,75 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
                     key={alt.id}
                     style={{
                       backgroundColor: "white",
-                      padding: "1rem",
-                      borderRadius: "8px",
+                      padding: "0.75rem",
+                      borderRadius: "6px",
                       border: "1px solid #cbd5e1",
-                      boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+                      boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                      display: "flex",
+                      flexDirection: "column",
                     }}
                   >
+                    {/* Header: Title + Tag */}
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        alignItems: "baseline",
-                        marginBottom: "0.5rem",
+                        alignItems: "center",
+                        marginBottom: "0.4rem",
                       }}
                     >
-                      <strong style={{ color: "#0f172a", fontSize: "1rem" }}>
+                      <strong
+                        style={{
+                          color: "#0f172a",
+                          fontSize: "0.9rem",
+                          lineHeight: 1.2,
+                        }}
+                      >
                         {alt.id}. {alt.title}
                       </strong>
                       <span
                         style={{
-                          fontSize: "0.75rem",
+                          fontSize: "0.65rem",
                           backgroundColor: style.bg,
                           color: style.text,
-                          padding: "4px 8px",
+                          padding: "2px 6px",
                           borderRadius: "4px",
                           fontWeight: 600,
+                          flexShrink: 0,
+                          marginLeft: "4px",
                         }}
                       >
                         {alt.tag}
                       </span>
                     </div>
+
+                    {/* Description */}
                     <p
                       style={{
-                        fontSize: "0.9rem",
+                        fontSize: "0.8rem",
                         color: "#475569",
                         margin: "0 0 0.75rem 0",
-                        lineHeight: 1.5,
+                        lineHeight: 1.35,
+                        flex: 1, // Pushes footer down
                       }}
                     >
                       {alt.description}
                     </p>
 
-                    {/* VIABILITY BUTTONS */}
+                    {/* Action Buttons (Compact) */}
                     <div
                       style={{
                         display: "flex",
-                        gap: "8px",
-                        marginBottom: "1rem",
+                        gap: "6px",
+                        marginBottom: "0.5rem",
                       }}
                     >
                       <button
                         onClick={() => toggleViability(alt.id, "viable")}
                         style={{
                           flex: 1,
-                          padding: "6px",
-                          fontSize: "0.8rem",
+                          padding: "4px 0",
+                          fontSize: "0.75rem",
                           borderRadius: "4px",
                           border: "1px solid #16a34a",
                           backgroundColor:
@@ -469,7 +485,7 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
                           color: viability === "viable" ? "white" : "#16a34a",
                           fontWeight: 600,
                           cursor: "pointer",
-                          transition: "all 0.2s",
+                          transition: "all 0.1s",
                         }}
                       >
                         ✓ VIABLE
@@ -478,8 +494,8 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
                         onClick={() => toggleViability(alt.id, "not_viable")}
                         style={{
                           flex: 1,
-                          padding: "6px",
-                          fontSize: "0.8rem",
+                          padding: "4px 0",
+                          fontSize: "0.75rem",
                           borderRadius: "4px",
                           border: "1px solid #dc2626",
                           backgroundColor:
@@ -488,20 +504,23 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
                             viability === "not_viable" ? "white" : "#dc2626",
                           fontWeight: 600,
                           cursor: "pointer",
-                          transition: "all 0.2s",
+                          transition: "all 0.1s",
                         }}
                       >
                         ✕ NO VIABLE
                       </button>
                     </div>
 
+                    {/* Footer Links (Ultra Compact) */}
                     <div
                       style={{
                         display: "flex",
-                        flexDirection: "column",
-                        gap: "0.5rem",
-                        borderTop: "1px solid #f1f5f9",
-                        paddingTop: "0.5rem",
+                        flexWrap: "wrap",
+                        gap: "6px",
+                        paddingTop: "6px",
+                        borderTop: "1px dashed #f1f5f9",
+                        fontSize: "0.7rem",
+                        alignItems: "center",
                       }}
                     >
                       <a
@@ -510,80 +529,56 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
                         rel="noopener noreferrer"
                         style={{
                           color: "#64748b",
-                          fontStyle: "italic",
-                          fontSize: "0.8rem",
                           textDecoration: "none",
                           display: "flex",
                           alignItems: "center",
-                          gap: "4px",
+                          gap: "2px",
                         }}
+                        title={alt.sourceText}
                       >
-                        📖 Fuente: {alt.sourceText} 🔗
+                        📖 Fuente
                       </a>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        {alt.providerUrl ? (
-                          <a
-                            href={alt.providerUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              color: "#2563eb",
-                              fontWeight: 600,
-                              textDecoration: "none",
-                              fontSize: "0.85rem",
-                            }}
-                          >
-                            🏢 {alt.providerText} &rarr;
-                          </a>
-                        ) : (
-                          <span
-                            style={{
-                              color: "#999",
-                              cursor: "help",
-                              fontSize: "0.85rem",
-                            }}
-                          >
-                            🏢 {alt.providerText}
-                          </span>
-                        )}
+                      <span style={{ color: "#cbd5e1" }}>|</span>
 
-                        {alt.fdsUrl ? (
-                          <a
-                            href={alt.fdsUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              color: "#dc2626",
-                              fontWeight: 600,
-                              textDecoration: "none",
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "4px",
-                              fontSize: "0.85rem",
-                            }}
-                          >
-                            📄 {alt.fdsText}
-                          </a>
-                        ) : (
-                          <span
-                            style={{
-                              color: "#28a745",
-                              fontSize: "0.7rem",
-                              border: "1px solid #28a745",
-                              padding: "1px 4px",
-                              borderRadius: "4px",
-                            }}
-                          >
-                            🌿 {alt.fdsText}
-                          </span>
-                        )}
-                      </div>
+                      {alt.providerUrl ? (
+                        <a
+                          href={alt.providerUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            color: "#2563eb",
+                            fontWeight: 600,
+                            textDecoration: "none",
+                          }}
+                        >
+                          🏢 {alt.providerText}
+                        </a>
+                      ) : (
+                        <span style={{ color: "#94a3b8" }}>
+                          🏢 {alt.providerText}
+                        </span>
+                      )}
+
+                      <div style={{ flex: 1 }}></div>
+
+                      {alt.fdsUrl ? (
+                        <a
+                          href={alt.fdsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            color: "#dc2626",
+                            fontWeight: 600,
+                            textDecoration: "none",
+                          }}
+                        >
+                          📄 FDS
+                        </a>
+                      ) : (
+                        <span style={{ color: "#22c55e", fontWeight: 600 }}>
+                          🌿 {alt.fdsText}
+                        </span>
+                      )}
                     </div>
                   </div>
                 );

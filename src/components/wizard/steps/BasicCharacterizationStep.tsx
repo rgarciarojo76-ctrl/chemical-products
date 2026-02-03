@@ -242,70 +242,122 @@ export const BasicCharacterizationStep: React.FC<
       <div className="animate-fadeIn h-full flex flex-col">
         {/* Trust Header */}
         <div className="mb-10 text-center">
-          <h3 className="text-center font-bold text-2xl mb-3 text-blue-700 flex items-center justify-center gap-3">
-            🤔 Módulo C: Selección de Metodología Caracterización Básica
+          <h3 className="text-center font-bold text-2xl mb-3 text-gray-800 flex items-center justify-center gap-3">
+            🤔 Módulo C: Selección de Metodología de Evaluación
           </h3>
           <p className="text-center text-gray-500 max-w-2xl mx-auto text-base">
-            Seleccione el nivel de profundidad para la caracterización básica
+            Seleccione el nivel de profundidad técnica más adecuado para su
+            situación
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1 max-w-5xl mx-auto w-full">
           {/* Card 1: Assistant (Recommended) */}
           <div
-            className="group relative bg-blue-50/40 border-2 border-blue-100 rounded-2xl p-8 cursor-pointer hover:border-blue-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center justify-start h-full"
+            className="group relative bg-gradient-to-b from-blue-50 to-white border border-blue-100 rounded-2xl p-8 cursor-pointer hover:border-blue-400 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center justify-start h-full"
             onClick={() => setMode("assistant")}
           >
-            <div className="absolute top-4 right-4 bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-sm">
+            <div className="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl uppercase tracking-wider shadow-sm">
               Recomendado
             </div>
-            {/* Icon Wrapper */}
-            <div className="bg-white p-4 rounded-full shadow-sm mb-6 group-hover:scale-110 transition-transform duration-300">
-              <BookOpen size={36} className="text-blue-600" strokeWidth={1.5} />
+
+            {/* COMPOSITE LOGO: STANDARD SCENARIOS */}
+            <div className="mb-6 relative w-24 h-24 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <div className="absolute inset-0 bg-blue-100 rounded-full opacity-50 blur-xl group-hover:opacity-70 transition-opacity"></div>
+              <div className="relative bg-white p-4 rounded-2xl shadow-md border border-blue-50">
+                <BookOpen
+                  size={40}
+                  className="text-blue-600"
+                  strokeWidth={1.5}
+                />
+                <div className="absolute -bottom-2 -right-2 bg-green-100 p-1.5 rounded-lg border border-white shadow-sm">
+                  <CheckCircle2
+                    size={16}
+                    className="text-green-600 fill-green-100"
+                  />
+                </div>
+              </div>
             </div>
 
-            <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-700 transition-colors">
+            <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">
               Asistente de Escenarios Estándar
             </h3>
+            <div className="w-12 h-1 bg-blue-200 rounded-full mb-4"></div>
 
             <p className="text-gray-500 text-sm leading-relaxed mb-8 flex-grow">
-              Utilice situaciones de trabajo pre-validadas por el{" "}
-              <strong className="text-gray-700">INSST</strong>. Carga
-              automáticamente medidas de control, EPIs y perfiles de exposición
-              conformes a normativa.
+              Utilice situaciones de trabajo{" "}
+              <strong className="text-blue-800">
+                pre-validadas por el INSST
+              </strong>
+              . El sistema carga automáticamente:
+              <ul className="mt-2 space-y-1 text-left bg-blue-50/50 p-3 rounded-lg text-xs md:text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-500">✓</span> Medidas de control
+                  obligatorias
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-500">✓</span> Equipos de protección
+                  (EPIs)
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-500">✓</span> Perfiles de
+                  exposición legal
+                </li>
+              </ul>
             </p>
 
-            <button className="py-2.5 px-6 rounded-lg font-semibold text-sm bg-white border border-gray-200 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all shadow-sm w-full max-w-[200px]">
-              Abrir Asistente
+            <button className="py-3 px-8 rounded-xl font-bold text-sm bg-white border border-blue-200 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all shadow-sm w-full">
+              Abrir Asistente Inteligente
             </button>
           </div>
 
           {/* Card 2: Advanced (Stoffenmanager) */}
-          {/* Card 2: Advanced (Stoffenmanager) */}
           <div
-            className="group relative bg-white border-2 border-gray-100 rounded-2xl p-8 cursor-pointer hover:border-emerald-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center justify-start h-full"
+            className="group relative bg-gradient-to-b from-gray-50 to-white border border-gray-200 rounded-2xl p-8 cursor-pointer hover:border-emerald-400 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center justify-start h-full"
             onClick={() => onSwitchToAdvanced && onSwitchToAdvanced()}
           >
-            <div className="bg-gray-50 p-4 rounded-full shadow-sm mb-6 group-hover:scale-110 transition-transform duration-300">
-              <FlaskConical
-                size={36}
-                className="text-emerald-600"
-                strokeWidth={1.5}
-              />
+            {/* COMPOSITE LOGO: ADVANCED */}
+            <div className="mb-6 relative w-24 h-24 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <div className="absolute inset-0 bg-emerald-100 rounded-full opacity-30 blur-xl group-hover:opacity-50 transition-opacity"></div>
+              <div className="relative bg-white p-4 rounded-2xl shadow-md border border-gray-100">
+                <FlaskConical
+                  size={40}
+                  className="text-gray-600 group-hover:text-emerald-600 transition-colors"
+                  strokeWidth={1.5}
+                />
+                <div className="absolute -top-2 -right-2 bg-gray-100 p-1.5 rounded-lg border border-white shadow-sm">
+                  <AlertOctagon size={16} className="text-gray-500" />
+                </div>
+              </div>
             </div>
 
-            <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-emerald-700 transition-colors">
-              Caracterización básica (avanzada)
+            <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-emerald-700 transition-colors">
+              Caracterización Avanzada
             </h3>
+            <div className="w-12 h-1 bg-gray-200 rounded-full mb-4 group-hover:bg-emerald-200 transition-colors"></div>
 
             <p className="text-gray-500 text-sm leading-relaxed mb-8 flex-grow">
-              Algoritmo <strong>Stoffenmanager®</strong> completo. Control total
-              sobre parámetros cuantitativos y simulación de escenarios
-              complejos.
+              Algoritmo matemático completo (basado en{" "}
+              <strong>Stoffenmanager®</strong>). Permite control total sobre
+              parámetros cuantitativos:
+              <ul className="mt-2 space-y-1 text-left bg-gray-50 p-3 rounded-lg text-xs md:text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400">⚙️</span> Simulación de
+                  escenarios complejos
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400">📏</span> Distancias y
+                  volúmenes exactos
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400">🌡️</span> Presión de vapor y
+                  temperatura
+                </li>
+              </ul>
             </p>
 
-            <button className="py-2.5 px-6 rounded-lg font-semibold text-sm bg-white border border-gray-200 text-gray-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all shadow-sm w-full max-w-[200px]">
-              Abrir asistente
+            <button className="py-3 px-8 rounded-xl font-bold text-sm bg-white border border-gray-200 text-gray-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all shadow-sm w-full">
+              Configuración Manual
             </button>
           </div>
         </div>
