@@ -24,6 +24,20 @@ interface MinimumVolumeValidationProps {
   initialTime?: number;
 }
 
+// Helper function to format minutes as "X horas y Y minutos"
+const formatTime = (totalMinutes: number): string => {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = Math.round(totalMinutes % 60);
+
+  if (hours === 0) {
+    return `${minutes} minuto${minutes !== 1 ? "s" : ""}`;
+  } else if (minutes === 0) {
+    return `${hours} hora${hours !== 1 ? "s" : ""}`;
+  } else {
+    return `${hours} hora${hours !== 1 ? "s" : ""} y ${minutes} minuto${minutes !== 1 ? "s" : ""}`;
+  }
+};
+
 export const MinimumVolumeValidation: React.FC<
   MinimumVolumeValidationProps
 > = ({
@@ -34,13 +48,29 @@ export const MinimumVolumeValidation: React.FC<
   initialLoq = 10,
   initialTime = 60,
 }) => {
+  // Calculate minimum time first to use as default
+  const initialResult = useMemo(
+    () =>
+      validateMinimumVolume(
+        vla,
+        flowRate,
+        initialLoq,
+        exposureType,
+        initialTime,
+      ),
+    [vla, flowRate, initialLoq, exposureType, initialTime],
+  );
+
+  // Auto-populate plannedTime with calculated minimum time if not explicitly set
+  const defaultPlannedTime = initialResult?.tMinMinutes || initialTime;
+
   // String state for inputs to allow smooth typing (handling "10," etc.)
   const [loqStr, setLoqStr] = useState<string>(initialLoq.toString());
-  const [timeStr, setTimeStr] = useState<string>(initialTime.toString());
+  const [timeStr, setTimeStr] = useState<string>(defaultPlannedTime.toString());
 
   // Logic state
   const [loq, setLoq] = useState<number>(initialLoq);
-  const [plannedTime, setPlannedTime] = useState<number>(initialTime);
+  const [plannedTime, setPlannedTime] = useState<number>(defaultPlannedTime);
 
   // Sync String -> Number
   const handleLoqChange = (val: string) => {
@@ -149,23 +179,25 @@ export const MinimumVolumeValidation: React.FC<
             {/* PLANNED TIME INPUT */}
             <div>
               <label className="block text-sm font-semibold text-gray-600 mb-1">
-                Tiempo Planificado{" "}
-                <span className="text-xs text-gray-400 font-normal">
-                  (minutos)
-                </span>
+                Tiempo Planificado
               </label>
-              <input
-                type="text"
-                inputMode="numeric"
-                value={timeStr}
-                onChange={(e) => handleTimeChange(e.target.value)}
-                onBlur={syncToParent}
-                className={`w-full p-2 border rounded focus:ring-2 outline-none font-mono font-bold ${
-                  result.isValid
-                    ? "border-green-300 bg-green-50 text-green-800 focus:ring-green-100"
-                    : "border-red-300 bg-red-50 text-red-800 focus:ring-red-100"
-                }`}
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={timeStr}
+                  onChange={(e) => handleTimeChange(e.target.value)}
+                  onBlur={syncToParent}
+                  className={`w-full p-2 pr-4 border rounded focus:ring-2 outline-none font-mono font-bold ${
+                    result.isValid
+                      ? "border-green-300 bg-green-50 text-green-800 focus:ring-green-100"
+                      : "border-red-300 bg-red-50 text-red-800 focus:ring-red-100"
+                  }`}
+                />
+                <div className="text-xs text-gray-500 mt-1">
+                  {formatTime(plannedTime)}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -214,7 +246,7 @@ export const MinimumVolumeValidation: React.FC<
             <div className="flex justify-between">
               <span className="text-gray-600">Tiempo Mínimo (tmin):</span>
               <span className="font-mono font-bold text-blue-700">
-                {result.tMinMinutes} min
+                {formatTime(result.tMinMinutes)}
               </span>
             </div>
 
