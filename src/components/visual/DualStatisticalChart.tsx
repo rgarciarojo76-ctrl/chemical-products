@@ -85,8 +85,11 @@ export const DualStatisticalChart: React.FC<DualStatisticalChartProps> = ({
     curvePoints.push([x, y]);
   }
 
+  // Prevent division by zero if PDF is flat (e.g. GSD=1 -> leads to 0 PDF values in our impl)
+  const safeMaxYB = maxYB > 0 ? maxYB : 1;
+
   const scaleYB = (val: number) =>
-    plotHeight - (val / (maxYB * 1.1)) * plotHeight;
+    plotHeight - (val / (safeMaxYB * 1.1)) * plotHeight;
 
   // Build Paths B
   const linePathB = curvePoints
