@@ -422,90 +422,98 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
             )}
           </div>
 
-          {/* Statistics Card */}
-          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h4 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <Calculator size={18} className="text-gray-400" /> Detalle
-              Estadístico
-            </h4>
+          {/* Statistics Card - Only show with 6+ valid samples */}
+          {result.samples.filter((s: Sample) => s.value > 0).length >= 6 && (
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+              <h4 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <Calculator size={18} className="text-gray-400" /> Detalle
+                Estadístico
+              </h4>
 
-            {result.ruleApplied === "statistical_utl" ||
-            result.ruleApplied === "statistical_fail" ? (
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Media Geométrica (MG):</span>
-                  <span className="font-mono font-bold">
-                    {(Number(result.stats?.gm) || 0).toFixed(4)}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Desv. Est. (GSD):</span>
-                  <span
-                    className={`font-mono font-bold ${
-                      (result.stats?.gsd || 0) > 3
-                        ? "text-red-600"
-                        : "text-gray-900"
-                    }`}
-                  >
-                    {(Number(result.stats?.gsd) || 0).toFixed(3)}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">UR (P95, 70% UCL):</span>
-                  <span
-                    className={`font-mono font-bold ${
-                      (result.stats?.ur || 0) > vlaReference
-                        ? "text-red-600"
-                        : "text-green-600"
-                    }`}
-                  >
-                    {(Number(result.stats?.ur) || 0).toFixed(4)}
-                  </span>
-                </div>
-                <div className="mt-4 pt-3 border-t">
-                  <div className="flex justify-between items-center bg-gray-50 p-2 rounded">
-                    <span className="text-xs font-bold text-gray-500 uppercase">
-                      Índice (I)
+              {result.ruleApplied === "statistical_utl" ||
+              result.ruleApplied === "statistical_fail" ? (
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">
+                      Media Geométrica (MG):
                     </span>
-                    <span className="text-xl font-bold text-gray-800">
-                      {(Number(result.stats?.complianceIndex) || 0).toFixed(2)}
+                    <span className="font-mono font-bold">
+                      {(Number(result.stats?.gm) || 0).toFixed(4)}
                     </span>
                   </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Desv. Est. (GSD):</span>
+                    <span
+                      className={`font-mono font-bold ${
+                        (result.stats?.gsd || 0) > 3
+                          ? "text-red-600"
+                          : "text-gray-900"
+                      }`}
+                    >
+                      {(Number(result.stats?.gsd) || 0).toFixed(3)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">UR (P95, 70% UCL):</span>
+                    <span
+                      className={`font-mono font-bold ${
+                        (result.stats?.ur || 0) > vlaReference
+                          ? "text-red-600"
+                          : "text-green-600"
+                      }`}
+                    >
+                      {(Number(result.stats?.ur) || 0).toFixed(4)}
+                    </span>
+                  </div>
+                  <div className="mt-4 pt-3 border-t">
+                    <div className="flex justify-between items-center bg-gray-50 p-2 rounded">
+                      <span className="text-xs font-bold text-gray-500 uppercase">
+                        Índice (I)
+                      </span>
+                      <span className="text-xl font-bold text-gray-800">
+                        {(Number(result.stats?.complianceIndex) || 0).toFixed(
+                          2,
+                        )}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="text-center py-8 text-gray-400 text-sm">
-                <p>Estadística avanzada disponible con N ≥ 6.</p>
-                <div className="mt-2 text-xs bg-gray-50 p-2 rounded inline-block">
-                  Criterio actual: Todos ≤{" "}
-                  {(Number(result.stats?.ur) || 0).toFixed(2)} (Fracción del
-                  VLA)
+              ) : (
+                <div className="text-center py-8 text-gray-400 text-sm">
+                  <p>Estadística avanzada disponible con N ≥ 6.</p>
+                  <div className="mt-2 text-xs bg-gray-50 p-2 rounded inline-block">
+                    Criterio actual: Todos ≤{" "}
+                    {(Number(result.stats?.ur) || 0).toFixed(2)} (Fracción del
+                    VLA)
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            <div className="mt-4 flex items-center justify-between text-sm bg-blue-50 text-blue-800 p-2 rounded">
-              <span className="font-bold">Próxima Medición:</span>
-              <span>{result.nextCheck}</span>
+              <div className="mt-4 flex items-center justify-between text-sm bg-blue-50 text-blue-800 p-2 rounded">
+                <span className="font-bold">Próxima Medición:</span>
+                <span>{result.nextCheck}</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
-      {/* FULL WIDTH STATISTICAL CHART */}
-      {result && result.stats && (
-        <div className="mb-8 animate-fadeIn delay-100">
-          <DualStatisticalChart
-            samples={result.samples
-              .filter((s: Sample) => s.value > 0)
-              .map((s: Sample) => s.value)}
-            vla={vlaReference || 1}
-            gm={result.stats?.gm || 0}
-            gsd={result.stats?.gsd || 1}
-            ur={result.stats?.ur || 0}
-          />
-        </div>
-      )}
+      {/* FULL WIDTH STATISTICAL CHART - Only show with 6+ valid samples */}
+      {result &&
+        result.stats &&
+        result.samples.filter((s: Sample) => s.value > 0).length >= 6 && (
+          <div className="mb-8 animate-fadeIn delay-100">
+            <DualStatisticalChart
+              samples={result.samples
+                .filter((s: Sample) => s.value > 0)
+                .map((s: Sample) => s.value)}
+              vla={vlaReference || 1}
+              gm={result.stats?.gm || 0}
+              gsd={result.stats?.gsd || 1}
+              ur={result.stats?.ur || 0}
+            />
+          </div>
+        )}
 
       {/* NAVIGATION */}
       <div className="flex justify-between mt-8 pt-6 border-t">
