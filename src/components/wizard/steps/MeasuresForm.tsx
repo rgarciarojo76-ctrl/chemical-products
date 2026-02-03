@@ -391,7 +391,13 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
               </h5>
             </div>
 
-            <div style={{ display: "grid", gap: "1rem" }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
+                gap: "1rem",
+              }}
+            >
               {TECHNICAL_ALTERNATIVES.map((alt) => {
                 const style = getTagStyle(alt.tagColor);
                 const viability = altViability[alt.id];
@@ -616,9 +622,11 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
                       ? "1px solid #cbd5e1"
                       : "1px solid #dc3545",
                   borderRadius: "6px",
-                  minHeight: "100px",
-                  fontSize: "0.95rem",
+                  minHeight: "400px",
+                  fontSize: "1rem",
+                  lineHeight: "1.6",
                   boxShadow: "inset 0 1px 2px rgba(0,0,0,0.05)",
+                  resize: "vertical",
                 }}
               />
               <div
