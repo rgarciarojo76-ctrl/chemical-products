@@ -290,6 +290,7 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
               onClick={() =>
                 updatePhase(key, {
                   isViable: false,
+                  reasons: [], // Initialize empty reasons
                   costInputs: {},
                   status: "evaluated",
                 })
