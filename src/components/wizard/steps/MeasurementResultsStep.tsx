@@ -9,12 +9,10 @@ import {
   AlertTriangle,
   Calculator,
 } from "lucide-react";
-import {
-  calculateSampleConcentration,
-  runEn689Evaluation,
-} from "../../../utils/en689_calculator";
+import { runEn689Evaluation } from "../../../utils/en689_calculator";
 import type { Sample, En689Result } from "../../../types";
 import { DualStatisticalChart } from "../../visual/DualStatisticalChart";
+import { LabParserModal } from "./lab-parser/LabParserModal";
 
 // Custom Input for handling comma/dot decimals
 // Refactored to prevent Chrome-specific infinite loop issues
@@ -36,6 +34,7 @@ const DecimalInput = ({
   // Only update from props if value changed externally (not from user typing)
   useEffect(() => {
     if (!isUserTypingRef.current && lastPropValueRef.current !== value) {
+      // eslint-disable-next-line
       setStrVal(value.toString());
       lastPropValueRef.current = value;
     }
@@ -77,10 +76,14 @@ const DecimalInput = ({
 interface MeasurementResultsStepProps {
   onNext: () => void;
   onBack: () => void;
-  onUpdate: (data: any) => void;
-  initialData?: any;
-  contextData?: any;
-  gesData?: any; // Added missing prop
+  onUpdate: (
+    data: En689Result | { samples: Sample[]; result: En689Result },
+  ) => void;
+  initialData?: { samples?: Sample[] };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  contextData?: { hygienicStrategy?: any; vlaEd?: number };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  gesData?: any;
   initialSamples?: Sample[];
   vlaReference?: number;
 }
@@ -98,7 +101,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
   const [samples, setSamples] = useState<Sample[]>(
     initialSamples && initialSamples.length > 0
       ? initialSamples
-      : initialData?.samples?.length > 0
+      : initialData?.samples && initialData.samples.length > 0
         ? initialData.samples
         : [
             { id: "1", type: "direct", value: 0, isBelowLod: false },
@@ -107,14 +110,13 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
           ],
   );
 
+  const [isParserOpen, setIsParserOpen] = useState(false);
+
   // Derive VLA from Context (or default)
   const vlaReference = useMemo(() => {
     if (vlaProp !== undefined) return vlaProp;
     // Try to get from Hygienic Strategy -> Chemical -> VLA
-    // But passed down context might be flattened.
-    // Let's assume contextData has legalLimit or we extract it.
-    // For now, let's use a safe fallback or passed prop.
-    return contextData?.vlaEd || 1; // Default to 1 if missing for safety
+    return contextData?.vlaEd || 1;
   }, [contextData, vlaProp]);
 
   const gesData = gesDataProp || contextData?.hygienicStrategy;
@@ -126,7 +128,6 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
 
   // Sync parent on change
   useEffect(() => {
-    // Only sync if valid result
     if (result) {
       onUpdate({
         samples,
@@ -142,7 +143,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
   };
 
   const addSample = () => {
-    const newId = Date.now().toString(); // Simple unique ID
+    const newId = Date.now().toString();
     setSamples((prev) => [
       ...prev,
       { id: newId, type: "direct", value: 0, isBelowLod: false },
@@ -153,17 +154,48 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
     setSamples((prev) => prev.filter((s) => s.id !== id));
   };
 
+  const handleParserConfirm = (parsedSamples: Sample[]) => {
+    // Convert parsed samples to compatible Sample objects and append
+    const newSamples = parsedSamples.map((ps: Sample, index: number) => ({
+      ...ps,
+      id: `imp-${Date.now()}-${index}`, // Unique ID
+    }));
+
+    // Replace existing empty/default samples if strictly 3 zeros
+    const isDefault =
+      samples.length === 3 && samples.every((s) => s.value === 0);
+
+    if (isDefault) {
+      setSamples(newSamples);
+    } else {
+      setSamples((prev) => [...prev, ...newSamples]);
+    }
+    setIsParserOpen(false);
+  };
+
   return (
     <div className="animate-fadeIn max-w-5xl mx-auto">
       {/* HEADER */}
+      {/* HEADER */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
-        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-2">
-          <TestTube className="text-purple-600" /> 5. Resultados de la Medición
-        </h3>
-        <p className="text-gray-500 mb-4">
-          Introduzca los resultados del laboratorio para obtener el dictamen de
-          conformidad UNE-EN 689.
-        </p>
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-2">
+              <TestTube className="text-purple-600" /> 5. Resultados de la
+              Medición
+            </h3>
+            <p className="text-gray-500 mb-4">
+              Introduzca los resultados del laboratorio para obtener el dictamen
+              de conformidad UNE-EN 689.
+            </p>
+          </div>
+          <button
+            onClick={() => setIsParserOpen(true)}
+            className="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-lg shadow hover:bg-indigo-700 flex items-center gap-2 transition-transform hover:scale-105"
+          >
+            <Calculator size={16} /> Importar Informe Lab (PDF)
+          </button>
+        </div>
 
         {/* VLA Display */}
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4 bg-purple-50 p-4 rounded-lg border border-purple-100">
@@ -215,7 +247,7 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                       }
                     >
                       <option value="direct">Directo (mg/m³)</option>
-                      <option value="lab_calc">Lab (M/Q/t)</option>
+                      <option value="lab_calc">Lab (Datos Brutos)</option>
                     </select>
                   </td>
                   <td className="px-4 py-3">
@@ -229,14 +261,15 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                           }
                           placeholder="0,000"
                         />
-                        <label className="flex items-center gap-1 text-xs text-gray-500 cursor-pointer">
+                        <span className="text-xs text-gray-400">mg/m³</span>
+                        <label className="flex items-center gap-1 text-xs text-gray-500 cursor-pointer ml-2">
                           <input
                             type="checkbox"
                             checked={sample.isBelowLod}
                             onChange={(e) =>
                               updateSample(sample.id, {
                                 isBelowLod: e.target.checked,
-                                lodMultiplier: 0.5, // Default to 0.5 rules
+                                lodMultiplier: 0.5,
                               })
                             }
                           />
@@ -260,92 +293,116 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
                         )}
                       </div>
                     ) : (
-                      <div className="flex gap-2 items-center">
+                      <div className="flex gap-2 items-center bg-blue-50/50 p-2 rounded border border-blue-100">
                         <div className="flex flex-col">
-                          <span className="text-[10px] text-gray-400">
+                          <span className="text-[10px] text-gray-400 uppercase font-bold">
                             Masa (µg)
                           </span>
                           <DecimalInput
-                            className="border rounded p-1 w-20 text-xs"
+                            className="border rounded p-1 w-20 text-xs text-right"
                             placeholder="µg"
                             value={sample.raw?.mass || 0}
-                            onChange={(val) =>
+                            onChange={(val) => {
+                              const newRaw = {
+                                ...(sample.raw || { flow: 2, time: 120 }),
+                                mass: val,
+                              };
+                              const volL =
+                                (newRaw.flow || 0) * (newRaw.time || 0); // L
+                              // mg/m3 = ug / L
+                              const conc = volL > 0 ? val / volL : 0;
                               updateSample(sample.id, {
-                                raw: {
-                                  mass: val,
-                                  flow: sample.raw?.flow || 0,
-                                  time: sample.raw?.time || 0,
-                                },
-                              })
-                            }
+                                raw: newRaw,
+                                value: conc,
+                              });
+                            }}
                           />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-[10px] text-gray-400">
-                            Caudal (l/min)
+                          <span className="text-[10px] text-gray-400 uppercase font-bold">
+                            Flujo (l/min)
                           </span>
                           <DecimalInput
-                            className="border rounded p-1 w-16 text-xs"
+                            className="border rounded p-1 w-16 text-xs text-right"
                             placeholder="l/min"
-                            value={sample.raw?.flow || 0}
-                            onChange={(val) =>
+                            value={sample.raw?.flow || 2.0}
+                            onChange={(val) => {
+                              const newRaw = {
+                                ...(sample.raw || { mass: 0, time: 120 }),
+                                flow: val,
+                              };
+                              const volL = val * (newRaw.time || 0);
+                              const conc =
+                                volL > 0 ? (newRaw.mass || 0) / volL : 0;
                               updateSample(sample.id, {
-                                raw: {
-                                  mass: sample.raw?.mass || 0,
-                                  flow: val,
-                                  time: sample.raw?.time || 0,
-                                },
-                              })
-                            }
+                                raw: newRaw,
+                                value: conc,
+                              });
+                            }}
                           />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-[10px] text-gray-400">
+                          <span className="text-[10px] text-gray-400 uppercase font-bold">
                             Tiempo (min)
                           </span>
                           <DecimalInput
-                            className="border rounded p-1 w-16 text-xs"
+                            className="border rounded p-1 w-16 text-xs text-right"
                             placeholder="min"
-                            value={sample.raw?.time || 0}
-                            onChange={(val) =>
+                            value={sample.raw?.time || 120}
+                            onChange={(val) => {
+                              const newRaw = {
+                                ...(sample.raw || { mass: 0, flow: 2 }),
+                                time: val,
+                              };
+                              const volL = (newRaw.flow || 0) * val;
+                              const conc =
+                                volL > 0 ? (newRaw.mass || 0) / volL : 0;
                               updateSample(sample.id, {
-                                raw: {
-                                  mass: sample.raw?.mass || 0,
-                                  flow: sample.raw?.flow || 0,
-                                  time: val,
-                                },
-                              })
-                            }
+                                raw: newRaw,
+                                value: conc,
+                              });
+                            }}
                           />
+                        </div>
+
+                        {/* ND Logic for Lab Calc */}
+                        <div className="flex flex-col justify-end h-full pb-1 ml-2">
+                          <label className="flex items-center gap-1 text-[10px] text-gray-500 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={sample.isBelowLod}
+                              onChange={(e) =>
+                                updateSample(sample.id, {
+                                  isBelowLod: e.target.checked,
+                                })
+                              }
+                            />
+                            &lt; LQ
+                          </label>
                         </div>
                       </div>
                     )}
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="font-mono font-bold text-gray-700">
-                      {sample.type === "direct" && sample.isBelowLod && (
-                        <span className="text-xs text-gray-400 mr-1">
-                          (Est.)
-                        </span>
-                      )}
-                      {(
-                        (sample.type === "lab_calc"
-                          ? calculateSampleConcentration(sample)
-                          : sample.value *
-                            (sample.isBelowLod
-                              ? sample.lodMultiplier || 1
-                              : 1)) || 0
-                      ).toFixed(4)}{" "}
-                      <span className="text-xs font-normal text-gray-400">
-                        mg/m³
-                      </span>
-                    </div>
+                  <td className="px-4 py-3 font-bold text-gray-900 group relative">
+                    {sample.value.toFixed(4)}{" "}
+                    <span className="text-xs font-normal text-gray-500">
+                      mg/m³
+                    </span>
+                    {sample.type === "lab_calc" && (
+                      <div className="text-[10px] text-gray-400 font-mono">
+                        Vol:{" "}
+                        {(
+                          ((sample.raw?.flow || 0) * (sample.raw?.time || 0)) /
+                          1000
+                        ).toFixed(3)}{" "}
+                        m³
+                      </div>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <button
                       onClick={() => removeSample(sample.id)}
                       className="text-gray-400 hover:text-red-500 transition-colors"
-                      title="Eliminar muestra"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -514,6 +571,16 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
             />
           </div>
         )}
+
+      {/* PARSER MODAL */}
+      <LabParserModal
+        isOpen={isParserOpen}
+        onClose={() => setIsParserOpen(false)}
+        onConfirm={handleParserConfirm}
+        // Try to get Chemical name/CAS from context
+        expectedCas={contextData?.hazard?.input?.casNumber || ""}
+        gesDuration={8} // Default or extract from context
+      />
 
       {/* NAVIGATION */}
       <div className="flex justify-between mt-8 pt-6 border-t">

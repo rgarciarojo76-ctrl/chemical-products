@@ -132,6 +132,7 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
         phases: phases as ClosedSystemAnalysis["phases"],
         financials: estimate,
         outputDoc,
+        customJustification: initialData?.customJustification, // Persist or update
       });
     } else if (isClosed === true) {
       // Educational Flow: Only output if all validated
@@ -604,10 +605,12 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
                       }`}
                     >
                       Fase {p.id}
-                      {p.isViable ? (
-                        <span className="ml-1 text-green-500">●</span>
+                      {p.status !== "evaluated" ? (
+                        <span className="ml-1 text-gray-400">●</span>
+                      ) : p.isViable ? (
+                        <span className="ml-1 text-green-500">✓</span>
                       ) : (
-                        <span className="ml-1 text-red-500">●</span>
+                        <span className="ml-1 text-red-500">✕</span>
                       )}
                     </button>
                   );
@@ -676,20 +679,40 @@ export const ClosedSystemStep: React.FC<ClosedSystemStepProps> = ({
                   ? "GENERANDO: PLAN DE INVERSIÓN"
                   : "GENERANDO: JUSTIFICACIÓN EXENCIÓN"}
               </h5>
-              {Object.values(phases).some((p) => p.isViable) && estimate
-                ? generateInvestmentText(
-                    {
-                      isClosedSystem: false,
-                      phases: phases as ClosedSystemAnalysis["phases"],
-                      outputDoc: "investment_plan",
-                    } as ClosedSystemAnalysis,
-                    estimate,
-                  )
-                : generateJustificationText({
+
+              <textarea
+                className="w-full h-64 p-3 bg-transparent border-0 focus:ring-0 text-sm font-mono resize-none outline-none"
+                value={
+                  initialData?.customJustification ||
+                  (Object.values(phases).some((p) => p.isViable) && estimate
+                    ? generateInvestmentText(
+                        {
+                          isClosedSystem: false,
+                          phases: phases as ClosedSystemAnalysis["phases"],
+                          outputDoc: "investment_plan",
+                        } as ClosedSystemAnalysis,
+                        estimate,
+                      )
+                    : generateJustificationText({
+                        isClosedSystem: false,
+                        phases: phases as ClosedSystemAnalysis["phases"],
+                        outputDoc: "exemption_justification",
+                      } as ClosedSystemAnalysis))
+                }
+                onChange={(e) => {
+                  const newVal = e.target.value;
+                  onUpdate({
+                    ...initialData!, // Keep prev structure
                     isClosedSystem: false,
                     phases: phases as ClosedSystemAnalysis["phases"],
-                    outputDoc: "exemption_justification",
-                  } as ClosedSystemAnalysis)}
+                    financials: estimate || undefined,
+                    outputDoc: Object.values(phases).some((p) => p.isViable)
+                      ? "investment_plan"
+                      : "exemption_justification",
+                    customJustification: newVal,
+                  });
+                }}
+              />
             </div>
           </div>
         )}

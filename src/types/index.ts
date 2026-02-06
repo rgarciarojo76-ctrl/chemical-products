@@ -353,6 +353,7 @@ export interface ClosedSystemAnalysis {
   };
   financials?: SystemCostEstimate;
   outputDoc: "exemption_justification" | "investment_plan";
+  customJustification?: string;
 }
 
 export interface AssessmentState {

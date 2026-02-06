@@ -243,7 +243,7 @@ export const BasicCharacterizationStep: React.FC<
         {/* Trust Header */}
         <div className="mb-10 text-center">
           <h3 className="text-center font-bold text-2xl mb-3 text-gray-800 flex items-center justify-center gap-3">
-            🤔 Módulo C: Selección de Metodología de Evaluación
+            🤔 Módulo C: Caracterización Básica
           </h3>
           <p className="text-center text-gray-500 max-w-2xl mx-auto text-base">
             Seleccione el nivel de profundidad técnica más adecuado para su
