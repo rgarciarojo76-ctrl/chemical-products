@@ -81,7 +81,7 @@ interface MeasurementResultsStepProps {
   ) => void;
   initialData?: { samples?: Sample[] };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  contextData?: { hygienicStrategy?: any; vlaEd?: number };
+  contextData?: { hygienicStrategy?: any; vlaEd?: number; hazard?: any };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   gesData?: any;
   initialSamples?: Sample[];
@@ -154,12 +154,20 @@ export const MeasurementResultsStep: React.FC<MeasurementResultsStepProps> = ({
     setSamples((prev) => prev.filter((s) => s.id !== id));
   };
 
-  const handleParserConfirm = (parsedSamples: Sample[]) => {
+  const handleParserConfirm = (parsedSamples: Partial<Sample>[]) => {
     // Convert parsed samples to compatible Sample objects and append
-    const newSamples = parsedSamples.map((ps: Sample, index: number) => ({
-      ...ps,
-      id: `imp-${Date.now()}-${index}`, // Unique ID
-    }));
+    const newSamples = parsedSamples.map((ps, index) => {
+      // Ensure required properties exist or have defaults
+      const sample: Sample = {
+        id: `imp-${Date.now()}-${index}`,
+        type: ps.type || "lab_calc",
+        value: ps.value || 0,
+        isBelowLod: ps.isBelowLod || false,
+        raw: ps.raw || { mass: 0, flow: 0, time: 0 },
+        ...ps,
+      };
+      return sample;
+    });
 
     // Replace existing empty/default samples if strictly 3 zeros
     const isDefault =
