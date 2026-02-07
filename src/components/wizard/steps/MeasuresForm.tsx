@@ -3,6 +3,8 @@ import { StepCard } from "../../ui/StepCard";
 import type { MeasureStatus, ClosedSystemAnalysis } from "../../../types";
 import { RD_MEASURES } from "../../../utils/engineLogic";
 import { ClosedSystemStep } from "./ClosedSystemStep"; // Integrate specialized module
+import { MinimizationStep } from "./MinimizationStep"; // Integrate Art 5.3 module
+import { MinimizationWorkersStep } from "./MinimizationWorkersStep"; // Integrate Art 5.3.b module
 
 interface MeasuresFormProps {
   initialData: MeasureStatus[];
@@ -277,6 +279,28 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
               onUpdate={(data) => {
                 if (onUpdateClosedSystem) onUpdateClosedSystem(data);
                 handleToggle("closed_system", data.isClosedSystem === true);
+              }}
+              onNext={handleNextStep}
+              onBack={handlePrevStep}
+            />
+          </div>
+        ) : currentMeasure.id === "reduction_quantity" ? (
+          <div className="bg-white p-2 text-left">
+            <MinimizationStep
+              onUpdate={(implemented: boolean, justification: string) => {
+                handleToggle("reduction_quantity", implemented);
+                handleJustification("reduction_quantity", justification);
+              }}
+              onNext={handleNextStep}
+              onBack={handlePrevStep}
+            />
+          </div>
+        ) : currentMeasure.id === "reduction_workers" ? (
+          <div className="bg-white p-2 text-left">
+            <MinimizationWorkersStep
+              onUpdate={(implemented: boolean, justification: string) => {
+                handleToggle("reduction_workers", implemented);
+                handleJustification("reduction_workers", justification);
               }}
               onNext={handleNextStep}
               onBack={handlePrevStep}
@@ -588,7 +612,9 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
         )}
 
         {!currentStatus.implemented &&
-          currentMeasure.id !== "closed_system" && (
+          currentMeasure.id !== "closed_system" &&
+          currentMeasure.id !== "reduction_quantity" &&
+          currentMeasure.id !== "reduction_workers" && (
             <div style={{ marginTop: "1.5rem" }}>
               <label
                 style={{
@@ -649,58 +675,62 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
           )}
       </div>
 
-      {currentMeasure.id !== "closed_system" && (
-        <div
-          className="actions"
-          style={{
-            marginTop: "2rem",
-            borderTop: "1px solid #eee",
-            paddingTop: "1.5rem",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <button
-            onClick={handlePrevStep}
-            disabled={activeStep === 0}
+      {currentMeasure.id !== "closed_system" &&
+        currentMeasure.id !== "reduction_quantity" &&
+        currentMeasure.id !== "reduction_workers" && (
+          <div
+            className="actions"
             style={{
-              backgroundColor: "white",
-              color: "#64748b",
-              padding: "0.75rem 1.5rem",
-              borderRadius: "6px",
-              border: "1px solid #cbd5e1",
-              fontSize: "1rem",
-              cursor: activeStep === 0 ? "not-allowed" : "pointer",
-              opacity: activeStep === 0 ? 0.5 : 1,
-            }}
-          >
-            &larr; Anterior
-          </button>
-
-          <button
-            onClick={handleNextStep}
-            disabled={!isCurrentValid}
-            style={{
-              backgroundColor: isCurrentValid ? "var(--color-primary)" : "#ccc",
-              color: "white",
-              padding: "0.75rem 1.5rem",
-              borderRadius: "6px",
-              border: "none",
-              fontSize: "1rem",
-              cursor: isCurrentValid ? "pointer" : "not-allowed",
-              transition: "background-color 0.2s",
-              fontWeight: 600,
+              marginTop: "2rem",
+              borderTop: "1px solid #eee",
+              paddingTop: "1.5rem",
               display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
+              justifyContent: "space-between",
             }}
           >
-            {isLastStep
-              ? "Validar Final y Continuar ✨"
-              : "Siguiente Medida &rarr;"}
-          </button>
-        </div>
-      )}
+            <button
+              onClick={handlePrevStep}
+              disabled={activeStep === 0}
+              style={{
+                backgroundColor: "white",
+                color: "#64748b",
+                padding: "0.75rem 1.5rem",
+                borderRadius: "6px",
+                border: "1px solid #cbd5e1",
+                fontSize: "1rem",
+                cursor: activeStep === 0 ? "not-allowed" : "pointer",
+                opacity: activeStep === 0 ? 0.5 : 1,
+              }}
+            >
+              &larr; Anterior
+            </button>
+
+            <button
+              onClick={handleNextStep}
+              disabled={!isCurrentValid}
+              style={{
+                backgroundColor: isCurrentValid
+                  ? "var(--color-primary)"
+                  : "#ccc",
+                color: "white",
+                padding: "0.75rem 1.5rem",
+                borderRadius: "6px",
+                border: "none",
+                fontSize: "1rem",
+                cursor: isCurrentValid ? "pointer" : "not-allowed",
+                transition: "background-color 0.2s",
+                fontWeight: 600,
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              {isLastStep
+                ? "Validar Final y Continuar ✨"
+                : "Siguiente Medida &rarr;"}
+            </button>
+          </div>
+        )}
     </StepCard>
   );
 };
