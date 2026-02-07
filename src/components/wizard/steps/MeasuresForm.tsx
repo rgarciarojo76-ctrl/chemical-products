@@ -5,6 +5,7 @@ import { RD_MEASURES } from "../../../utils/engineLogic";
 import { ClosedSystemStep } from "./ClosedSystemStep"; // Integrate specialized module
 import { MinimizationStep } from "./MinimizationStep"; // Integrate Art 5.3 module
 import { MinimizationWorkersStep } from "./MinimizationWorkersStep"; // Integrate Art 5.3.b module
+import { ExtractionStep } from "./ExtractionStep"; // Integrate Art 5.3.c module
 
 interface MeasuresFormProps {
   initialData: MeasureStatus[];
@@ -151,13 +152,18 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({
     onUpdate(updated);
   };
 
-  const handleJustification = (id: string, text: string) => {
-    const updated = measures.map((m) =>
-      m.measureId === id ? { ...m, justificationIfNo: text } : m,
-    );
-    setMeasures(updated);
-    onUpdate(updated);
-  };
+  const handleJustification = React.useCallback(
+    (id: string, text: string) => {
+      setMeasures((prev) => {
+        const updated = prev.map((m) =>
+          m.measureId === id ? { ...m, justificationIfNo: text } : m,
+        );
+        onUpdate(updated);
+        return updated;
+      });
+    },
+    [onUpdate],
+  );
 
   // Auto-generate justification when all 5 alternatives are marked as "not viable"
   React.useEffect(() => {
@@ -193,7 +199,12 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
         handleJustification(currentMeasure.id, autoJustification);
       }
     }
-  }, [altViability, currentMeasure.id, currentStatus.justificationIfNo]);
+  }, [
+    altViability,
+    currentMeasure.id,
+    currentStatus.justificationIfNo,
+    handleJustification,
+  ]);
 
   const handleNextStep = () => {
     if (activeStep < RD_MEASURES.length - 1) {
@@ -301,6 +312,17 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
               onUpdate={(implemented: boolean, justification: string) => {
                 handleToggle("reduction_workers", implemented);
                 handleJustification("reduction_workers", justification);
+              }}
+              onNext={handleNextStep}
+              onBack={handlePrevStep}
+            />
+          </div>
+        ) : currentMeasure.id === "extraction" ? (
+          <div className="bg-white p-2 text-left">
+            <ExtractionStep
+              onUpdate={(implemented: boolean, justification: string) => {
+                handleToggle("extraction", implemented);
+                handleJustification("extraction", justification);
               }}
               onNext={handleNextStep}
               onBack={handlePrevStep}
@@ -614,7 +636,8 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
         {!currentStatus.implemented &&
           currentMeasure.id !== "closed_system" &&
           currentMeasure.id !== "reduction_quantity" &&
-          currentMeasure.id !== "reduction_workers" && (
+          currentMeasure.id !== "reduction_workers" &&
+          currentMeasure.id !== "extraction" && (
             <div style={{ marginTop: "1.5rem" }}>
               <label
                 style={{
@@ -677,7 +700,8 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
 
       {currentMeasure.id !== "closed_system" &&
         currentMeasure.id !== "reduction_quantity" &&
-        currentMeasure.id !== "reduction_workers" && (
+        currentMeasure.id !== "reduction_workers" &&
+        currentMeasure.id !== "extraction" && (
           <div
             className="actions"
             style={{
