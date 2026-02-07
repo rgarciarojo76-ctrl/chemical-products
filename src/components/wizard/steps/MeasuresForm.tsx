@@ -138,19 +138,24 @@ export const MeasuresForm: React.FC<MeasuresFormProps> = ({
   // Auto-generate justification when all 5 alternatives are marked as "not viable"
 
   // Sync with parent when changed
-  const handleToggle = (id: string, implemented: boolean) => {
-    const updated = measures.map((m) =>
-      m.measureId === id
-        ? {
-            ...m,
-            implemented,
-            justificationIfNo: implemented ? "" : m.justificationIfNo,
-          }
-        : m,
-    );
-    setMeasures(updated);
-    onUpdate(updated);
-  };
+  const handleToggle = React.useCallback(
+    (id: string, implemented: boolean) => {
+      setMeasures((prev) => {
+        const updated = prev.map((m) =>
+          m.measureId === id
+            ? {
+                ...m,
+                implemented,
+                justificationIfNo: implemented ? "" : m.justificationIfNo,
+              }
+            : m,
+        );
+        onUpdate(updated);
+        return updated;
+      });
+    },
+    [onUpdate],
+  );
 
   const handleJustification = React.useCallback(
     (id: string, text: string) => {
@@ -205,6 +210,31 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
     currentStatus.justificationIfNo,
     handleJustification,
   ]);
+
+  // Stable handlers for child steps to avoid infinite loops
+  const handleMinimizationUpdate = React.useCallback(
+    (implemented: boolean, justification: string) => {
+      handleToggle("reduction_quantity", implemented);
+      handleJustification("reduction_quantity", justification);
+    },
+    [handleToggle, handleJustification],
+  );
+
+  const handleWorkersUpdate = React.useCallback(
+    (implemented: boolean, justification: string) => {
+      handleToggle("reduction_workers", implemented);
+      handleJustification("reduction_workers", justification);
+    },
+    [handleToggle, handleJustification],
+  );
+
+  const handleExtractionUpdate = React.useCallback(
+    (implemented: boolean, justification: string) => {
+      handleToggle("extraction", implemented);
+      handleJustification("extraction", justification);
+    },
+    [handleToggle, handleJustification],
+  );
 
   const handleNextStep = () => {
     if (activeStep < RD_MEASURES.length - 1) {
@@ -298,10 +328,7 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
         ) : currentMeasure.id === "reduction_quantity" ? (
           <div className="bg-white p-2 text-left">
             <MinimizationStep
-              onUpdate={(implemented: boolean, justification: string) => {
-                handleToggle("reduction_quantity", implemented);
-                handleJustification("reduction_quantity", justification);
-              }}
+              onUpdate={handleMinimizationUpdate}
               onNext={handleNextStep}
               onBack={handlePrevStep}
             />
@@ -309,10 +336,7 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
         ) : currentMeasure.id === "reduction_workers" ? (
           <div className="bg-white p-2 text-left">
             <MinimizationWorkersStep
-              onUpdate={(implemented: boolean, justification: string) => {
-                handleToggle("reduction_workers", implemented);
-                handleJustification("reduction_workers", justification);
-              }}
+              onUpdate={handleWorkersUpdate}
               onNext={handleNextStep}
               onBack={handlePrevStep}
             />
@@ -320,10 +344,7 @@ La empresa ha cumplido con la obligación de evaluar alternativas (Art. 4.1). La
         ) : currentMeasure.id === "extraction" ? (
           <div className="bg-white p-2 text-left">
             <ExtractionStep
-              onUpdate={(implemented: boolean, justification: string) => {
-                handleToggle("extraction", implemented);
-                handleJustification("extraction", justification);
-              }}
+              onUpdate={handleExtractionUpdate}
               onNext={handleNextStep}
               onBack={handlePrevStep}
             />
